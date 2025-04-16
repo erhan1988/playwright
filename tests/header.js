@@ -28,24 +28,24 @@ async function navigatetoURL(page, action) {
 }
 
 async function checkFaviconIcon(page, action) {
-    await test.step('2.Check if in browser exist Favicon Image', async () => { 
-        await logStep('Check if in browser exist Favicon Image'); // Await logStep for yellow-colored text
+    await test.step('2. Check if Favicon exists in the browser', async () => { 
+        logStep('Checking if Favicon exists in the browser'); // Log the step
         try {
-            // Example usage
-            const domain = action; // This can be dynamically set based on your action
+            const domain = action; // Dynamically set based on your action
             const faviconUrl = getFaviconUrl(domain);
-        
+
             // Use Axios to check if the URL exists
             const response = await axios.head(faviconUrl); // Sending a HEAD request to avoid downloading the file
+
             // Validate the response status and Content-Type
-            if (response.status === 200 && response.headers['content-type'].includes('image')) {
-                logSuccess(`Favicon exists in the browser tab. URL is: ${faviconUrl}`);
-            }else{
-                logError('Favicon does not exist or is not a valid image file.');
-            }
+            expect(response.status).toBe(200); // Assert that the response status is 200
+            expect(response.headers['content-type']).toContain('image'); // Assert that the Content-Type is an image
+            logSuccess(`Favicon exists in the browser tab. URL is: ${faviconUrl}`);
         } catch (error) {
-            logError('Error checking favicon:', error.response?.status || error.message);
-        } 
+            // Log the error and fail the test
+            logError(`Favicon does not exist or is not a valid image file. Error: ${error.response?.status || error.message}`);
+            expect(error).toBeNull(); // Force the test to fail and include the error in the report
+        }
     });
 }
 
@@ -93,8 +93,6 @@ async function checkHomeLinkHeader(page) {
         }
     });
 }
-
-
 
 module.exports = { checkHomeLinkHeader, navigatetoURL , checkFaviconIcon};
 
