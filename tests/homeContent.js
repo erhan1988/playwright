@@ -29,5 +29,44 @@ async function checkCategoryTitleHomeScreen(page) {
         }
     });
 }
-module.exports = { checkCategoryTitleHomeScreen };
+
+async function checkVodsInHome(page) {
+    await test.step('6.Check if images exist and click the 5th image', async () => {
+        logStep('6.Checking for images with background styles...');
+        try {
+            // Wait for the elements to be located
+            const imageElements = await page.locator("div.item[style*='background-image']").all();
+
+            // Check if any images are found
+            expect(imageElements.length, 'Expected at least one image').toBeGreaterThan(0);
+            console.log(`✅ Found ${imageElements.length} images with background styles.`);
+
+            // Ensure there are at least 5 images
+            if (imageElements.length < 15) {
+                throw new Error('Less than 15 images found. Cannot click the 14th image.');
+            }
+
+            // Click on the 5th image (index 4, as Playwright uses 0-based indexing)
+            const fifthImage = imageElements[14];
+            await fifthImage.scrollIntoViewIfNeeded();
+            console.log('Clicking on the 5th image...');
+            await fifthImage.click();
+
+            // Wait for the URL to change
+            const initialUrl = page.url();
+            await page.waitForFunction(
+                (initialUrl) => window.location.href !== initialUrl,
+                initialUrl,
+                { timeout: 10000 }
+            );
+            // Log the new URL
+            const newUrl = page.url();
+            console.log(`✅ Successfully redirected to: ${newUrl}`);
+        } catch (err) {
+            console.error(`❌ Error: ${err.message}`);
+            expect.fail(`❌ Error: ${err.message}`);
+        }
+    });
+}
+module.exports = { checkCategoryTitleHomeScreen, checkVodsInHome };
 
