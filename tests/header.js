@@ -1,10 +1,11 @@
 const { test, expect } = require('@playwright/test');
-const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
+const { logStep, logSuccess, logError } = require('../index'); 
 const axios = require('axios');
-const { checkElementExists } = require('./helper'); // Import the helper function
+const { checkElementExists } = require('./helper'); 
 
 async function navigatetoURL(page, action) {
     await test.step('1. Open the Site', async () => { 
+        logStep('1.Opening the site...'); // Log the step
         try {
             let url;
             if (action) {
@@ -30,7 +31,7 @@ async function navigatetoURL(page, action) {
 
 async function checkFaviconIcon(page, action) {
     await test.step('2. Check if Favicon exists in the browser', async () => { 
-        logStep('Checking if Favicon exists in the browser'); // Log the step
+        logStep('2.Checking if Favicon exists in the browser'); // Log the step
         try {
             const domain = action; // Dynamically set based on your action
             const faviconUrl = getFaviconUrl(domain);
@@ -98,7 +99,7 @@ async function checkHomeLinkHeader(page) {
 
 async function checkHeaderElements(page, action) {
     await test.step('4. Check in header in top bar are exist Logo, Buttons: Register, Login, Search Icon, and Home Link', async () => { 
-        logStep('Checking if header elements exist in the top bar'); // Log the step
+        logStep('4.Checking if header elements exist in the top bar'); // Log the step
         try {
             // Define an array of elements to check
             const headerElements = [
@@ -126,8 +127,7 @@ async function checkHeaderElements(page, action) {
                     logError(`❌ Error checking ${result.name}: ${result.error}`);
                 }
             });
-
-            return results; // Return the results to the caller
+            //return results; // Return the results to the caller
         } catch (error) {
             logError(`Error while checking header elements: ${error.message}`);
             throw error; // Fail the test if an error occurs
