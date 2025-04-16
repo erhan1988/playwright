@@ -1,6 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
 const axios = require('axios');
+const { checkElementExists } = require('./helper'); // Import the helper function
 
 async function navigatetoURL(page, action) {
     await test.step('1. Open the Site', async () => { 
@@ -55,34 +56,34 @@ function getFaviconUrl(domain) {
 
 async function checkHomeLinkHeader(page) {
     await test.step('3. Find link Home in the Header and click', async () => { 
-        logStep('Executing step: 3. Find link Home in the Header and click'); // Use logStep for yellow-colored text
+        logStep('Executing step: 3. Find link Home in the Header and click');
         try {
             const homeOrInicioLink = page.locator("//a[contains(text(),'Home') or contains(text(),'Inicio')]");
             const menuButton = page.locator('.navbar-toggler'); 
-    
+
             // Ensure the link is visible, otherwise check menu
             if (!(await homeOrInicioLink.isVisible())) {
                 logError("Home/Inicio link is not visible. Checking menu...");
                 if (await menuButton.isVisible()) {
                     await menuButton.click();
-    
-                    // Wait dynamically for menu animation (instead of hardcoded timeout)
-                    await page.waitForSelector("//a[contains(text(),'Home') or contains(text(),'Inicio')]", { state: "visible", timeout: 5000 });
+                    await page.waitForSelector("//a[contains(text(),'Home') or contains(text(),'Inicio')]", { state: "visible", timeout: 10000 });
                 }
             }
+
             // Final check after opening menu
-            await homeOrInicioLink.waitFor({ state: 'visible', timeout: 20000 });
-    
+            await homeOrInicioLink.waitFor({ state: 'visible', timeout: 10000 });
+
             if (await homeOrInicioLink.isVisible()) {
                 const linkText = await homeOrInicioLink.textContent();
-                logSuccess(`Found link text: "${linkText.trim()}"`); // Use logSuccess for green-colored text
-    
+                logSuccess(`Found link text: "${linkText.trim()}"`);
+
                 let initialUrl = page.url();
                 logStep('Clicking Home/Inicio link...');
-                await homeOrInicioLink.click();
-    
-                // Wait for navigation
-                await page.waitForFunction(({ initUrl }) => window.location.href !== initUrl, { initUrl: initialUrl }, { timeout: 5000 });
+                await Promise.all([
+                    page.waitForNavigation({ timeout: 10000 }), // Wait for navigation to complete
+                    homeOrInicioLink.click() // Trigger the navigation
+                ]);
+
                 let currentUrlLogin = page.url();
                 logSuccess(`Current URL after clicking: ${currentUrlLogin}`);
             } else {
@@ -90,9 +91,51 @@ async function checkHomeLinkHeader(page) {
             }
         } catch (err) {
             logError(`Error in checkHomeLinkHeader: ${err.message}`);
+            throw err; // Re-throw the error to fail the test
         }
     });
 }
 
-module.exports = { checkHomeLinkHeader, navigatetoURL , checkFaviconIcon};
+async function checkHeaderElements(page, action) {
+    await test.step('4. Check in header in top bar are exist Logo, Buttons: Register, Login, Search Icon, and Home Link', async () => { 
+        logStep('Checking if header elements exist in the top bar'); // Log the step
+        try {
+            // Define an array of elements to check
+            const headerElements = [
+                { locator:'a.navbar-brand img.img-fluid[alt="logo"]' , name: 'Logo' },
+                { locator: "//*[contains(text(),'Log In') or contains(text(),' Iniciar sesión ')]", name: 'Login Button' },
+                { locator: "//*[contains(text(),'Subscribe Now') or contains(text(),' Suscríbase Ahora ')]", name: 'Register Button' },      
+                { locator: '#search-button', name: 'Search Button' },
+                { locator: "//a[contains(text(),'Home') or contains(text(),'Inicio')]", name: 'Home Link' }
+            ];
+            // Collect results for each element
+            const results = [];
+            for (const element of headerElements) {
+                const result = await checkElementExists(page, element.locator, element.name);
+                results.push(result); // Store the result
+            }
+
+            // Log the final results
+            logStep('Header elements check completed. Results:');
+            results.forEach(result => {
+                if (result.status === 'visible') {
+                    logSuccess(`✅ ${result.name} is visible.`);
+                } else if (result.status === 'not visible') {
+                    logError(`❌ ${result.name} is not visible.`);
+                } else if (result.status === 'error') {
+                    logError(`❌ Error checking ${result.name}: ${result.error}`);
+                }
+            });
+
+            return results; // Return the results to the caller
+        } catch (error) {
+            logError(`Error while checking header elements: ${error.message}`);
+            throw error; // Fail the test if an error occurs
+        }
+    });
+}
+
+
+
+module.exports = { checkHomeLinkHeader, navigatetoURL , checkFaviconIcon, checkHeaderElements, checkElementExists };
 
