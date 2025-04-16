@@ -13,40 +13,28 @@ import { defineConfig, devices } from '@playwright/test';
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
-  testDir: './tests', // Ensure the directory containing your test files is correct
-  fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
-  reporter: [['html', { outputFolder: 'playwright-report', open: 'always' }]], // Automatically open HTML report
+  testDir: './tests',
+  fullyParallel: false, // Run tests sequentially
+  workers: 1, // Ensure only one worker is used
+  reporter: [['html', { outputFolder: 'playwright-report', open: 'always' }]],
   use: {
-    trace: 'on-first-retry',
-    headless: false, // Run tests with UI (non-headless mode)
-    viewport: { width: 1920, height: 1080 }, // Explicitly set viewport size
+    headless: false, // Run in headed mode
     launchOptions: {
       args: ['--start-maximized'], // Maximize the browser window
     },
+    viewport: null, // Disable viewport to use the full screen size
   },
   projects: [
     {
       name: 'chromium',
       use: {
-        ...devices['Desktop Chrome'],
-        headless: false, // Ensure the browser runs in UI mode
-        viewport: { width: 1920, height: 1080 }, // Explicitly set viewport size
+        headless: false,
         launchOptions: {
           args: ['--start-maximized'], // Maximize the browser window
         },
+        viewport: null, // Disable viewport for full screen
       },
     },
-    // {
-    //   name: 'firefox',
-    //   use: { ...devices['Desktop Firefox'] },
-    // },
-    // {
-    //   name: 'webkit',
-    //   use: { ...devices['Desktop Safari'] },
-    // },
   ],
 });
 

@@ -1,31 +1,61 @@
 const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
+const axios = require('axios');
 
 async function navigatetoURL(page, action) {
     await test.step('1. Open the Site', async () => { 
-        await logStep('Executing step: 1. Open the Site'); // Await logStep for yellow-colored text
         try {
             let url;
-            if (action === 'emmanuel') {
-                url = 'https://emmanuel-v3-dev.streann.tech/';
-            } else if (action === 'amorir') {
-                url = 'https://amorir-v3-dev.streann.tech/';
+            if (action) {
+                url = `https://${action}-v3-dev.streann.tech/`;
             } else {
                 throw new Error('Invalid action provided. Use "emmanuel" or "amorir".');
             }
 
+            console.log(`Navigating to URL: ${url}`); // Debug the URL
+
             // Navigate to the appropriate site
             await page.goto(url, { timeout: 60000, waitUntil: 'load' });
-            await logSuccess(`Navigated to ${url}`); // Await logSuccess for green-colored text
+
+            // Wait for the page to fully load
+            await page.waitForLoadState('load');
+            logSuccess(`Navigated to ${url} and fully loaded the site`);
         } catch (err) {
-            await logError(`Error in navigatetoURL: ${err.message}`); // Await logError for red-colored text
+            logError(`Error in navigatetoURL: ${err.message}`);
+            throw err; // Re-throw the error to fail the test
         }
     });
 }
 
+async function checkFaviconIcon(page, action) {
+    await test.step('2.Check if in browser exist Favicon Image', async () => { 
+        await logStep('Check if in browser exist Favicon Image'); // Await logStep for yellow-colored text
+        try {
+            // Example usage
+            const domain = action; // This can be dynamically set based on your action
+            const faviconUrl = getFaviconUrl(domain);
+        
+            // Use Axios to check if the URL exists
+            const response = await axios.head(faviconUrl); // Sending a HEAD request to avoid downloading the file
+            // Validate the response status and Content-Type
+            if (response.status === 200 && response.headers['content-type'].includes('image')) {
+                logSuccess(`Favicon exists in the browser tab. URL is: ${faviconUrl}`);
+            }else{
+                logError('Favicon does not exist or is not a valid image file.');
+            }
+        } catch (error) {
+            logError('Error checking favicon:', error.response?.status || error.message);
+        } 
+    });
+}
+
+function getFaviconUrl(domain) {
+    return `https://${domain}-v3-dev.streann.tech/assets/images/favicon.ico`;
+}
+
 async function checkHomeLinkHeader(page) {
-    await test.step('2. Find link Home in the Header and click', async () => { 
-        logStep('Executing step: 2. Find link Home in the Header and click'); // Use logStep for yellow-colored text
+    await test.step('3. Find link Home in the Header and click', async () => { 
+        logStep('Executing step: 3. Find link Home in the Header and click'); // Use logStep for yellow-colored text
         try {
             const homeOrInicioLink = page.locator("//a[contains(text(),'Home') or contains(text(),'Inicio')]");
             const menuButton = page.locator('.navbar-toggler'); 
@@ -64,5 +94,7 @@ async function checkHomeLinkHeader(page) {
     });
 }
 
-module.exports = { checkHomeLinkHeader, navigatetoURL };
+
+
+module.exports = { checkHomeLinkHeader, navigatetoURL , checkFaviconIcon};
 

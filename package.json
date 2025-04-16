@@ -1,7 +1,6 @@
 {
   "name": "automation-playwright",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {},
   "keywords": [],
@@ -14,5 +13,17 @@
   "dependencies": {
     "chalk": "^5.4.1",
     "playwright": "^1.51.1"
-  }
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erhan1988/playwright.git"
+  },
+  "bugs": {
+    "url": "https://github.com/erhan1988/playwright/issues"
+  },
+  "homepage": "https://github.com/erhan1988/playwright#readme",
+  "description": ""
 }
