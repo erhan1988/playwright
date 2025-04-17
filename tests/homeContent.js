@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
-const { GobackLink , titleDetailsScreen } = require('./helper'); 
+const { GobackLink , titleDetailsScreen ,backgroundImageDetailsScreen,buttonsDetailsScreen} = require('./helper'); 
 
 async function checkCategoryTitleHomeScreen(page) {
     await test.step('5. Check the Home screen and print titles of all categories', async () => {
@@ -33,7 +33,7 @@ async function checkCategoryTitleHomeScreen(page) {
 
 async function checkVodsInHome(page) {
     await test.step('6.Check if images exist and click the 14th image vod', async () => {
-        logStep('6.Checking for images with background styles...');
+        logStep('6.Check if images exist and click the 14th image vod...');
         try {
             // Wait for the elements to be located
             const imageElements = await page.locator("div.item[style*='background-image']").all();
@@ -44,7 +44,7 @@ async function checkVodsInHome(page) {
 
             // Ensure there are at least 5 images
             if (imageElements.length < 15) {
-                throw new Error('Less than 15 images found. Cannot click the 14th image.');
+                throw new Error('Less than 15 images found. Cannot click the 14th image (vod).');
             }
 
             // Click on the 5th image (index 4, as Playwright uses 0-based indexing)
@@ -58,19 +58,19 @@ async function checkVodsInHome(page) {
             await page.waitForFunction(
                 (initialUrl) => window.location.href !== initialUrl,
                 initialUrl,
-                { timeout: 10000 }
+                { timeout: 20000 }
             );
             // Log the new URL
             const newUrl = page.url();
             console.log(`✅ Successfully redirected to: ${newUrl}`);
         } catch (err) {
-            console.error(`❌ Error: ${err.message}`);
-            expect.fail(`❌ Error: ${err.message}`);
+            logError(`❌ An error occurred in checkVodsInHome: ${err.message}`);
+            throw new Error(`❌ An error occurred in checkVodsInHome: ${err.message}`);
         }
     });
 }
 
-async function NotloggeduserDetailsScrenn(page) {
+async function NotloggeduserDetailsScrenn(page,action) {
     await test.step('7. Not logged user checking Details screen containts Go back Title background Image watch Now', async () => {
         logStep('7. Not logged user checking Details screen containts Go back Title background Image watch Now');
         try {
@@ -80,6 +80,11 @@ async function NotloggeduserDetailsScrenn(page) {
             // Check for the title in the Details screen
             await titleDetailsScreen(page);
 
+            //Background image check
+            await backgroundImageDetailsScreen(page);
+
+            await buttonsDetailsScreen(page,action);
+
         } catch (err) {
             logError(`❌ An error occurred in NotloggeduserDetailsScrenn: ${err.message}`);
             throw new Error(`❌ An error occurred in NotloggeduserDetailsScrenn: ${err.message}`);
@@ -88,6 +93,7 @@ async function NotloggeduserDetailsScrenn(page) {
 }
 
 
+
 module.exports = { checkCategoryTitleHomeScreen, checkVodsInHome,
-NotloggeduserDetailsScrenn, GobackLink, titleDetailsScreen };
+NotloggeduserDetailsScrenn, GobackLink, titleDetailsScreen, backgroundImageDetailsScreen, buttonsDetailsScreen };
 

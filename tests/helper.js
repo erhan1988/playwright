@@ -95,5 +95,68 @@ async function titleDetailsScreen(page) {
     }
 }
 
-module.exports = { checkElementExists, GobackLink,titleDetailsScreen};
+async function backgroundImageDetailsScreen(page) {
+    console.log('Checking for background images in the Details screen...');
+    try {
+        // Wait for the background image elements to appear
+        const imageLocator = page.locator('div.details-image.details-image-desktop');
+        await imageLocator.waitFor({ state: 'visible', timeout: 5000 });
+
+        // Get the count of matching elements
+        const imageCount = await imageLocator.count();
+        console.log(`- Found ${imageCount} background image(s).`);
+
+        if (imageCount > 0) {
+            // Loop through each image element and log its background-image property
+            for (let i = 0; i < imageCount; i++) {
+                const backgroundImage = await imageLocator.nth(i).evaluate(el => getComputedStyle(el).backgroundImage);
+                logSuccess(`3. Background Image in details screen is ${i + 1}: ${backgroundImage}`);
+            }
+        } else {
+            const msg = 'No background images found in the Details screen.';
+            console.error(msg);
+            throw new Error(msg); // Fail the test
+        }
+    } catch (err) {
+        console.error(`❌ An error occurred in backgroundImageDetailsScreen: ${err.message}`);
+        throw new Error(`❌ An error occurred in backgroundImageDetailsScreen: ${err.message}`);
+    }
+}
+
+async function buttonsDetailsScreen(page,action) {
+    console.log('Checking for buttons in Details screen');
+    try {
+
+        await page.evaluate(() => window.scrollBy(0, 200)); // Scroll down by 300 pixels
+        await page.waitForTimeout(2000); // Wait for 2 seconds
+        const buttons = page.locator("//button[.//span[@class='mat-mdc-button-touch-target']]");
+        await page.waitForTimeout(2000); // Wait for 2 seconds
+        // Get the count of matching buttons
+
+        let watchNowFound = false; // Flag to track if "Watch Now" is found
+        const buttonCount = await buttons.count();
+
+        for (let i = 0; i < buttonCount; i++) {
+            const buttonText = await buttons.nth(i).textContent();
+            const trimmedText = buttonText.trim();
+           console.log('er',trimmedText);
+            if (action === 'emmanuel' && trimmedText.toLowerCase() === 'watch now') {
+              logSuccess(`✅ Found "Watch Now" button at index ${i + 1}`);
+              watchNowFound = true; // Set the flag to true
+            }
+        }
+        // After the loop, check if "Watch Now" was found
+        if (!watchNowFound && action === 'emmanuel') {
+            const msg = '❌ "Watch Now" button not found for action: emmanuel';
+            console.error(msg);
+            logError(msg);
+            throw new Error(msg); // Fail the test
+        }
+    } catch (err) {
+        console.error(`❌ An error occurred in buttonsDetailsScreen: ${err.message}`);
+        throw new Error(`❌ An error occurred in buttonsDetailsScreen: ${err.message}`);
+    }
+}
+
+module.exports = { checkElementExists, GobackLink,titleDetailsScreen,backgroundImageDetailsScreen,buttonsDetailsScreen};
 
