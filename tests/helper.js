@@ -144,18 +144,9 @@ async function buttonsDetailsScreen(page, action) {
                 // Click the "Watch Now" button
                 logStep(`Clicking on "Watch Now" button at Details screen...`);
                 await buttons.nth(i).click();
+
                 // Wait for the URL to change
-                try {
-                    await page.waitForFunction(
-                        (url) => window.location.href !== url,
-                        initialUrl,
-                        { timeout: 10000 }
-                    );
-                    const newUrl = page.url();
-                logSuccess(`New URL: ${newUrl}`);
-                } catch (err) {
-                    console.error(`Error waiting for URL to change: ${err.message}`);
-                }
+                await redirectUrl(page,'/player');
                 break; // Exit the loop after checking the URL change
             }
              // Check for "Suscribirse" and "Compartir" when action is "amorir"
@@ -163,7 +154,22 @@ async function buttonsDetailsScreen(page, action) {
                 if (trimmedText.toLowerCase() === 'suscribirse') {
                     logSuccess(`✅ Found "Suscribirse" button at Details screen`);
                     suscribirseFound = true;
+
+                    // Click the "Suscribirse" button
+                    logStep(`Clicking on "Suscribirse" button at Details screen...`);
+                    await buttons.nth(i).click();
+                    await page.waitForTimeout(2000);
+                    // Wait for the URL to change               
+                    await redirectUrl(page,'/login');
+
+                    // Go back to the details screen
+                    logStep('Navigating back to the Details screen...');
+                    await page.goBack();
+                    const backUrl = page.url();
+                    logSuccess(`✅ Returned to Details screen. Current URL: ${backUrl}`);
+                    break; // Exit the loop after checking the URL change
                 }
+
                 if (trimmedText.toLowerCase() === 'compartir') {
                     logSuccess(`✅ Found "Compartir" button at Details screen`);
                     compartirFound = true;
@@ -187,6 +193,25 @@ async function buttonsDetailsScreen(page, action) {
         throw new Error(err.message);
     }
 }
+
+async function redirectUrl(page, expectedPartOfUrl) {
+    try {
+        const currentUrl = page.url(); // Get the current URL
+        console.log(`🌐 Current URL: ${currentUrl}`); // Log the current URL
+
+        if (currentUrl.includes(expectedPartOfUrl)) {
+            logSuccess(`✅ URL contains the expected path: ${expectedPartOfUrl}`);
+        } else {
+            const message = `❌ URL does not contain the expected path "${expectedPartOfUrl}". Current URL: "${currentUrl}"`;
+            logError(message);
+            throw new Error(message);
+        }
+    } catch (err) {
+        logError(`❌ redirectUrl error: ${err.message}`);
+        throw err;
+    }
+}
+
 module.exports = { 
     checkElementExists, 
     GobackLink,

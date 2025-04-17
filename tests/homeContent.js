@@ -69,7 +69,6 @@ async function checkVodsInHome(page) {
         }
     });
 }
-
 async function NotloggeduserDetailsScrenn(page,action) {
     await test.step('7. Not logged user checking Details screen containts Go back Title background Image watch Now', async () => {
         logStep('7. Not logged user checking Details screen containts Go back Title background Image watch Now');
