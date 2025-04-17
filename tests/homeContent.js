@@ -82,7 +82,7 @@ async function NotloggeduserDetailsScrenn(page,action) {
 
             //Background image check
             await backgroundImageDetailsScreen(page);
-
+            // Buttons in the Details screen
             await buttonsDetailsScreen(page,action);
 
         } catch (err) {
@@ -94,6 +94,13 @@ async function NotloggeduserDetailsScrenn(page,action) {
 
 
 
-module.exports = { checkCategoryTitleHomeScreen, checkVodsInHome,
-NotloggeduserDetailsScrenn, GobackLink, titleDetailsScreen, backgroundImageDetailsScreen, buttonsDetailsScreen };
+module.exports = {
+    checkCategoryTitleHomeScreen, 
+    checkVodsInHome,
+    NotloggeduserDetailsScrenn, 
+    GobackLink, 
+    titleDetailsScreen, 
+    backgroundImageDetailsScreen, 
+    buttonsDetailsScreen 
+};
 

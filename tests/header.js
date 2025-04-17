@@ -137,5 +137,11 @@ async function checkHeaderElements(page, action) {
 
 
 
-module.exports = { checkHomeLinkHeader, navigatetoURL , checkFaviconIcon, checkHeaderElements, checkElementExists };
+module.exports = { 
+    checkHomeLinkHeader, 
+    navigatetoURL, 
+    checkFaviconIcon, 
+    checkHeaderElements, 
+    checkElementExists 
+};
 
