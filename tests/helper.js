@@ -212,11 +212,33 @@ async function redirectUrl(page, expectedPartOfUrl) {
     }
 }
 
+async function checkPlayerScreen(page,action,stepNumber) {
+    await test.step(`${stepNumber}. Checking Player screen...`, async () => {
+        logStep(`${stepNumber}. Checking Player screen...`);
+        try {
+
+            const playerElement = page.locator("//div[@class='player']");
+            const isVisible = await playerElement.isVisible();
+            if (isVisible) {
+                logSuccess(`✅ Player screen is visible.`);
+            } else {
+                logError(`❌ Player screen is not visible.`);
+                throw new Error('Player screen is not visible.');
+            }
+           
+
+        } catch (err) {
+            logError(`❌ An error occurred in checkPlayerScreen: ${err.message}`);
+            throw new Error(`❌ An error occurred in checkPlayerScreen: ${err.message}`);
+        }
+    });
+}
 module.exports = { 
     checkElementExists, 
     GobackLink,
     titleDetailsScreen,
     backgroundImageDetailsScreen,
-    buttonsDetailsScreen
+    buttonsDetailsScreen,
+    checkPlayerScreen
 };
 
