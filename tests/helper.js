@@ -137,6 +137,26 @@ async function buttonsDetailsScreen(page, action) {
             if (action === 'emmanuel' && trimmedText.toLowerCase() === 'watch now') {
                 logSuccess(`✅ Found "Watch Now" button at Details screen`);
                 watchNowFound = true;
+
+                const initialUrl = page.url(); // Get the current URL before the action
+                console.log(`Initial URL: ${initialUrl}`); // Log the initial URL
+
+                // Click the "Watch Now" button
+                logStep(`Clicking on "Watch Now" button at Details screen...`);
+                await buttons.nth(i).click();
+                // Wait for the URL to change
+                try {
+                    await page.waitForFunction(
+                        (url) => window.location.href !== url,
+                        initialUrl,
+                        { timeout: 10000 }
+                    );
+                    const newUrl = page.url();
+                logSuccess(`New URL: ${newUrl}`);
+                } catch (err) {
+                    console.error(`Error waiting for URL to change: ${err.message}`);
+                }
+                break; // Exit the loop after checking the URL change
             }
              // Check for "Suscribirse" and "Compartir" when action is "amorir"
             if (action === 'amorir') {

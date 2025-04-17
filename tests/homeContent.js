@@ -62,7 +62,7 @@ async function checkVodsInHome(page) {
             );
             // Log the new URL
             const newUrl = page.url();
-            console.log(`✅ Successfully redirected to: ${newUrl}`);
+            logSuccess(`✅ Successfully redirected to: ${newUrl}`);
         } catch (err) {
             logError(`❌ An error occurred in checkVodsInHome: ${err.message}`);
             throw new Error(`❌ An error occurred in checkVodsInHome: ${err.message}`);
