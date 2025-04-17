@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { checkHomeLinkHeader, navigatetoURL, checkFaviconIcon,checkHeaderElements } = require('./header');
-const { checkCategoryTitleHomeScreen,checkVodsInHome } = require('./homeContent');
+const { checkCategoryTitleHomeScreen,checkVodsInHome,NotloggeduserDetailsScrenn} = require('./homeContent');
 
 // Get the action from the command-line argument or environment variable
 const action = process.env.ACTION || process.argv[2]; // Use `ACTION` env variable or second CLI argument
@@ -28,6 +28,9 @@ if (action === 'emmanuel') {
 
             //6.Check the VODs in Home screen
             await checkVodsInHome(page, action);
+            
+            //7.Not logged user checking Details screen containts Go back Title background Image watch Now etc'
+            await NotloggeduserDetailsScrenn(page, action);
         });
     });
 } else if (action === 'amorir') {
@@ -53,6 +56,9 @@ if (action === 'emmanuel') {
 
             //6.Check the VODs in Home screen
             await checkVodsInHome(page, action);
+
+            //7.Not logged user checking Details screen containts Go back Title background Image watch Now etc'
+            await NotloggeduserDetailsScrenn(page, action);
         });
     });
 } else {

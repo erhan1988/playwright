@@ -24,5 +24,76 @@ async function checkElementExists(page, locator, name) {
     }
 }
 
-module.exports = { checkElementExists };
+async function GobackLink(page, value) {
+    console.log('Checking for the "Go Back" link in the Details screen...');
+    try {
+        const goBackLink = page.locator('a.my-1.d-flex.align-items-center.fs-5');
+
+        // Wait for the "Go Back" link to appear
+        await goBackLink.waitFor({ state: 'visible', timeout: 5000 });
+
+        const text = await goBackLink.textContent();
+        logSuccess(`1. "GO BACK" link exists in the Details screen. Text: ${text.trim()}`);
+
+        if (value === 'click') {
+            logStep('Clicking the "Go Back" link...');
+            await goBackLink.click();
+
+            const initialUrl = page.url();
+            await page.waitForFunction(
+                (initialUrl) => window.location.href !== initialUrl,
+                initialUrl,
+                { timeout: 10000 }
+            );
+
+            const currentUrl = page.url();
+            console.log('Current URL:', currentUrl);
+
+            const expectedUrl = 'https://amorir-v3-dev.streann.tech/content/inicio/JnuxRZ0OclyIuaxox2SYLYLY2';
+            if (currentUrl === expectedUrl) {
+                logSuccess('2. The current URL matches the expected URL after clicking "Go Back".');
+            } else {
+                logError(`2. ❌ URL mismatch after clicking "Go Back". Expected: ${expectedUrl}, but got: ${currentUrl}`);
+                throw new Error(`URL mismatch: Expected ${expectedUrl}, got ${currentUrl}`);
+            }
+        }
+    } catch (err) {
+        const message = err.message.includes('Timeout') ?
+        '❌ "Go Back" link not found within timeout. It may not exist on this screen.' :
+        `❌ An unexpected error occurred in GobackLink: ${err.message}`;
+        logError(`1. ${message}`);
+        throw new Error(message); // Throw 
+    }
+}
+
+async function titleDetailsScreen(page) {
+    console.log('Checking for the title on the Details screen...');
+    try {
+        // Wait for the title element to appear
+        const titleLocator = page.locator('h1.title-title.fs-3');
+        await titleLocator.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Find all matching elements
+        const titleElements = await titleLocator.all();
+
+        if (titleElements.length === 0) {
+            const msg = "No Title found on the Details page.";
+            console.error(msg);
+            throw new Error(msg); // Fail the test
+        }
+
+        // Loop through each title element and log its text
+        for (let i = 0; i < titleElements.length; i++) {
+            const text = await titleElements[i].textContent();
+            logSuccess(`2. Title in the Details screen exists: ${i + 1}: ${text.trim()}`);
+        }
+
+        console.log('✅ Title found on the Details page.');
+    } catch (err) {
+        console.error(`❌ An error occurred in titleDetailsScreen: ${err.message}`);
+        throw err; // Re-throw the error to fail the test
+    }
+}
+
+module.exports = { checkElementExists, GobackLink,titleDetailsScreen};
 

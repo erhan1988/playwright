@@ -1,5 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
+const { GobackLink , titleDetailsScreen } = require('./helper'); 
 
 async function checkCategoryTitleHomeScreen(page) {
     await test.step('5. Check the Home screen and print titles of all categories', async () => {
@@ -31,7 +32,7 @@ async function checkCategoryTitleHomeScreen(page) {
 }
 
 async function checkVodsInHome(page) {
-    await test.step('6.Check if images exist and click the 5th image', async () => {
+    await test.step('6.Check if images exist and click the 14th image vod', async () => {
         logStep('6.Checking for images with background styles...');
         try {
             // Wait for the elements to be located
@@ -49,7 +50,7 @@ async function checkVodsInHome(page) {
             // Click on the 5th image (index 4, as Playwright uses 0-based indexing)
             const fifthImage = imageElements[14];
             await fifthImage.scrollIntoViewIfNeeded();
-            console.log('Clicking on the 5th image...');
+            console.log('Clicking on the 14th image...');
             await fifthImage.click();
 
             // Wait for the URL to change
@@ -68,5 +69,25 @@ async function checkVodsInHome(page) {
         }
     });
 }
-module.exports = { checkCategoryTitleHomeScreen, checkVodsInHome };
+
+async function NotloggeduserDetailsScrenn(page) {
+    await test.step('7. Not logged user checking Details screen containts Go back Title background Image watch Now', async () => {
+        logStep('7. Not logged user checking Details screen containts Go back Title background Image watch Now');
+        try {
+            // Call the GobackLink function
+            await GobackLink(page,'undefined');  
+
+            // Check for the title in the Details screen
+            await titleDetailsScreen(page);
+
+        } catch (err) {
+            logError(`❌ An error occurred in NotloggeduserDetailsScrenn: ${err.message}`);
+            throw new Error(`❌ An error occurred in NotloggeduserDetailsScrenn: ${err.message}`);
+        }
+    });
+}
+
+
+module.exports = { checkCategoryTitleHomeScreen, checkVodsInHome,
+NotloggeduserDetailsScrenn, GobackLink, titleDetailsScreen };
 
