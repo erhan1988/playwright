@@ -185,13 +185,10 @@ async function buttonsDetailsScreen(page, action) {
                     logStep(`Clicking on "Compartir" button at Details screen...`);
                     await compartirButton.click();
                     await page.waitForTimeout(2000);
+                    await checkSharePopup(page,'cdk-overlay-0');
+                    logSuccess(`✅ "Compartir" button clicked successfully.`);
                     break; // Exit the loop after handling "Suscribirse" and "Compartir"
                 }
-
-                // if (trimmedText.toLowerCase() === 'compartir') {
-                //     logSuccess(`✅ Found "Compartir" button at Details screen`);
-                //     compartirFound = true;
-                // }
             }
         }
         if (!watchNowFound && action === 'emmanuel') {
@@ -243,14 +240,86 @@ async function checkPlayerScreen(page,action,stepNumber) {
                 logError(`❌ Player screen is not visible.`);
                 throw new Error('Player screen is not visible.');
             }
-           
-
         } catch (err) {
             logError(`❌ An error occurred in checkPlayerScreen: ${err.message}`);
             throw new Error(`❌ An error occurred in checkPlayerScreen: ${err.message}`);
         }
     });
 }
+
+async function checkSharePopup(page, popupId) {
+    try {
+        const popupSelector = `#${popupId}`;
+        const popupShare = page.locator(popupSelector); // Use Locator
+
+        // Wait until the popup is visible
+        await popupShare.waitFor({ state: 'visible', timeout: 30000 });
+
+        const isVisible = await popupShare.isVisible();
+        
+        if (isVisible) {
+            logSuccess(`- Share Popup is shown: ${isVisible}`);
+
+            // Check for buttons inside the popup
+            const buttons = await popupShare.locator('button').all();
+
+            for (const button of buttons) {
+                const buttonText = (await button.innerText()).trim().toLowerCase();
+
+                if (buttonText === 'facebook') {
+                    console.log('-. Facebook button is present in the popup');
+                } else if (buttonText === 'whatsapp') {
+                    console.log('-. WhatsApp button is present in the popup');
+                } else if (buttonText === 'x') {
+                    console.log('-. Twitter button is present in the popup');
+                } else if (buttonText === 'copy link') {
+                    console.log('-. Copy Link button is present in the popup');
+                }
+            }
+
+            // Check for image with specific alt attribute
+            const imageLocator = popupShare.locator('img.share-modal-image[alt="share-modal-image"]');
+            const imageCount = await imageLocator.count();
+
+            if (imageCount > 0) {
+                console.log("Image exists in the popup.");
+
+                for (let i = 0; i < imageCount; i++) {
+                    const src = await imageLocator.nth(i).getAttribute('src');
+                    console.log(`- Image ${i + 1} src in the popup: ${src}`);
+                }
+            } else {
+                console.log("Image element does not exist.");
+                logError('Image element does not exist.');
+                throw new Error('Image element does not exist.');
+            }
+
+            // Close the popup
+            const closeIcon = page.locator('i.bi.bi-x-lg.btn.text-white');
+            await closeIcon.waitFor({ timeout: 5000 });
+            await closeIcon.click();
+            console.log('- Clicked to close the popup');
+            await page.waitForTimeout(2000);
+
+            // Verify the popup is closed
+            const popupGone = await page.locator(popupSelector).isVisible().catch(() => false);
+
+            if (!popupGone) {
+                logSuccess("Popup is closed");
+                await page.waitForTimeout(2000);
+            }
+        } else {
+            console.log("Share Popup did not appear within 30 seconds.");
+            logError( 'Share Popup did not appear within 30 seconds.');
+        }
+    } catch (err) {
+        logError(`❌ An error occurred in checkSharePopup: ${err.message}`);
+        throw new Error(`❌ An error occurred in checkSharePopup: ${err.message}`);
+    }
+}
+
+
+
 module.exports = { 
     checkElementExists, 
     GobackLink,
