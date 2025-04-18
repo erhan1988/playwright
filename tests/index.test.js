@@ -1,4 +1,4 @@
-const { test, expect } = require('@playwright/test');
+const { test, expect} = require('@playwright/test');
 const { checkHomeLinkHeader, navigatetoURL, checkFaviconIcon,checkHeaderElements } = require('./header');
 const { checkCategoryTitleHomeScreen,checkVodsInHome,NotloggeduserDetailsScrenn} = require('./homeContent');
 const { checkPlayerScreen } = require('./helper'); 
@@ -34,7 +34,7 @@ if (action === 'emmanuel') {
             await NotloggeduserDetailsScrenn(page, action);
 
             //8.Check the player screen
-            await checkPlayerScreen(page, action,'8');
+            await checkPlayerScreen(page, action,'8','undefined');
         });
     });
 } else if (action === 'amorir') {

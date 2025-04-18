@@ -227,19 +227,67 @@ async function redirectUrl(page, expectedPartOfUrl) {
     }
 }
 
-async function checkPlayerScreen(page,action,stepNumber) {
+async function checkPlayerScreen(page,action,stepNumber,value) {
     await test.step(`${stepNumber}. Checking Player screen...`, async () => {
         logStep(`${stepNumber}. Checking Player screen...`);
         try {
 
-            const playerElement = page.locator("//div[@class='player']");
-            const isVisible = await playerElement.isVisible();
-            if (isVisible) {
-                logSuccess(`✅ Player screen is visible.`);
-            } else {
-                logError(`❌ Player screen is not visible.`);
-                throw new Error('Player screen is not visible.');
+            // Wait for the video player to appear
+            const video = await page.waitForSelector('#vjsplayer_html5_api', { timeout: 20000 });
+            // Perform actions, for example, clicking the play button
+            expect.soft(video, 'Video element should be in the DOM').not.toBeNull();
+
+            // Check if the video is "visible" via offsetParent 
+            if (video) {
+                const isVisible = await video.evaluate(el => el.offsetParent !== null);
+                console.log('Is video visually attached to DOM:', isVisible);
+                expect.soft(isVisible, 'Video player should be visible on screen').toBe(true);
+              } else {
+                console.error('❌ Video element not found.');
+              }
+
+            // Wait until video is ready
+            let isReady = false;
+            for (let i = 0; i < 10; i++) {
+                isReady = await video.evaluate(el => el.readyState > 2);
+                if (isReady) {
+                console.log('Video is ready to play.');
+                break;
+                }
+                console.log('...Waiting for video to be ready...');
+                await page.waitForTimeout(8000);
             }
+            expect.soft(isReady, 'Video should become ready to play').toBe(true);
+
+            // Check video is playing (based on currentTime)
+            const initialTime = await video.evaluate(el => el.currentTime);
+            await page.waitForTimeout(4000);
+            const laterTime = await video.evaluate(el => el.currentTime);
+            const isPlaying = laterTime > initialTime;
+            expect.soft(isPlaying, `Video should be playing. Initial: ${initialTime}, Later: ${laterTime}`).toBe(true);
+
+            // Check Play/Pause button switch
+            const pauseButton = await page.waitForSelector('button.vjs-play-control.vjs-control.vjs-button.vjs-playing', { timeout: 10000 });
+            const titlePause = await pauseButton.getAttribute('title');
+
+            await video.evaluate(el => el.pause()); // Pause video via JS
+
+            const playButton = await page.waitForSelector('button.vjs-play-control.vjs-control.vjs-button.vjs-paused', { timeout: 10000 });
+            const titlePlay = await playButton.getAttribute('title');
+
+            expect.soft(titlePause).toBe('Pause');
+            expect.soft(titlePlay).toBe('Play');
+
+            // Check Mute/Unmute
+            const volumeButton = await page.waitForSelector('button.vjs-mute-control.vjs-control.vjs-button.vjs-vol-3', { timeout: 10000 });
+            const volumeTitle = await volumeButton.getAttribute('title');
+            await volumeButton.click();
+
+            const muteButton = await page.waitForSelector('button.vjs-mute-control.vjs-control.vjs-button.vjs-vol-0', { timeout: 10000 });
+            const muteTitle = await muteButton.getAttribute('title');
+
+            expect.soft(volumeTitle).toBe('Mute');
+            expect.soft(muteTitle).toBe('Unmute');
         } catch (err) {
             logError(`❌ An error occurred in checkPlayerScreen: ${err.message}`);
             throw new Error(`❌ An error occurred in checkPlayerScreen: ${err.message}`);
