@@ -151,29 +151,47 @@ async function buttonsDetailsScreen(page, action) {
             }
              // Check for "Suscribirse" and "Compartir" when action is "amorir"
             if (action === 'amorir') {
+                let buttons1 = page.locator("//button[.//span[contains(text(), 'Compartir')]]"); // 🟢 Declare early!
+            
                 if (trimmedText.toLowerCase() === 'suscribirse') {
                     logSuccess(`✅ Found "Suscribirse" button at Details screen`);
                     suscribirseFound = true;
-
+            
                     // Click the "Suscribirse" button
                     logStep(`Clicking on "Suscribirse" button at Details screen...`);
                     await buttons.nth(i).click();
-                    await page.waitForTimeout(2000);
-                    // Wait for the URL to change               
-                    await redirectUrl(page,'/login');
-
+                    await page.waitForTimeout(4000);
+            
+                    // Wait for the URL to change
+                    await redirectUrl(page, '/login');
+            
                     // Go back to the details screen
                     logStep('Navigating back to the Details screen...');
                     await page.goBack();
                     const backUrl = page.url();
                     logSuccess(`✅ Returned to Details screen. Current URL: ${backUrl}`);
-                    break; // Exit the loop after checking the URL change
+                    await page.waitForTimeout(2000);
+            
+                    // After returning to the details screen, click the "Compartir" button
+                    logStep('Looking for the "Compartir" button...');
+                    const compartirButton = buttons1.first();
+                    try {
+                        await compartirButton.waitFor({ state: 'visible', timeout: 5000 });
+                        logSuccess(`✅ Found "Compartir" button at Details screen`);
+                    } catch (error) {
+                        logError(`❌ "Compartir" button not found or not visible after returning to the Details screen.`);
+                        throw new Error(`"Compartir" button not found or not visible.`);
+                    }
+                    logStep(`Clicking on "Compartir" button at Details screen...`);
+                    await compartirButton.click();
+                    await page.waitForTimeout(2000);
+                    break; // Exit the loop after handling "Suscribirse" and "Compartir"
                 }
 
-                if (trimmedText.toLowerCase() === 'compartir') {
-                    logSuccess(`✅ Found "Compartir" button at Details screen`);
-                    compartirFound = true;
-                }
+                // if (trimmedText.toLowerCase() === 'compartir') {
+                //     logSuccess(`✅ Found "Compartir" button at Details screen`);
+                //     compartirFound = true;
+                // }
             }
         }
         if (!watchNowFound && action === 'emmanuel') {
