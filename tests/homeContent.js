@@ -2,9 +2,9 @@ const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
 const { GobackLink , titleDetailsScreen ,backgroundImageDetailsScreen,buttonsDetailsScreen} = require('./helper'); 
 
-async function checkCategoryTitleHomeScreen(page) {
-    await test.step('5. Check the Home screen and print titles of all categories', async () => {
-        logStep('5.Checking category titles on the home page...');
+async function checkCategoryTitleHomeScreen(page,action , stepNumber) {
+    await test.step(`${stepNumber}. Check the Home screen and print titles of all categories`, async () => {
+        logStep(`${stepNumber}. Checking category titles on the home page...`);
         try {
             // Wait for the elements to be located
             await page.waitForSelector('h5.m-0.mb-1.w-50', { timeout: 5000 });
@@ -31,9 +31,9 @@ async function checkCategoryTitleHomeScreen(page) {
     });
 }
 
-async function checkVodsInHome(page) {
-    await test.step('6.Check if images exist and click the 14th image vod', async () => {
-        logStep('6.Check if images exist and click the 14th image vod...');
+async function checkVodsInHome(page,action, stepNumber) {
+    await test.step(`${stepNumber}. Check if images exist and click the 14th image vod`, async () => {
+        logStep(`${stepNumber}. Check if images exist and click the 14th image vod...`);
         try {
             // Wait for the elements to be located
             const imageElements = await page.locator("div.item[style*='background-image']").all();
@@ -69,9 +69,9 @@ async function checkVodsInHome(page) {
         }
     });
 }
-async function NotloggeduserDetailsScrenn(page,action) {
-    await test.step('7. Not logged user checking Details screen containts Go back Title background Image watch Now', async () => {
-        logStep('7. Not logged user checking Details screen containts Go back Title background Image watch Now');
+async function NotloggeduserDetailsScrenn(page,action,stepNumber) {
+    await test.step(`${stepNumber}. Not logged user checking Details screen containts Go back Title background Image watch Now`, async () => {
+        logStep(`${stepNumber}. Not logged user checking Details screen containts Go back Title background Image watch Now`);
         try {
             // Call the GobackLink function
             await GobackLink(page,'undefined');  
@@ -91,6 +91,68 @@ async function NotloggeduserDetailsScrenn(page,action) {
     });
 }
 
+async function checkRelatedContentInDetailsScreen(page, action, stepNumber) {
+    await test.step(`${stepNumber}. Check Related Content in Details screen`, async () => {
+      logStep(`${stepNumber}. Checking related content in the Details screen...`);
+        try {
+            let titleButtons;
+            let count = 0;
+    
+            if (action === 'amorir') {
+            // Check title in the Related Content
+            titleButtons = await page.locator('button.nav-link.ng-star-inserted');
+            // Wait for at least one element or timeout
+            await expect.soft(titleButtons.first(), 'Expect at least one title button to appear').toBeVisible({ timeout: 20000 });
+            count = await titleButtons.count();
+            }
+    
+            if (count === 0) {
+            logError("❌ No Found title of the category in the Related Content.");
+            } else {
+            for (let i = 0; i < count; i++) {
+                const text = await titleButtons.nth(i).textContent();
+                logSuccess(`✅ Title Category in the Related Content is ${i + 1}: ${text.trim()}`);
+            }
+            }
+
+            console.log("List all  episodes in Related Content and click on the 4 episodes");
+            // Check if the related content exists vods/episodes
+            // Wait for the elements to be located
+            const imageElements = await page.locator('img.card-img-top').all();
+
+            // Check if any images are found
+            expect(imageElements.length, 'Expected at least one image').toBeGreaterThan(0);
+            console.log(`✅ Found ${imageElements.length} images with background styles.`);
+
+            // Ensure there are at least 5 images
+            if (imageElements.length < 4) {
+                throw new Error('Less than 4 images found. Cannot click the 3th image (vod).');
+            }
+
+            // Click on the 3th image (index 3, as Playwright uses 0-based indexing)
+            const thirdImage = imageElements[3];
+            await thirdImage.scrollIntoViewIfNeeded();
+            console.log('Clicking on the 3th image...');
+            await thirdImage.click();
+
+            // Wait for the URL to change
+            const initialUrl = page.url();
+            await page.waitForFunction(
+                (initialUrl) => window.location.href !== initialUrl,
+                initialUrl,
+                { timeout: 20000 }
+            );
+            // Log the new URL
+            const newUrl = page.url();
+            logSuccess(`✅ Successfully redirected to: ${newUrl}`);
+        } catch (err) {
+        logError(`❌ An error occurred in checkRelatedContentInDetailsScreen: ${err.message}`);
+        throw new Error(`❌ An error occurred in checkRelatedContentInDetailsScreen: ${err.message}`);
+        }
+    });
+}
+  
+
 
 
 module.exports = {
@@ -100,6 +162,7 @@ module.exports = {
     GobackLink, 
     titleDetailsScreen, 
     backgroundImageDetailsScreen, 
-    buttonsDetailsScreen 
+    buttonsDetailsScreen,
+    checkRelatedContentInDetailsScreen
 };
 

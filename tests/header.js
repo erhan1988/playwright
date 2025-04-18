@@ -3,9 +3,9 @@ const { logStep, logSuccess, logError } = require('../index');
 const axios = require('axios');
 const { checkElementExists } = require('./helper'); 
 
-async function navigatetoURL(page, action) {
-    await test.step('1. Open the Site', async () => { 
-        logStep('1.Opening the site...'); // Log the step
+async function navigatetoURL(page, action, stepNumber) {
+    await test.step(`${stepNumber}. Open the Site`, async () => { 
+        logStep(`${stepNumber}. Opening the site...`); // Log the step
         try {
             let url;
             if (action) {
@@ -29,9 +29,9 @@ async function navigatetoURL(page, action) {
     });
 }
 
-async function checkFaviconIcon(page, action) {
-    await test.step('2. Check if Favicon exists in the browser', async () => { 
-        logStep('2.Checking if Favicon exists in the browser'); // Log the step
+async function checkFaviconIcon(page, action, stepNumber) {
+    await test.step(`${stepNumber}. Check if Favicon exists in the browser`, async () => { 
+        logStep(`${stepNumber}. Checking if Favicon exists in the browser`); // Log the step
         try {
             const domain = action; // Dynamically set based on your action
             const faviconUrl = getFaviconUrl(domain);
@@ -55,9 +55,9 @@ function getFaviconUrl(domain) {
     return `https://${domain}-v3-dev.streann.tech/assets/images/favicon.ico`;
 }
 
-async function checkHomeLinkHeader(page) {
-    await test.step('3. Find link Home in the Header and click', async () => { 
-        logStep('Executing step: 3. Find link Home in the Header and click');
+async function checkHomeLinkHeader(page, stepNumber) {
+    await test.step(`${stepNumber}. Find link Home in the Header and click`, async () => { 
+        logStep(`${stepNumber}. Executing step: 3. Find link Home in the Header and click`);
         try {
             const homeOrInicioLink = page.locator("//a[contains(text(),'Home') or contains(text(),'Inicio')]");
             const menuButton = page.locator('.navbar-toggler'); 
@@ -97,9 +97,9 @@ async function checkHomeLinkHeader(page) {
     });
 }
 
-async function checkHeaderElements(page, action) {
-    await test.step('4. Check in header in top bar are exist Logo, Buttons: Register, Login, Search Icon, and Home Link', async () => { 
-        logStep('4.Checking if header elements exist in the top bar'); // Log the step
+async function checkHeaderElements(page, action, stepNumber) {
+    await test.step(`${stepNumber}. Check in header in top bar are exist Logo, Buttons: Register, Login, Search Icon, and Home Link`, async () => { 
+        logStep(`${stepNumber}. Checking if header elements exist in the top bar`); // Log the step
         try {
             // Define an array of elements to check
             const headerElements = [
