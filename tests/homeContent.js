@@ -104,15 +104,21 @@ async function checkRelatedContentInDetailsScreen(page, action, stepNumber) {
             // Wait for at least one element or timeout
             await expect.soft(titleButtons.first(), 'Expect at least one title button to appear').toBeVisible({ timeout: 20000 });
             count = await titleButtons.count();
+            }else if (action === 'emmanuel'){
+                // Check title in the Related Content
+                titleButtons = await page.locator('h5.season-title');
+                // Wait for at least one element or timeout
+                await expect.soft(titleButtons.first(), 'Expect at least one title button to appear').toBeVisible({ timeout: 20000 });
+                count = await titleButtons.count();
             }
     
             if (count === 0) {
             logError("❌ No Found title of the category in the Related Content.");
             } else {
-            for (let i = 0; i < count; i++) {
-                const text = await titleButtons.nth(i).textContent();
-                logSuccess(`✅ Title Category in the Related Content is ${i + 1}: ${text.trim()}`);
-            }
+                for (let i = 0; i < count; i++) {
+                    const text = await titleButtons.nth(i).textContent();
+                    logSuccess(`✅ Title Category in the Related Content is ${i + 1}: ${text.trim()}`);
+                }
             }
 
             console.log("List all  episodes in Related Content and click on the 4 episodes");

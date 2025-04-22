@@ -35,6 +35,9 @@ if (action === 'emmanuel') {
 
             //8.Check the player screen
             await checkPlayerScreen(page, action,'8','undefined');
+
+            //9.Check Related Content in Details screen
+            await checkRelatedContentInDetailsScreen(page, action,'9');
         });
     });
 } else if (action === 'amorir') {
