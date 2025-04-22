@@ -329,11 +329,31 @@ async function checkPlayerScreen(page, action, stepNumber, value) {
                     logSuccess('✅ Chat button exists and was clicked.');
                     await page.waitForTimeout(2000);
                     await redirectUrl(page,'/login');
+
+                    await page.goBack(); // Go back in browser history
+                    await page.waitForTimeout(2000); // Wait for 2 seconds
+                    // Capture the current URL after clicking back
+                    const newURL = page.url();
+                    console.log('New URL after back:', newURL);
                 } else {
                     logError('❌ Chat button not found.');
                 }
             }
+            // Back Button in the player
+            const backButton = await page.$('#player-back-button');
+            // Soft assertion for reporting
+            expect.soft(backButton, 'Back button should be present').not.toBeNull();
 
+            if (backButton) {
+                logSuccess('✅ Back button exist.');
+                await backButton.click();
+                logSuccess('✅ Back button clicked.');
+                await page.waitForTimeout(2000);
+                await redirectUrl(page,'/title')
+            } else {
+            logError('❌ Back button not found.');
+            }
+            
         } catch (err) {
             logError(`❌ An error occurred in checkPlayerScreen: ${err.message}`);
             throw new Error(`❌ An error occurred in checkPlayerScreen: ${err.message}`);
