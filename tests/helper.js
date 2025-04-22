@@ -227,67 +227,113 @@ async function redirectUrl(page, expectedPartOfUrl) {
     }
 }
 
-async function checkPlayerScreen(page,action,stepNumber,value) {
+async function checkPlayerScreen(page, action, stepNumber, value) {
     await test.step(`${stepNumber}. Checking Player screen...`, async () => {
         logStep(`${stepNumber}. Checking Player screen...`);
         try {
-
-            // Wait for the video player to appear
             const video = await page.waitForSelector('#vjsplayer_html5_api', { timeout: 20000 });
-            // Perform actions, for example, clicking the play button
             expect.soft(video, 'Video element should be in the DOM').not.toBeNull();
-
-            // Check if the video is "visible" via offsetParent 
             if (video) {
-                const isVisible = await video.evaluate(el => el.offsetParent !== null);
-                console.log('Is video visually attached to DOM:', isVisible);
-                expect.soft(isVisible, 'Video player should be visible on screen').toBe(true);
-              } else {
-                console.error('❌ Video element not found.');
-              }
+                logSuccess('✅ Video element exists');
+            } else {
+                logError('❌ Video element is null or not found in DOM');
+            }
 
-            // Wait until video is ready
+            const isVisible = await video.evaluate(el => el.offsetParent !== null);
+            expect.soft(isVisible, 'Video player should be visible on screen').toBe(true);
+            isVisible ? logSuccess('✅ Video is visible on screen') : logError('❌ Video is not visible');
+
             let isReady = false;
             for (let i = 0; i < 10; i++) {
                 isReady = await video.evaluate(el => el.readyState > 2);
                 if (isReady) {
-                console.log('Video is ready to play.');
-                break;
+                    console.log('Video is ready to play.');
+                    break;
                 }
                 console.log('...Waiting for video to be ready...');
                 await page.waitForTimeout(8000);
             }
             expect.soft(isReady, 'Video should become ready to play').toBe(true);
+            isReady ? logSuccess('✅ Video is ready to play') : logError('❌ Video did not become ready to play');
 
-            // Check video is playing (based on currentTime)
             const initialTime = await video.evaluate(el => el.currentTime);
             await page.waitForTimeout(4000);
             const laterTime = await video.evaluate(el => el.currentTime);
             const isPlaying = laterTime > initialTime;
+            const playedDuration = (laterTime - initialTime).toFixed(2); // Optional: round to 2 decimal places
             expect.soft(isPlaying, `Video should be playing. Initial: ${initialTime}, Later: ${laterTime}`).toBe(true);
+            isPlaying ? logSuccess(`✅ Video is playing — advanced by ${playedDuration} seconds`) : logError('❌ Video is not playing');
 
-            // Check Play/Pause button switch
             const pauseButton = await page.waitForSelector('button.vjs-play-control.vjs-control.vjs-button.vjs-playing', { timeout: 10000 });
             const titlePause = await pauseButton.getAttribute('title');
+            expect.soft(titlePause).toBe('Pause');
+            titlePause === 'Pause' ? logSuccess('✅ Pause button exists and labeled correctly') : logError(`❌ Pause button label mismatch. Found: ${titlePause}`);
 
-            await video.evaluate(el => el.pause()); // Pause video via JS
+            await video.evaluate(el => el.pause());
 
             const playButton = await page.waitForSelector('button.vjs-play-control.vjs-control.vjs-button.vjs-paused', { timeout: 10000 });
             const titlePlay = await playButton.getAttribute('title');
-
-            expect.soft(titlePause).toBe('Pause');
             expect.soft(titlePlay).toBe('Play');
+            titlePlay === 'Play' ? logSuccess('✅ Play button appears after pausing') : logError(`❌ Play button label mismatch. Found: ${titlePlay}`);
 
-            // Check Mute/Unmute
             const volumeButton = await page.waitForSelector('button.vjs-mute-control.vjs-control.vjs-button.vjs-vol-3', { timeout: 10000 });
             const volumeTitle = await volumeButton.getAttribute('title');
+            expect.soft(volumeTitle).toBe('Mute');
+            volumeTitle === 'Mute' ? logSuccess('✅ Volume button is visible and labeled "Mute"') : logError(`❌ Volume button label mismatch. Found: ${volumeTitle}`);
             await volumeButton.click();
 
             const muteButton = await page.waitForSelector('button.vjs-mute-control.vjs-control.vjs-button.vjs-vol-0', { timeout: 10000 });
             const muteTitle = await muteButton.getAttribute('title');
-
-            expect.soft(volumeTitle).toBe('Mute');
             expect.soft(muteTitle).toBe('Unmute');
+            muteTitle === 'Unmute' ? logSuccess('✅ Mute button is visible and labeled "Unmute"') : logError(`❌ Mute button label mismatch. Found: ${muteTitle}`);
+
+            // 5. Check for progress bar
+            const progressBar = await page.$('div.vjs-progress-control.vjs-control');
+            expect.soft(progressBar, 'Progress bar should be present').not.toBeNull();
+            if (progressBar) {
+                logSuccess('✅ Progress bar exists.');
+            } else {
+                logError('❌ Progress bar not found.');
+            }
+
+            //6 .Check Share Icon in the Player screen
+            const shareIcon = await page.$("//button[@type='button' and contains(@class, 'share-content-icon')]");
+
+            // Soft assertion for reporting (won't fail the test)
+            expect.soft(shareIcon, 'Share icon should be present').not.toBeNull();
+            // Only click if it exists
+            if (shareIcon) {
+            await shareIcon.click();
+            logSuccess('✅ Share icon clicked.');
+            await page.waitForTimeout(2000);
+            await checkSharePopup(page,'cdk-overlay-0');
+            } else {
+              logError('❌ Share icon not found.');
+            }
+            
+            if (action === 'emmanuel') {
+                // 7. Check for Bible toggle
+                const bibleToggle = await page.$('text=Bible'); // Visible text match
+                expect.soft(bibleToggle, 'Bible toggle should be present').not.toBeNull();
+                if (bibleToggle) {
+                    logSuccess('✅ Bible toggle exists.');
+                } else {
+                    logError('❌ Bible toggle not found.');
+                }
+
+                // 8. Check for chat button
+                const chatBtn = await page.$('button.btn.chat-icon.btn-active');
+                expect.soft(chatBtn, 'Chat button should be present').not.toBeNull();
+                if (chatBtn) {
+                    await chatBtn.click();
+                    logSuccess('✅ Chat button exists and was clicked.');
+                    await page.waitForTimeout(2000);
+                    await redirectUrl(page,'/login');
+                } else {
+                    logError('❌ Chat button not found.');
+                }
+            }
+
         } catch (err) {
             logError(`❌ An error occurred in checkPlayerScreen: ${err.message}`);
             throw new Error(`❌ An error occurred in checkPlayerScreen: ${err.message}`);
