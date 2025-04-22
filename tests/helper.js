@@ -440,6 +440,7 @@ module.exports = {
     titleDetailsScreen,
     backgroundImageDetailsScreen,
     buttonsDetailsScreen,
-    checkPlayerScreen
+    checkPlayerScreen,
+    redirectUrl
 };
 

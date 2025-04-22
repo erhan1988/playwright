@@ -2,6 +2,7 @@ const { test, expect} = require('@playwright/test');
 const { checkHomeLinkHeader, navigatetoURL, checkFaviconIcon,checkHeaderElements } = require('./header');
 const { checkCategoryTitleHomeScreen,checkVodsInHome,NotloggeduserDetailsScrenn,checkRelatedContentInDetailsScreen} = require('./homeContent');
 const { checkPlayerScreen } = require('./helper'); 
+const { checkFooterLinks } = require('./footer'); 
 
 // Get the action from the command-line argument or environment variable
 const action = process.env.ACTION || process.argv[2]; // Use `ACTION` env variable or second CLI argument
@@ -38,6 +39,9 @@ if (action === 'emmanuel') {
 
             //9.Check Related Content in Details screen
             await checkRelatedContentInDetailsScreen(page, action,'9');
+
+            //10. Check footer Section 
+            await checkFooterLinks (page,action,'10');
         });
     });
 } else if (action === 'amorir') {
@@ -69,6 +73,9 @@ if (action === 'emmanuel') {
 
             //8.Check Related Content in Details screen
             await checkRelatedContentInDetailsScreen(page, action,'8');
+
+            //9. Check footer Section 
+            await checkFooterLinks (page,action,'9');
         });
     });
 } else {
