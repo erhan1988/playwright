@@ -42,43 +42,11 @@ async function checkFooterLinks(page, action, stepNumber) {
       ]);
 
       // 🛑 Now move to privacy policy **only after above check passes**
+      await privacyPolicy(page);
 
-      // ✅ Check and click Privacy Policy
-      const privacyLink = page.getByRole('link', { name: /privacy policy|política de privacidad/i });
-      await privacyLink.waitFor({ state: 'visible', timeout: 8000 });
-      const privacyText = await privacyLink.textContent();
-      await logSuccess(`Found Privacy Policy link: "${privacyText?.trim()}"`);
-
-      await Promise.all([
-        privacyLink.click(),
-        page.waitForURL(/\/privacy/, { timeout: 10000 })
-      ]);
-      await logSuccess('✅ Clicked Privacy Policy and navigated to privacy page');
-      await redirectUrl(page,'/privacy');
-
-
-      // ✅ Wait for known content (optional)
-      await page.waitForSelector('body', { timeout: 5000 });
-      await page.waitForTimeout(7000);
-
-      // ✅ Check privacy page content
-      await checkTextExist(page, [
-        "Privacy Policy Effective Since",
-        "Política de Privacidad"
-      ]);
-     
       // CHECK CONTACT US 
       if (action !== 'amorir'){
-          const contactLink = page.getByRole('link', { name: /contact us|contáctenos/i });
-          await contactLink.waitFor({ state: 'visible', timeout: 8000 });
-          const contactUsText = await contactLink.textContent();
-          await logSuccess(`Found Contact Us link: "${contactUsText?.trim()}"`);
-          await Promise.all([
-            contactLink.click(),
-            page.waitForURL(/\/contact-us/, { timeout: 10000 })
-          ]);
-          await logSuccess('✅ Clicked Contact Us and navigated to Contact Us Page');
-          expect(page.url()).toContain('/contact-us');
+          await contactUs(page,action);
       }
     } catch (err) {
       logError(`❌ An error occurred in checkFooterLinks: ${err.message}`);
@@ -97,6 +65,55 @@ async function checkTextExist(page, expectedTerms) {
     }
   }
   throw new Error(`Could not find any of: ${expectedTerms.join(" OR ")}`);
+}
+
+async function privacyPolicy(page) {
+  try {
+    // ✅ Check and click Privacy Policy
+    const privacyLink = page.getByRole('link', { name: /privacy policy|política de privacidad/i });
+    await privacyLink.waitFor({ state: 'visible', timeout: 8000 });
+    const privacyText = await privacyLink.textContent();
+    await logSuccess(`Found Privacy Policy link: "${privacyText?.trim()}"`);
+
+    await Promise.all([
+      privacyLink.click(),
+      page.waitForURL(/\/privacy/, { timeout: 10000 })
+    ]);
+    await logSuccess('✅ Clicked Privacy Policy and navigated to privacy page');
+    await redirectUrl(page,'/privacy');
+
+
+    // ✅ Wait for known content (optional)
+    await page.waitForSelector('body', { timeout: 5000 });
+    await page.waitForTimeout(7000);
+
+    // ✅ Check privacy page content
+    await checkTextExist(page, [
+      "Privacy Policy Effective Since",
+      "Política de Privacidad"
+    ]);
+  } catch (err) {
+    logError(`❌ An error occurred in privacyPolicy: ${err.message}`);
+    throw err;
+  }
+}
+
+async function contactUs(page) {
+  try {
+    const contactLink = page.getByRole('link', { name: /contact us|contáctenos/i });
+    await contactLink.waitFor({ state: 'visible', timeout: 8000 });
+    const contactUsText = await contactLink.textContent();
+    await logSuccess(`Found Contact Us link: "${contactUsText?.trim()}"`);
+    await Promise.all([
+      contactLink.click(),
+      page.waitForURL(/\/contact-us/, { timeout: 10000 })
+    ]);
+    await logSuccess('✅ Clicked Contact Us and navigated to Contact Us Page');
+    expect(page.url()).toContain('/contact-us');
+  } catch (err) {
+    logError(`❌ An error occurred in contactUs: ${err.message}`);
+    throw err;
+  }
 }
 
 
