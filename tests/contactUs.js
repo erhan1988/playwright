@@ -1,28 +1,51 @@
 const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
-const { redirectUrl  } = require('./helper'); 
+const { checkElementExists  } = require('./helper'); 
 
 async function contactUsDifferentScenario(page, action, stepNumber) {
   await test.step(`${stepNumber}. Check different scenario in Contact Us Page`, async () => {
     logStep(`${stepNumber}. Check different scenario in Contact Us Page`);
     try {
-        // Already is navigated to the Contact Us page
+        
+        await page.waitForTimeout(10000);
 
+        try {
+          await expect(page.locator('h1')).toHaveText(/Contact Us|Contáctenos/i);
+          logSuccess('✅ Heading matches "Contact Us" or "Contáctenos"');
+        } catch (error) {
+          logError(`❌ Heading did not match expected text: ${error.message}`);
+        }
+
+
+
+        
         // check if exist all input fields in the contact us page 
-        const headerElements = [
-          // { locator:'a.navbar-brand img.img-fluid[alt="logo"]' , name: 'Logo' },
-            { locator: "//*[contains(text(),'Contact Us') or contains(text(),' Contáctenos ')]", name: 'Title of the Page' },
-          // { locator: "//*[contains(text(),'Subscribe Now') or contains(text(),' Suscríbase Ahora ')]", name: 'Register Button' },      
-          // { locator: '#search-button', name: 'Search Button' },
-          // { locator: "//a[contains(text(),'Home') or contains(text(),'Inicio')]", name: 'Home Link' }
+        const contactUsElements = [
+          { locator: '#customer-service', name: 'Form Contact Us' },
+          { locator: '#mat-select-value-1', name: 'Dropdown Select Category' },
+          { locator: '#email', name: 'Email' },
+          { locator: '#subject', name: 'Subject' },
+          { locator: '#issue', name: 'Text Area' },
+          { locator: '#submit-button', name: 'Submit Button' },
         ];
 
         // Collect results for each element
         const results = [];
-        for (const element of headerElements) {
+        for (const element of contactUsElements) {
             const result = await checkElementExists(page, element.locator, element.name);
             results.push(result); // Store the result
         }
+
+        // logStep('Header elements check completed. Results:');
+        // results.forEach(result => {
+        //     if (result.status === 'visible') {
+        //         logSuccess(`✅ ${result.name} is visible.`);
+        //     } else if (result.status === 'not visible') {
+        //         logError(`❌ ${result.name} is not visible.`);
+        //     } else if (result.status === 'error') {
+        //         logError(`❌ Error checking ${result.name}: ${result.error}`);
+        //     }
+        // });
     } catch (err) {
       logError(`❌ An error occurred in contactUsDifferentScenario: ${err.message}`);
       throw new Error(`❌ An error occurred in contactUsDifferentScenario: ${err.message}`);

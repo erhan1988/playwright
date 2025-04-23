@@ -1,6 +1,5 @@
 const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
-const { redirectUrl  } = require('./helper'); 
 
 async function checkFooterLinks(page, action, stepNumber) {
   await test.step(`${stepNumber}. Check Footer links elements are exists`, async () => {
@@ -81,7 +80,7 @@ async function privacyPolicy(page) {
 
     // ✅ Wait for known content (optional)
     await page.waitForSelector('body', { timeout: 7000 });
-    await page.waitForTimeout(7000);
+    await page.waitForTimeout(8000);
 
     // ✅ Check privacy page content
     await checkTextExist(page, [
@@ -115,6 +114,6 @@ async function contactUs(page) {
 
 
 module.exports = {
-    checkFooterLinks
+  checkFooterLinks
 };
 

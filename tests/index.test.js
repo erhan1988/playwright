@@ -12,7 +12,7 @@ const action = process.env.ACTION || process.argv[2]; // Use `ACTION` env variab
 if (action === 'emmanuel') {
     test.describe('Website Tests for Emmanuel', () => {
         test('Website Tests', async ({ page }) => {
-            test.setTimeout(60000); // Increase timeout to 60 seconds
+            test.setTimeout(90000); // Increase timeout to 60 seconds
 
             //Step 1: Open the Site
             await navigatetoURL(page, action,'1');
@@ -46,7 +46,7 @@ if (action === 'emmanuel') {
             await checkFooterLinks (page,action,'10');
 
             //11. Check different scenario for contact Us
-            contactUsDifferentScenario(page,action,'11');
+            await contactUsDifferentScenario(page,action,'11');
 
         });
     });
@@ -84,6 +84,18 @@ if (action === 'emmanuel') {
             await checkFooterLinks (page,action,'9');
         });
     });
+}else if (action === 'prtv') {
+    test.describe('Website Tests for Prtv', () => {
+        test('Website Tests', async ({ page }) => {
+            test.setTimeout(60000); // Increase timeout to 60 seconds
+            
+            //Step 1: Open the Site
+            await navigatetoURL(page, action,'1');
+
+          
+        });
+    })
+
 } else {
     console.log('No valid action provided. Use "emmanuel" or "amorir".');
     process.exit(1);
