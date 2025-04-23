@@ -2,23 +2,23 @@ const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
 const { checkElementExists  } = require('./helper'); 
 
-async function contactUsDifferentScenario(page, action, stepNumber) {
-  await test.step(`${stepNumber}. Check different scenario in Contact Us Page`, async () => {
-    logStep(`${stepNumber}. Check different scenario in Contact Us Page`);
+async function contactUsFirstScenario(page, action, stepNumber) {
+  await test.step(`${stepNumber}.Contact Us First scenario Check if exist Title and fields `, async () => {
+    logStep(`${stepNumber}.Contact Us First scenario Check if exist Title and fields`);
     try {
-        
+        // Check first Title
         await page.waitForTimeout(10000);
-
+        const h1 = page.locator('h1');
         try {
-          await expect(page.locator('h1')).toHaveText(/Contact Us|Contáctenos/i);
-          logSuccess('✅ Heading matches "Contact Us" or "Contáctenos"');
+          await expect(h1).toHaveText(/Contact Us|Contáctenos/i);
+          const headingText = await h1.textContent();
+          logSuccess(`✅ Found Title: "${headingText?.trim()}"`);
         } catch (error) {
-          logError(`❌ Heading did not match expected text: ${error.message}`);
+          const actualText = await h1.textContent();
+          logError(`❌ Heading did not match expected text. Found: "${actualText?.trim()}"`);
+          throw error; 
         }
 
-
-
-        
         // check if exist all input fields in the contact us page 
         const contactUsElements = [
           { locator: '#customer-service', name: 'Form Contact Us' },
@@ -36,16 +36,9 @@ async function contactUsDifferentScenario(page, action, stepNumber) {
             results.push(result); // Store the result
         }
 
-        // logStep('Header elements check completed. Results:');
-        // results.forEach(result => {
-        //     if (result.status === 'visible') {
-        //         logSuccess(`✅ ${result.name} is visible.`);
-        //     } else if (result.status === 'not visible') {
-        //         logError(`❌ ${result.name} is not visible.`);
-        //     } else if (result.status === 'error') {
-        //         logError(`❌ Error checking ${result.name}: ${result.error}`);
-        //     }
-        // });
+        stepNumber += 1 ;
+        await contactUsSecondScenario(page,action,stepNumber);
+
     } catch (err) {
       logError(`❌ An error occurred in contactUsDifferentScenario: ${err.message}`);
       throw new Error(`❌ An error occurred in contactUsDifferentScenario: ${err.message}`);
@@ -53,6 +46,21 @@ async function contactUsDifferentScenario(page, action, stepNumber) {
   });
 }
 
+async function contactUsSecondScenario(page, action, stepNumber) {
+  await test.step(`${stepNumber}.Contact Us Second Scenario click in submit button all fields empty need to appear warning message`, async () => {
+    logStep(`${stepNumber}.Contact Us Second Scenario click in submit button all fields empty need to appear warning message`);
+    try {
+      
+
+        // stepNumber += 1 ;
+        // await contactUsSecondScenario(page,action,stepNumber);
+
+    } catch (err) {
+      logError(`❌ An error occurred in contactUsSecondScenario: ${err.message}`);
+      throw new Error(`❌ An error occurred in contactUsSecondScenario: ${err.message}`);
+    }
+  });
+}
 
 
 
@@ -125,6 +133,7 @@ async function contactUsDifferentScenario(page, action, stepNumber) {
 
 
 module.exports = {
-  contactUsDifferentScenario
+  contactUsFirstScenario,
+  contactUsSecondScenario,
 };
 

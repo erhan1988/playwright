@@ -3,7 +3,7 @@ const { checkHomeLinkHeader, navigatetoURL, checkFaviconIcon,checkHeaderElements
 const { checkCategoryTitleHomeScreen,checkVodsInHome,NotloggeduserDetailsScrenn,checkRelatedContentInDetailsScreen} = require('./homeContent');
 const { checkPlayerScreen } = require('./helper'); 
 const { checkFooterLinks } = require('./footer'); 
-const { contactUsDifferentScenario } = require('./contactUs'); 
+const { contactUsFirstScenario } = require('./contactUs'); 
 
 
 // Get the action from the command-line argument or environment variable
@@ -15,38 +15,38 @@ if (action === 'emmanuel') {
             test.setTimeout(90000); // Increase timeout to 60 seconds
 
             //Step 1: Open the Site
-            await navigatetoURL(page, action,'1');
+            await navigatetoURL(page, action,1);
 
             //Step 2: Check if Favicon exists in the browser            
-            await checkFaviconIcon(page, action,'2');
+            await checkFaviconIcon(page, action,2);
 
             //Step 3: Find link Home in the Header and click
-            await checkHomeLinkHeader(page,'3');
+            await checkHomeLinkHeader(page,3);
 
             await page.waitForTimeout(2000); // 2000ms = 2 seconds
             //Step 4: Check if Header elements exist
-            await checkHeaderElements(page, action,'4');
+            await checkHeaderElements(page, action,4);
 
             //5.Check the Home screen Need to print title of all category
-            await checkCategoryTitleHomeScreen(page, action,'5');
+            await checkCategoryTitleHomeScreen(page, action,5);
 
             //6.Check the VODs in Home screen
-            await checkVodsInHome(page, action,'6');
+            await checkVodsInHome(page, action,6);
             
             //7.Not logged user checking Details screen containts Go back Title background Image watch Now etc'
-            await NotloggeduserDetailsScrenn(page, action,'7');
+            await NotloggeduserDetailsScrenn(page, action,7);
 
             //8.Check the player screen
-            await checkPlayerScreen(page, action,'8','undefined');
+            await checkPlayerScreen(page, action,8,'undefined');
 
             //9.Check Related Content in Details screen
-            await checkRelatedContentInDetailsScreen(page, action,'9');
+            await checkRelatedContentInDetailsScreen(page, action,9);
 
             //10. Check footer Section 
-            await checkFooterLinks (page,action,'10');
+            await checkFooterLinks (page,action,10);
 
             //11. Check different scenario for contact Us
-            await contactUsDifferentScenario(page,action,'11');
+            await contactUsFirstScenario(page,action,11);
 
         });
     });
@@ -56,43 +56,41 @@ if (action === 'emmanuel') {
             test.setTimeout(60000); // Increase timeout to 60 seconds
             
             //Step 1: Open the Site
-            await navigatetoURL(page, action,'1');
+            await navigatetoURL(page, action,1);
 
             //Step 2: Check if Favicon exists in the browser                
-            await checkFaviconIcon(page, action,'2');
+            await checkFaviconIcon(page, action,2);
 
             //Step 3: Find link Home in the Header and click
-            await checkHomeLinkHeader(page,'3');  
+            await checkHomeLinkHeader(page,3);  
 
             await page.waitForTimeout(2000); // 2000ms = 2 seconds
             //Step 4: Check if Header elements exist
-            await checkHeaderElements(page, action,'4');
+            await checkHeaderElements(page, action,4);
 
             //5.Check the Home screen Need to print title of all category
-            await checkCategoryTitleHomeScreen(page, action,'5');
+            await checkCategoryTitleHomeScreen(page, action,5);
 
             //6.Check the VODs in Home screen
-            await checkVodsInHome(page, action,'6');
+            await checkVodsInHome(page, action,6);
 
             //7.Not logged user checking Details screen containts Go back Title background Image watch Now etc'
-            await NotloggeduserDetailsScrenn(page, action,'7');
+            await NotloggeduserDetailsScrenn(page, action,7);
 
             //8.Check Related Content in Details screen
-            await checkRelatedContentInDetailsScreen(page, action,'8');
+            await checkRelatedContentInDetailsScreen(page, action,8);
 
             //9. Check footer Section 
-            await checkFooterLinks (page,action,'9');
+            await checkFooterLinks (page,action,9);
         });
     });
 }else if (action === 'prtv') {
     test.describe('Website Tests for Prtv', () => {
         test('Website Tests', async ({ page }) => {
             test.setTimeout(60000); // Increase timeout to 60 seconds
-            
+    
             //Step 1: Open the Site
             await navigatetoURL(page, action,'1');
-
-          
         });
     })
 
