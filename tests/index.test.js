@@ -3,6 +3,8 @@ const { checkHomeLinkHeader, navigatetoURL, checkFaviconIcon,checkHeaderElements
 const { checkCategoryTitleHomeScreen,checkVodsInHome,NotloggeduserDetailsScrenn,checkRelatedContentInDetailsScreen} = require('./homeContent');
 const { checkPlayerScreen } = require('./helper'); 
 const { checkFooterLinks } = require('./footer'); 
+const { contactUsDifferentScenario } = require('./contactUs'); 
+
 
 // Get the action from the command-line argument or environment variable
 const action = process.env.ACTION || process.argv[2]; // Use `ACTION` env variable or second CLI argument
@@ -42,6 +44,10 @@ if (action === 'emmanuel') {
 
             //10. Check footer Section 
             await checkFooterLinks (page,action,'10');
+
+            //11. Check different scenario for contact Us
+            contactUsDifferentScenario(page,action,'11');
+
         });
     });
 } else if (action === 'amorir') {

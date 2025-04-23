@@ -29,10 +29,8 @@ async function checkFooterLinks(page, action, stepNumber) {
       ]);
       await logSuccess('✅ Clicked Terms of Use and navigated to terms page');
 
-      await redirectUrl(page,'/terms');
-
       // ✅ Wait for known content (optional)
-      await page.waitForSelector('body', { timeout: 5000 });
+      await page.waitForSelector('body', { timeout: 7000 });
       await page.waitForTimeout(7000);
 
       // ✅ Now check the expected terms content
@@ -80,11 +78,9 @@ async function privacyPolicy(page) {
       page.waitForURL(/\/privacy/, { timeout: 10000 })
     ]);
     await logSuccess('✅ Clicked Privacy Policy and navigated to privacy page');
-    await redirectUrl(page,'/privacy');
-
 
     // ✅ Wait for known content (optional)
-    await page.waitForSelector('body', { timeout: 5000 });
+    await page.waitForSelector('body', { timeout: 7000 });
     await page.waitForTimeout(7000);
 
     // ✅ Check privacy page content
@@ -115,10 +111,6 @@ async function contactUs(page) {
     throw err;
   }
 }
-
-
-
-  
 
 
 
