@@ -5,7 +5,6 @@ const { checkPlayerScreen } = require('./helper');
 const { checkFooterLinks } = require('./footer'); 
 const { contactUsFirstScenario } = require('./contactUs'); 
 
-
 // Get the action from the command-line argument or environment variable
 const action = process.env.ACTION || process.argv[2]; // Use `ACTION` env variable or second CLI argument
 
@@ -95,6 +94,6 @@ if (action === 'emmanuel') {
     })
 
 } else {
-    console.log('No valid action provided. Use "emmanuel" or "amorir".');
+    console.log('No valid action provided. Use "emmanuel,Prtv" or "amorir".');
     process.exit(1);
 }
