@@ -48,6 +48,7 @@ async function contactUsFirstScenario(page, action, stepNumber) {
     }
   });
 }
+
 async function contactUsSecondScenario(page, action, stepNumber) {
   await test.step(`${stepNumber}.Contact Us Second Scenario click in submit button all fields empty need to appear warning message`, async () => {
     logStep(`${stepNumber}.Contact Us Second Scenario click in submit button all fields empty need to appear warning message`);
@@ -64,15 +65,36 @@ async function contactUsSecondScenario(page, action, stepNumber) {
         const invalidFields = [
           { id: '#subject', name: 'Subject' },
           { id: '#issue', name: 'Issue (Textarea)' },
-          { id: '#mat-select-value-1', name: 'Dropdown Select Category' },
+          { id: '#mat-select-0', name: 'Dropdown Select Category' },
         ];
         for (const field of invalidFields) {
           await checkAriaInvalid(page, field); // <-- Use helper function here
         }
 
+        stepNumber += 1 ;
+        await contactUsThirdScenario(page,action,stepNumber);
+
     } catch (err) {
       logError(`❌ An error occurred in contactUsSecondScenario: ${err.message}`);
       throw new Error(`❌ An error occurred in contactUsSecondScenario: ${err.message}`);
+    }
+  });
+}
+
+async function contactUsThirdScenario(page, action, stepNumber) {
+  await test.step(`${stepNumber}.Contact Us Third Scenario click need to appear warning message in Email and Text Area -> Dropdown and Subject will have value`, async () => {
+    logStep(`${stepNumber}.Contact Us Third Scenario click need to appear warning message in Email and Text Area -> Dropdown and Subject will have value`);
+    try {
+
+      // Refresh first then check from the begging this scenario
+      await page.reload();
+      await page.waitForSelector('#submit-button', { state: 'visible' });        
+
+       
+
+    } catch (err) {
+      logError(`❌ An error occurred in contactUsThirdScenario: ${err.message}`);
+      throw new Error(`❌ An error occurred in contactUsThirdScenario: ${err.message}`);
     }
   });
 }
