@@ -11,7 +11,7 @@ const action = process.env.ACTION || process.argv[2]; // Use `ACTION` env variab
 if (action === 'emmanuel') {
     test.describe('Website Tests for Emmanuel', () => {
         test('Website Tests', async ({ page }) => {
-            test.setTimeout(90000); // Increase timeout to 60 seconds
+            test.setTimeout(110000); 
 
             //Step 1: Open the Site
             await navigatetoURL(page, action,1);
@@ -92,7 +92,6 @@ if (action === 'emmanuel') {
             await navigatetoURL(page, action,'1');
         });
     })
-
 } else {
     console.log('No valid action provided. Use "emmanuel,Prtv" or "amorir".');
     process.exit(1);

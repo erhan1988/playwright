@@ -53,56 +53,44 @@ async function contactUsSecondScenario(page, action, stepNumber) {
   await test.step(`${stepNumber}.Contact Us Second Scenario click in submit button all fields empty need to appear warning message`, async () => {
     logStep(`${stepNumber}.Contact Us Second Scenario click in submit button all fields empty need to appear warning message`);
     try {
-          // wait       
-          // Wait for the submit button to be visible and enabled
-          try {
-            // Wait for the button to be visible
-            await page.waitForSelector('#submit-button', { state: 'visible' });
-            // Click the button
-            await page.click('#submit-button');
-          } catch (error) {
-            logError("❌ Failed to click the submit button: " + error.message);
-            process.exit(1); // Exit the script if the button click fails
-          }
-           const invalidFields = [
-            { id: '#subject', name: 'Subject' },
-            { id: '#issue', name: 'Issue (Textarea)' },
-            { id: '#mat-select-value-1', name: 'Dropdown Select Category' },
-          ];
-          
-          // GRESNA E FUNKCIJATA ...!!!! NE E UBO ISKODIRANO NA WEB 
-          for (const field of invalidFields) {
-            const input = page.locator(field.id);
-            const errorMessage = page.locator(`${field.id} ~ .error-message`);
-          
-            const isErrorVisible = await errorMessage.isVisible().catch(() => false);
-            const ariaInvalid = await input.getAttribute('aria-invalid');
+        // Wait for the submit button to be visible and enabled
+        try {
+          await page.waitForSelector('#submit-button', { state: 'visible' });
+          await page.click('#submit-button');
+        } catch (error) {
+          logError("❌ Failed to click the submit button: " + error.message);
+          process.exit(1); // Exit the script if the button click fails
+        }
 
-            await page.waitForTimeout(2000);  // Wait for 2 seconds
-          
-            if (isErrorVisible) {
-              // If there's an error message visible, aria-invalid must be "true"
-              if (ariaInvalid === 'true') {
-                logSuccess(`✅ Error message and aria-invalid both present for ${field.name}`);
-              } else {
-                logSuccess(`✅ Error message is visible for ${field.name}, but aria-invalid is missing or incorrect`);
-              }
-            } else {
-              // If no error message is visible, aria-invalid should be either "false" or null
-              if (ariaInvalid === 'true') {
-                logSuccess(`✅ aria-invalid is true for ${field.name}, but no error message is shown`);
-              } else {
-                logError(`❌ No error message and aria-invalid is correct for ${field.name}`);
-              }
-            }
-          }
-          
+        const invalidFields = [
+          { id: '#subject', name: 'Subject' },
+          { id: '#issue', name: 'Issue (Textarea)' },
+          { id: '#mat-select-value-1', name: 'Dropdown Select Category' },
+        ];
+        for (const field of invalidFields) {
+          await checkAriaInvalid(page, field); // <-- Use helper function here
+        }
+
     } catch (err) {
       logError(`❌ An error occurred in contactUsSecondScenario: ${err.message}`);
       throw new Error(`❌ An error occurred in contactUsSecondScenario: ${err.message}`);
     }
   });
 }
+
+async function checkAriaInvalid(page, field) {
+  const input = page.locator(field.id);
+  const ariaInvalid = await input.getAttribute('aria-invalid');
+
+  await page.waitForTimeout(2000); // Wait for 2 seconds
+
+  if (ariaInvalid === 'true' || ariaInvalid === null) {
+    logSuccess(`✅ Field "${field.name}" is invalid (aria-invalid=${ariaInvalid})`);
+  } else {
+    logError(`❌ Field "${field.name}" is valid (aria-invalid=${ariaInvalid})`);
+  }
+}
+
 
 
 

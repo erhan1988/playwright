@@ -79,8 +79,11 @@ async function privacyPolicy(page) {
     await logSuccess('✅ Clicked Privacy Policy and navigated to privacy page');
 
     // ✅ Wait for known content (optional)
-    await page.waitForSelector('body', { timeout: 7000 });
-    await page.waitForTimeout(8000);
+    await page.waitForSelector('body', { timeout: 8000 });
+    await page.waitForFunction(() => {
+    const bodyText = document.body.innerText;
+      return bodyText.includes('Privacy Policy Effective Since') || bodyText.includes('Política de Privacidad');
+    });
 
     // ✅ Check privacy page content
     await checkTextExist(page, [
