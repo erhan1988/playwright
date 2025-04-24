@@ -88,7 +88,11 @@ async function contactUsThirdScenario(page, action, stepNumber) {
 
       // Refresh first then check from the begging this scenario
       await page.reload();
-      await page.waitForSelector('#submit-button', { state: 'visible' });        
+      await page.waitForSelector('#submit-button', { state: 'visible' });
+      
+      // fill Select Category
+      await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'General');
+
 
        
 
@@ -109,6 +113,28 @@ async function checkAriaInvalid(page, field) {
     logSuccess(`✅ Field "${field.name}" is invalid (aria-invalid=${ariaInvalid})`);
   } else {
     logError(`❌ Field "${field.name}" is valid (aria-invalid=${ariaInvalid})`);
+  }
+}
+
+// Function to select a dropdown by visible text
+async function selectDropdownByVisibleText(page, dropdownSelector, visibleText) {
+  // Wait for the dropdown to be visible and click it
+  const dropdown = await page.locator(dropdownSelector);
+  await dropdown.click();
+
+  // Wait for the option to be visible and click it
+  const option = await page.locator(`//mat-option//span[text()="${visibleText}"]`);
+  await option.click();
+
+  // Get the selected value from the dropdown
+  const selectedValue = await dropdown.innerText();
+  
+  // Check if a value was selected
+  if (selectedValue) {
+    console.log('- -.Selected Value in Dropdown is:', selectedValue);
+  } else {
+   logError('is not Selected any value in the Dropdown')
+   process.exit(1);
   }
 }
 

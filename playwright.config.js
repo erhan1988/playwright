@@ -16,7 +16,10 @@ export default defineConfig({
   testDir: './tests',
   fullyParallel: false, // Run tests sequentially
   workers: 1, // Ensure only one worker is used
-  reporter: [['html', { outputFolder: 'playwright-report', open: 'always' }]],
+  reporter: [
+    ['html', { outputFolder: 'playwright-report', open: 'always' }],
+    ['dot'], // Minimal output (dots for each test)
+  ],
   use: {
     headless: false, // Run in headed mode
     launchOptions: {
