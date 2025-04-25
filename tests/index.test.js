@@ -4,6 +4,7 @@ const { checkCategoryTitleHomeScreen,checkVodsInHome,NotloggeduserDetailsScrenn,
 const { checkPlayerScreen } = require('./helper'); 
 const { checkFooterLinks } = require('./footer'); 
 const { contactUsFirstScenario } = require('./contactUs'); 
+const { registrationScreen } = require('./registration');
 
 // Get the action from the command-line argument or environment variable
 const action = process.env.ACTION || process.argv[2]; // Use `ACTION` env variable or second CLI argument
@@ -47,6 +48,9 @@ if (action === 'emmanuel') {
             //11. Check different scenario for contact Us
             await contactUsFirstScenario(page,action,11);
 
+            //10. Check different scenario for registration User
+            await registrationScreen(page,action,12);
+
         });
     });
 } else if (action === 'amorir') {
@@ -81,6 +85,9 @@ if (action === 'emmanuel') {
 
             //9. Check footer Section 
             await checkFooterLinks (page,action,9);
+
+            //10. Check different scenario for registration User
+            await registrationScreen(page,action,10);
         });
     });
 }else if (action === 'prtv') {
