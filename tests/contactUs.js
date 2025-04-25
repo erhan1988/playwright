@@ -3,44 +3,44 @@ const { logStep, logSuccess, logError } = require('../index'); // Import logging
 const { checkElementExists  } = require('./helper'); 
 
 async function contactUsFirstScenario(page, action, stepNumber) {
-  await test.step(`${stepNumber}.Contact Us First scenario Check if exist Title and fields `, async () => {
-    logStep(`${stepNumber}.Contact Us First scenario Check if exist Title and fields`);
+  await test.step(`${stepNumber}. Contact Us First Different Scenario: 1.Check if Title and fields exist`, async () => {
+    logStep(`${stepNumber}. Contact Us First Different Scenario: 1.Check if Title and fields exist`);
     try {
+      await page.waitForTimeout(2000);
 
-        await page.waitForTimeout(2000);
+      // Check first Title
+      const h1 = page.locator('h1');
+      try {
+        await expect(h1).toHaveText(/Contact Us|Contáctenos/i);
+        const headingText = await h1.textContent();
+        logSuccess(`✅ Found Title: "${headingText?.trim()}"`);
+      } catch (error) {
+        const actualText = await h1.textContent();
+        logError(`❌ Heading did not match expected text. Found: "${actualText?.trim()}"`);
+        throw error;
+      }
 
-        // Check first Title
-        await page.waitForTimeout(10000);
-        const h1 = page.locator('h1');
-        try {
-          await expect(h1).toHaveText(/Contact Us|Contáctenos/i);
-          const headingText = await h1.textContent();
-          logSuccess(`✅ Found Title: "${headingText?.trim()}"`);
-        } catch (error) {
-          const actualText = await h1.textContent();
-          logError(`❌ Heading did not match expected text. Found: "${actualText?.trim()}"`);
-          throw error; 
-        }
+      // Check if all input fields exist on the Contact Us page
+      const contactUsElements = [
+        { locator: '#customer-service', name: 'Form Contact Us' },
+        { locator: '#mat-select-value-1', name: 'Dropdown Select Category' },
+        { locator: '#email', name: 'Email' },
+        { locator: '#subject', name: 'Subject' },
+        { locator: '#issue', name: 'Text Area' },
+        { locator: '#submit-button', name: 'Submit Button' },
+      ];
 
-        // check if exist all input fields in the contact us page 
-        const contactUsElements = [
-          { locator: '#customer-service', name: 'Form Contact Us' },
-          { locator: '#mat-select-value-1', name: 'Dropdown Select Category' },
-          { locator: '#email', name: 'Email' },
-          { locator: '#subject', name: 'Subject' },
-          { locator: '#issue', name: 'Text Area' },
-          { locator: '#submit-button', name: 'Submit Button' },
-        ];
+      for (const element of contactUsElements) {
+        await checkElementExists(page, element.locator, element.name);
+      }
 
-        // Collect results for each element
-        const results = [];
-        for (const element of contactUsElements) {
-            const result = await checkElementExists(page, element.locator, element.name);
-            results.push(result); // Store the result
-        }
+      // Increment step number and call the second scenario
+      stepNumber += 1;
+      await contactUsSecondScenario(page, action, stepNumber);
 
-        stepNumber += 1 ;
-        await contactUsSecondScenario(page,action,stepNumber);
+      // Increment step number and call the third scenario as a separate step
+      stepNumber += 1;
+      await contactUsThirdScenario(page, action, stepNumber);
 
     } catch (err) {
       logError(`❌ An error occurred in contactUsFirstScenario: ${err.message}`);
@@ -50,29 +50,21 @@ async function contactUsFirstScenario(page, action, stepNumber) {
 }
 
 async function contactUsSecondScenario(page, action, stepNumber) {
-  await test.step(`${stepNumber}.Contact Us Second Scenario click in submit button all fields empty need to appear warning message`, async () => {
-    logStep(`${stepNumber}.Contact Us Second Scenario click in submit button all fields empty need to appear warning message`);
+  await test.step(`${stepNumber}. Contact Us Second Scenario: Click submit button with all fields empty`, async () => {
+    logStep(`${stepNumber}. Contact Us Second Scenario: Click submit button with all fields empty`);
     try {
-        // Wait for the submit button to be visible and enabled
-        try {
-          await page.waitForSelector('#submit-button', { state: 'visible' });
-          await page.click('#submit-button');
-        } catch (error) {
-          logError("❌ Failed to click the submit button: " + error.message);
-          process.exit(1); // Exit the script if the button click fails
-        }
+      // Wait for the submit button to be visible and enabled
+      await page.waitForSelector('#submit-button', { state: 'visible' });
+      await page.click('#submit-button');
 
-        const invalidFields = [
-          { id: '#subject', name: 'Subject' },
-          { id: '#issue', name: 'Issue (Textarea)' },
-          { id: '#mat-select-0', name: 'Dropdown Select Category' },
-        ];
-        for (const field of invalidFields) {
-          await checkAriaInvalid(page, field); // <-- Use helper function here
-        }
-
-        stepNumber += 1 ;
-        await contactUsThirdScenario(page,action,stepNumber);
+      const invalidFields = [
+        { id: '#subject', name: 'Subject' },
+        { id: '#issue', name: 'Issue (Textarea)' },
+        { id: '#mat-select-0', name: 'Dropdown Select Category' },
+      ];
+      for (const field of invalidFields) {
+        await checkAriaInvalid(page, field); // <-- Use helper function here
+      }
 
     } catch (err) {
       logError(`❌ An error occurred in contactUsSecondScenario: ${err.message}`);
@@ -82,20 +74,42 @@ async function contactUsSecondScenario(page, action, stepNumber) {
 }
 
 async function contactUsThirdScenario(page, action, stepNumber) {
-  await test.step(`${stepNumber}.Contact Us Third Scenario click need to appear warning message in Email and Text Area -> Dropdown and Subject will have value`, async () => {
-    logStep(`${stepNumber}.Contact Us Third Scenario click need to appear warning message in Email and Text Area -> Dropdown and Subject will have value`);
+  await test.step(`${stepNumber}. Contact Us Third Scenario: Validate warning messages for Email and Text Area`, async () => {
+    logStep(`${stepNumber}. Contact Us Third Scenario: Validate warning messages for Email and Text Area`);
     try {
-
-      // Refresh first then check from the begging this scenario
+      // Refresh first then check from the beginning of this scenario
       await page.reload();
       await page.waitForSelector('#submit-button', { state: 'visible' });
-      
-      // fill Select Category
+
+      // Fill Select Category
       await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'General');
 
+      // Delete email because it is automatically filled with the user email
+      await page.locator('#email').fill('');
+      const emailValue = await page.locator('#email').inputValue();
+      console.log('Email field is empty', emailValue);
 
-       
+      // Fill the input field with the text
+      await page.locator('#subject').fill('Test');
+      const subjectValue = await page.locator('#subject').inputValue();
+      console.log('Subject field has value', subjectValue);
 
+      // Fill the textarea with the text
+      await page.locator('#issue').fill('');
+      const issueValue = await page.locator('#issue').inputValue();
+      console.log('Text Area field is empty', issueValue);
+
+      // Click the submit button
+      await page.click('#submit-button');
+
+      const invalidFields = [
+        { id: '#issue', name: 'Issue (Textarea)' },
+        { id: '#email', name: 'Email' },
+      ];
+      for (const field of invalidFields) {
+        await checkAriaInvalid(page, field); // <-- Use helper function here
+      }
+      
     } catch (err) {
       logError(`❌ An error occurred in contactUsThirdScenario: ${err.message}`);
       throw new Error(`❌ An error occurred in contactUsThirdScenario: ${err.message}`);
@@ -146,7 +160,7 @@ module.exports = {
 
 
 
-  
+
 
 
 
