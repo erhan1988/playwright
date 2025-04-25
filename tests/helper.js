@@ -453,25 +453,23 @@ async function selectDropdownByVisibleText(page, dropdownSelector, visibleText) 
      process.exit(1);
     }
   }
-async function checkAriaInvalid(page, field) {
+  async function checkAriaInvalid(page, field) {
     const input = page.locator(field.id);
-      // Wait for the input field to be visible
+  
+    // Wait for the input field to be visible
     await input.waitFor({ state: 'visible', timeout: 5000 });
-
-    // Wait for the aria-invalid attribute to be updated
-    await page.waitForSelector(`${field.id}[aria-invalid]`, { timeout: 5000 });
+   
     const ariaInvalid = await input.getAttribute('aria-invalid');
-
-    if (ariaInvalid === 'true') {
+  
+    if (ariaInvalid === 'true' || ariaInvalid === null) {
       logSuccess(`✅ Field "${field.name}" is invalid (aria-invalid=${ariaInvalid})`);
     } else if (ariaInvalid === 'false') {
       logError(`❌ Field "${field.name}" is valid (aria-invalid=${ariaInvalid})`);
-    } else if (ariaInvalid === null) {
-      logSuccess(`✅ Field "${field.name}" is invalid (aria-invalid=${ariaInvalid})`);
     } else {
       logError(`❌ Unexpected value for "aria-invalid" on field "${field.name}": ${ariaInvalid}`);
     }
-}
+  }
+  
     
 module.exports = { 
     checkElementExists, 

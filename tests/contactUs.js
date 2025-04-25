@@ -166,19 +166,6 @@ async function contactUsFourthScenario(page, action, stepNumber) {
   });
 }
 
-// async function checkAriaInvalid(page, field) {
-//   const input = page.locator(field.id);
-//   const ariaInvalid = await input.getAttribute('aria-invalid');
-
-//   await page.waitForTimeout(2000); // Wait for 2 seconds
-
-//   if (ariaInvalid === 'true' || ariaInvalid === null) {
-//     logSuccess(`✅ Field "${field.name}" is invalid (aria-invalid=${ariaInvalid})`);
-//   } else {
-//     logError(`❌ Field "${field.name}" is valid (aria-invalid=${ariaInvalid})`);
-//   }
-// }
-
 module.exports = {
   contactUsFirstScenario,
   contactUsSecondScenario,

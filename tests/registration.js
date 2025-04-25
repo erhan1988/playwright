@@ -74,7 +74,6 @@ async function registrationScreen(page, action, stepNumber) {
       await checkSubscribeButtonDisabled(page, action);
       console.log('All fields are empty. Now checking if the subscribe button is disabled...');
 
-      // Increment step number and call the four scenario as a separate step
       stepNumber += 1;
       await regScreenSecondScenario(page, action, stepNumber);
 
@@ -117,7 +116,7 @@ async function regScreenSecondScenario(page, action, stepNumber) {
       await page.locator('#confirmPassword').fill('123');
       const confirmPassword = await page.locator('#confirmPassword').inputValue();  
       console.log(`Confirm Password has Value: ${confirmPassword}`);
-      await page.waitForTimeout(11000); // Wait for 1 second
+      await page.locator('#confirmPassword').blur();
 
       const invalidFields = [
         { id: '#email', name: 'Email'},
@@ -131,9 +130,9 @@ async function regScreenSecondScenario(page, action, stepNumber) {
 
       await termsOfUseCheckBox(page, action);
 
-       // Check if button subscribe is disabled
-       await checkSubscribeButtonDisabled(page, action);
-       console.log('Now checking if the subscribe button is disabled...');
+      // Check if button subscribe is disabled
+      await checkSubscribeButtonDisabled(page, action);
+      console.log('Now checking if the subscribe button is disabled...');
 
     } catch (err) {
       logError(`❌ An error occurred in contactUsSecondScenario: ${err.message}`);
