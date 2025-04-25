@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
-const { checkElementExists  } = require('./helper'); 
+const { checkElementExists , selectDropdownByVisibleText,checkAriaInvalid  } = require('./helper'); 
 
 // NOTES : FROM CONTACT US PAGE WE DON'T SEND SUCCESS MESSAGE BECUASE COSTUMER DON'T WANT TO SEE THE MESSAGE FROM TESTING!!!!!
 
@@ -166,45 +166,23 @@ async function contactUsFourthScenario(page, action, stepNumber) {
   });
 }
 
-async function checkAriaInvalid(page, field) {
-  const input = page.locator(field.id);
-  const ariaInvalid = await input.getAttribute('aria-invalid');
+// async function checkAriaInvalid(page, field) {
+//   const input = page.locator(field.id);
+//   const ariaInvalid = await input.getAttribute('aria-invalid');
 
-  await page.waitForTimeout(2000); // Wait for 2 seconds
+//   await page.waitForTimeout(2000); // Wait for 2 seconds
 
-  if (ariaInvalid === 'true' || ariaInvalid === null) {
-    logSuccess(`✅ Field "${field.name}" is invalid (aria-invalid=${ariaInvalid})`);
-  } else {
-    logError(`❌ Field "${field.name}" is valid (aria-invalid=${ariaInvalid})`);
-  }
-}
-
-// Function to select a dropdown by visible text
-async function selectDropdownByVisibleText(page, dropdownSelector, visibleText) {
-  // Wait for the dropdown to be visible and click it
-  const dropdown = await page.locator(dropdownSelector);
-  await dropdown.click();
-
-  // Wait for the option to be visible and click it
-  const option = await page.locator(`//mat-option//span[text()="${visibleText}"]`);
-  await option.click();
-
-  // Get the selected value from the dropdown
-  const selectedValue = await dropdown.innerText();
-  
-  // Check if a value was selected
-  if (selectedValue) {
-    console.log('- -.Selected Value in Dropdown is:', selectedValue);
-  } else {
-   logError('is not Selected any value in the Dropdown')
-   process.exit(1);
-  }
-}
-
+//   if (ariaInvalid === 'true' || ariaInvalid === null) {
+//     logSuccess(`✅ Field "${field.name}" is invalid (aria-invalid=${ariaInvalid})`);
+//   } else {
+//     logError(`❌ Field "${field.name}" is valid (aria-invalid=${ariaInvalid})`);
+//   }
+// }
 
 module.exports = {
   contactUsFirstScenario,
   contactUsSecondScenario,
+  selectDropdownByVisibleText
 };
 
 

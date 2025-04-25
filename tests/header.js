@@ -137,6 +137,7 @@ async function checkHeaderElements(page, action, stepNumber) {
 
 
 
+
 module.exports = { 
     checkHomeLinkHeader, 
     navigatetoURL, 

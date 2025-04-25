@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
-const { checkElementExists  } = require('./helper'); 
+const { checkElementExists ,selectDropdownByVisibleText,checkAriaInvalid} = require('./helper'); 
 
 async function registrationScreen(page, action, stepNumber) {
   await test.step(`${stepNumber}. Registration Screen check Different Scenario: 1. Scenario check if exist all fields`, async () => {
@@ -69,11 +69,105 @@ async function registrationScreen(page, action, stepNumber) {
         logError('Sign-in link is not visible.');
         throw new Error("❌ Sign-in link not found!");
       }
+
+      // Check if button subscribe is disabled
+      await checkSubscribeButtonDisabled(page, action);
+      console.log('All fields are empty. Now checking if the subscribe button is disabled...');
+
+      // Increment step number and call the four scenario as a separate step
+      stepNumber += 1;
+      await regScreenSecondScenario(page, action, stepNumber);
+
     } catch (err) {
-      logError(`❌ An error occurred in contactUsFirstScenario: ${err.message}`);
-      throw new Error(`❌ An error occurred in contactUsFirstScenario: ${err.message}`);
+      logError(`❌ An error occurred in registrationScreen: ${err.message}`);
+      throw new Error(`❌ An error occurred in registrationScreen: ${err.message}`);
     }
   });
+}
+
+async function regScreenSecondScenario(page, action, stepNumber) {
+  await test.step(`${stepNumber}. Registration Screen Second Scenario: Need to appear warning message in Email , Password and Confirm Password`, async () => {
+    logStep(`${stepNumber}.Registration Screen Second Scenario: Need to appear warning message in Email , Password and Confirm Password`);
+    try {
+
+       // Fill First Name 
+       await page.locator('#firstname').fill('Test');
+       const firstName = await page.locator('#firstname').inputValue();
+       console.log(`First Name has Value: ${firstName}`);
+
+       //Fill Last Name
+       await page.locator('#lastname').fill('Test');
+       const lastName = await page.locator('#lastname').inputValue();
+       console.log(`Last Name has Value: ${lastName}`);
+
+      // Fill Select Country
+      await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'Albania');
+
+      // Fill Email Not Valid
+      await page.locator('#email').fill('test@');
+      const email = await page.locator('#email').inputValue();
+      console.log(`Email has Value: ${email}`);
+      
+      // Fill Password Not Valid
+      await page.locator('#password').fill('123');
+      const password = await page.locator('#password').inputValue();
+      console.log(`Password has Value: ${password}`);
+      // Fill Confirm Password Not Valid    
+
+      await page.locator('#confirmPassword').fill('123');
+      const confirmPassword = await page.locator('#confirmPassword').inputValue();  
+      console.log(`Confirm Password has Value: ${confirmPassword}`);
+      await page.waitForTimeout(11000); // Wait for 1 second
+
+      const invalidFields = [
+        { id: '#email', name: 'Email'},
+        { id: '#password', name: 'Password' },
+        { id: '#confirmPassword', name: 'Confirm Password' },
+      ];
+
+      for (const field of invalidFields) {
+        await checkAriaInvalid(page, field); // <-- Use helper function here
+      }
+
+      await termsOfUseCheckBox(page, action);
+
+       // Check if button subscribe is disabled
+       await checkSubscribeButtonDisabled(page, action);
+       console.log('Now checking if the subscribe button is disabled...');
+
+    } catch (err) {
+      logError(`❌ An error occurred in contactUsSecondScenario: ${err.message}`);
+      throw new Error(`❌ An error occurred in contactUsSecondScenario: ${err.message}`);
+    }
+  });
+}
+async function termsOfUseCheckBox(page, action) {
+    logStep(`Terms of Use CheckBox`);
+    try {
+      const termsOfUseCheckBox = page.locator('#termsOfUseCheckBox');
+      //await termsOfUseCheckBox.click();
+      const isChecked = await termsOfUseCheckBox.evaluate((el) => el.checked);
+      if (isChecked) {
+        console.log(' Terms of Use checkbox is checked.');
+      } else {
+        console.log(' Terms of Use checkbox is not checked.');
+      }
+    } catch (err) {
+      logError(`❌ An error occurred in termsOfUseCheckBox: ${err.message}`);
+      throw new Error(`❌ An error occurred in termsOfUseCheckBox: ${err.message}`);
+    }
+}
+
+async function checkSubscribeButtonDisabled(page, action) {
+    // Check if the subscribe button is disabled
+    const subscribeButton = page.locator('#subscribe-button');
+    const isDisabled = await subscribeButton.evaluate((el) => el.disabled);
+    if (isDisabled) {
+      logSuccess('✅ Subscribe button is disabled as expected.');
+    } else {
+      logError('❌ Subscribe button is enabled when it should be disabled.');
+      throw new Error("❌ Subscribe button is enabled when it should be disabled.");
+    }
 }
 
 module.exports = {

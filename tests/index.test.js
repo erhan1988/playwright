@@ -56,7 +56,7 @@ if (action === 'emmanuel') {
 } else if (action === 'amorir') {
     test.describe('Website Tests for Amorir', () => {
         test('Website Tests', async ({ page }) => {
-            test.setTimeout(60000); // Increase timeout to 60 seconds
+            test.setTimeout(110000); 
             
             //Step 1: Open the Site
             await navigatetoURL(page, action,1);

@@ -432,8 +432,47 @@ async function checkSharePopup(page, popupId) {
     }
 }
 
+// Function to select a dropdown by visible text
+async function selectDropdownByVisibleText(page, dropdownSelector, visibleText) {
+    // Wait for the dropdown to be visible and click it
+    const dropdown = await page.locator(dropdownSelector);
+    await dropdown.click();
+  
+    // Wait for the option to be visible and click it
+    const option = await page.locator(`//mat-option//span[text()="${visibleText}"]`);
+    await option.click();
+  
+    // Get the selected value from the dropdown
+    const selectedValue = await dropdown.innerText();
+    
+    // Check if a value was selected
+    if (selectedValue) {
+      console.log('- -.Selected Value in Dropdown is:', selectedValue);
+    } else {
+     logError('is not Selected any value in the Dropdown')
+     process.exit(1);
+    }
+  }
+async function checkAriaInvalid(page, field) {
+    const input = page.locator(field.id);
+      // Wait for the input field to be visible
+    await input.waitFor({ state: 'visible', timeout: 5000 });
 
+    // Wait for the aria-invalid attribute to be updated
+    await page.waitForSelector(`${field.id}[aria-invalid]`, { timeout: 5000 });
+    const ariaInvalid = await input.getAttribute('aria-invalid');
 
+    if (ariaInvalid === 'true') {
+      logSuccess(`✅ Field "${field.name}" is invalid (aria-invalid=${ariaInvalid})`);
+    } else if (ariaInvalid === 'false') {
+      logError(`❌ Field "${field.name}" is valid (aria-invalid=${ariaInvalid})`);
+    } else if (ariaInvalid === null) {
+      logSuccess(`✅ Field "${field.name}" is invalid (aria-invalid=${ariaInvalid})`);
+    } else {
+      logError(`❌ Unexpected value for "aria-invalid" on field "${field.name}": ${ariaInvalid}`);
+    }
+}
+    
 module.exports = { 
     checkElementExists, 
     GobackLink,
@@ -441,6 +480,8 @@ module.exports = {
     backgroundImageDetailsScreen,
     buttonsDetailsScreen,
     checkPlayerScreen,
-    redirectUrl
+    redirectUrl,
+    selectDropdownByVisibleText,
+    checkAriaInvalid
 };
 
