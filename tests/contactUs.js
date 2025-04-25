@@ -2,9 +2,11 @@ const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
 const { checkElementExists  } = require('./helper'); 
 
+// NOTES : FROM CONTACT US PAGE WE DON'T SEND SUCCESS MESSAGE BECUASE COSTUMER DON'T WANT TO SEE THE MESSAGE FROM TESTING!!!!!
+
 async function contactUsFirstScenario(page, action, stepNumber) {
-  await test.step(`${stepNumber}. Contact Us First Different Scenario: 1.Check if Title and fields exist`, async () => {
-    logStep(`${stepNumber}. Contact Us First Different Scenario: 1.Check if Title and fields exist`);
+  await test.step(`${stepNumber}. Contact Us Different Scenario: 1. First Scenario Check if Title and fields exist`, async () => {
+    logStep(`${stepNumber}. Contact Us Different Scenario: 1.First Scenario Check if Title and fields exist`);
     try {
       await page.waitForTimeout(2000);
 
@@ -41,6 +43,10 @@ async function contactUsFirstScenario(page, action, stepNumber) {
       // Increment step number and call the third scenario as a separate step
       stepNumber += 1;
       await contactUsThirdScenario(page, action, stepNumber);
+
+      // Increment step number and call the four scenario as a separate step
+      stepNumber += 1;
+      await contactUsFourthScenario(page, action, stepNumber);
 
     } catch (err) {
       logError(`❌ An error occurred in contactUsFirstScenario: ${err.message}`);
@@ -110,6 +116,49 @@ async function contactUsThirdScenario(page, action, stepNumber) {
         await checkAriaInvalid(page, field); // <-- Use helper function here
       }
       
+    } catch (err) {
+      logError(`❌ An error occurred in contactUsThirdScenario: ${err.message}`);
+      throw new Error(`❌ An error occurred in contactUsThirdScenario: ${err.message}`);
+    }
+  });
+}
+
+async function contactUsFourthScenario(page, action, stepNumber) {
+  await test.step(`${stepNumber}. Contact Us Fourth Scenario: Validate warning messages for Subject only others to be filled`, async () => {
+    logStep(`${stepNumber}. Contact Us Fourth Scenario: Validate warning messages for Subject only others to be filled`);
+    try {
+      // Refresh first then check from the beginning of this scenario
+      await page.reload();
+      await page.waitForSelector('#submit-button', { state: 'visible' });
+
+      // Fill Select Category
+      await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'General');
+
+      // Delete email because it is automatically filled with the user email
+      await page.locator('#email').fill('test@streann.com');
+      const emailValue = await page.locator('#email').inputValue();
+      console.log('Email field is empty', emailValue);
+
+      // Subject field is empty
+      await page.locator('#subject').fill('');
+      const subjectValue = await page.locator('#subject').inputValue();
+      console.log('Subject field has not value', subjectValue);
+
+      // Fill the textarea with the text
+      await page.locator('#issue').fill('This is a test');
+      const issueValue = await page.locator('#issue').inputValue();
+      console.log('Text Area field has value', issueValue);
+
+      // Click the submit button
+      await page.click('#submit-button');
+
+      const invalidFields = [
+        { id: '#subject', name: 'Subject' }, // <-- Added Subject field to invalidFields
+      ];
+
+      for (const field of invalidFields) {
+        await checkAriaInvalid(page, field); // <-- Use helper function here
+      }
     } catch (err) {
       logError(`❌ An error occurred in contactUsThirdScenario: ${err.message}`);
       throw new Error(`❌ An error occurred in contactUsThirdScenario: ${err.message}`);
