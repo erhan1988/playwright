@@ -77,6 +77,9 @@ async function registrationScreen(page, action, stepNumber) {
       stepNumber += 1;
       await regScreenSecondScenario(page, action, stepNumber);
 
+      stepNumber += 1;
+      await regScreenThirdcenario(page, action, stepNumber);
+
     } catch (err) {
       logError(`❌ An error occurred in registrationScreen: ${err.message}`);
       throw new Error(`❌ An error occurred in registrationScreen: ${err.message}`);
@@ -135,11 +138,72 @@ async function regScreenSecondScenario(page, action, stepNumber) {
       console.log('Now checking if the subscribe button is disabled...');
 
     } catch (err) {
-      logError(`❌ An error occurred in contactUsSecondScenario: ${err.message}`);
-      throw new Error(`❌ An error occurred in contactUsSecondScenario: ${err.message}`);
+      logError(`❌ An error occurred in regScreenSecondScenario: ${err.message}`);
+      throw new Error(`❌ An error occurred in regScreenSecondScenario: ${err.message}`);
     }
   });
 }
+
+async function regScreenThirdcenario(page, action, stepNumber) {
+  await test.step(`${stepNumber}. Registration Screen Third Scenario: Need to appear warning message in CConfirm Password all others to be filled`, async () => {
+    logStep(`${stepNumber}.Registration Screen Third Scenario: Need to appear warning message in CConfirm Password all others to be filled`);
+    try {
+
+            //Refresh the page to reset the form
+      await page.reload();
+      await page.waitForSelector('#subscribe-button', { state: 'visible' });
+
+       // Fill First Name 
+       await page.locator('#firstname').fill('Test');
+       const firstName = await page.locator('#firstname').inputValue();
+       console.log(`First Name has Value: ${firstName}`);
+
+       //Fill Last Name
+       await page.locator('#lastname').fill('Test');
+       const lastName = await page.locator('#lastname').inputValue();
+       console.log(`Last Name has Value: ${lastName}`);
+
+      // Fill Select Country
+      await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'Albania');
+
+      // Fill Email Not Valid
+      await page.locator('#email').fill('test@streann.com');
+      const email = await page.locator('#email').inputValue();
+      console.log(`Email has Value: ${email}`);
+      
+      // Fill Password Not Valid
+      await page.locator('#password').fill('123123');
+      const password = await page.locator('#password').inputValue();
+      console.log(`Password has Value: ${password}`);
+      // Fill Confirm Password Not Valid    
+
+      await page.locator('#confirmPassword').fill('123');
+      const confirmPassword = await page.locator('#confirmPassword').inputValue();  
+      console.log(`Confirm Password has  Value: ${confirmPassword}`);
+      await page.locator('#confirmPassword').blur();
+
+      const invalidFields = [
+        { id: '#confirmPassword', name: 'Confirm Password' },
+      ];
+
+      for (const field of invalidFields) {
+        await checkAriaInvalid(page, field); // <-- Use helper function here
+      }
+
+      await termsOfUseCheckBox(page, action);
+
+      // Check if button subscribe is disabled
+      await checkSubscribeButtonDisabled(page, action);
+      console.log('Now checking if the subscribe button is disabled...');
+
+    } catch (err) {
+      logError(`❌ An error occurred in regScreenThirdcenario: ${err.message}`);
+      throw new Error(`❌ An error occurred in regScreenThirdcenario: ${err.message}`);
+    }
+  });
+}
+
+
 async function termsOfUseCheckBox(page, action) {
     logStep(`Terms of Use CheckBox`);
     try {
