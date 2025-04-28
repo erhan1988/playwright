@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
-const { checkElementExists ,selectDropdownByVisibleText,checkAriaInvalid,generateEmail,redirectUrl} = require('./helper'); 
+const { checkElementExists ,selectDropdownByVisibleText,checkAriaInvalid,generateEmail,redirectUrl,checkDinamiclyPopUP} = require('./helper'); 
 
 async function registrationScreen(page, action, stepNumber) {
   await test.step(`${stepNumber}. Registration Screen check Different Scenario: 1. Scenario check if exist all fields`, async () => {
@@ -86,6 +86,9 @@ async function registrationScreen(page, action, stepNumber) {
       stepNumber += 1;
       await regScreenFivecenario(page, action, stepNumber);
 
+      stepNumber += 1;
+      await regScreenSixcenario(page, action, stepNumber);
+
     } catch (err) {
       logError(`❌ An error occurred in registrationScreen: ${err.message}`);
       throw new Error(`❌ An error occurred in registrationScreen: ${err.message}`);
@@ -137,7 +140,7 @@ async function regScreenSecondScenario(page, action, stepNumber) {
         await checkAriaInvalid(page, field); // <-- Use helper function here
       }
 
-      await termsOfUseCheckBox(page, action);
+      await termsOfUseCheckBox(page, action,false);
 
       // Check if button subscribe is disabled
       await checkSubscribeButtonDisabled(page, action);
@@ -196,7 +199,7 @@ async function regScreenThirdcenario(page, action, stepNumber) {
         await checkAriaInvalid(page, field); // <-- Use helper function here
       }
 
-      await termsOfUseCheckBox(page, action);
+      await termsOfUseCheckBox(page, action,false);
 
       // Check if button subscribe is disabled
       await checkSubscribeButtonDisabled(page, action);
@@ -247,7 +250,7 @@ async function regScreenFourcenario(page, action, stepNumber) {
       console.log(`Confirm Password has  Value: ${confirmPassword}`);
       await page.locator('#confirmPassword').blur();
 
-      await termsOfUseCheckBox(page, action);
+      await termsOfUseCheckBox(page, action, false);
 
       // Check if button subscribe is disabled
       await checkSubscribeButtonDisabled(page, action);
@@ -302,7 +305,7 @@ async function regScreenFivecenario(page, action, stepNumber) {
       await page.locator('#confirmPassword').blur();
 
       // Check termd of use checkbox
-      await termsOfUseCheckBox(page, action,'checkedCheckbox');
+      await termsOfUseCheckBox(page, action,true);
 
       // Check if button subscribe is disabled
       console.log('Now checking if the subscribe button is enabled...');
@@ -315,23 +318,97 @@ async function regScreenFivecenario(page, action, stepNumber) {
   });
 }
 
-async function termsOfUseCheckBox(page, action, checkedCheckbox) {
-    logStep(`Terms of Use CheckBox`);
+async function regScreenSixcenario(page, action, stepNumber) {
+  await test.step(`${stepNumber}. Registration Screen Six Scenario:Try to create new User with already exist email `, async () => {
+    logStep(`${stepNumber}. Registration Screen Six Scenario:Try to create new User with already exist email`);
     try {
-      const termsOfUseCheckBox = page.locator('#termsOfUseCheckBox');
-      if (checkedCheckbox === 'checkedCheckbox') {
-        await termsOfUseCheckBox.click();
-      }
-      const isChecked = await termsOfUseCheckBox.evaluate((el) => el.checked);
-      if (isChecked) {
-        console.log(' Terms of Use checkbox is checked.');
+
+      // CLick to redirect to Registration Screen from the Header
+      const subscribeButton = page.locator(`xpath=//*[contains(normalize-space(text()), 'Subscribe Now') or contains(normalize-space(text()), 'Suscríbase Ahora')]`);
+      if (await subscribeButton.count()) {
+        await subscribeButton.first().click();
+        console.log("Subscribe button clicked in the header!");
       } else {
-        console.log(' Terms of Use checkbox is not checked.');
+        throw new Error("❌ Subscribe button not found!");
       }
+      // Wait for the Registration screen to load
+      await page.waitForSelector('#subscribe-button', { state: 'visible' });
+
+        // Fill First Name ( NOTES ALL FIELDS ARE FILLED)
+      await page.locator('#firstname').fill('Test');
+      const firstName = await page.locator('#firstname').inputValue();
+      console.log(`First Name has Value: ${firstName}`);
+
+       //Fill Last Name
+      await page.locator('#lastname').fill('Test');
+      const lastName = await page.locator('#lastname').inputValue();
+      console.log(`Last Name has Value: ${lastName}`);
+
+      // Fill Select Country
+      await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'Albania');
+
+      // Fill Email
+      if (action === 'emmanuel'){
+        await page.locator('#email').fill('erhan+1115@streann.com'); 
+        const email = await page.locator('#email').inputValue();
+        console.log(`Email has Value: ${email}`);
+      }else {
+        //baseEmail = "test+@streann.com";
+        const emailWithDate1 = generateEmail(baseEmail);
+        console.log(emailWithDate1); 
+        await page.locator('#email').fill(emailWithDate1); 
+        const email = await page.locator('#email').inputValue();
+        console.log(`Email has Value: ${email}`);
+
+      }
+      // Fill Password  Valid
+      await page.locator('#password').fill('123123');
+      const password = await page.locator('#password').inputValue();
+      console.log(`Password has Value: ${password}`);
+
+      // Fill Confirm Password  Valid    
+      await page.locator('#confirmPassword').fill('123123');
+      const confirmPassword = await page.locator('#confirmPassword').inputValue();  
+      console.log(`Confirm Password has  Value: ${confirmPassword}`);
+      await page.locator('#confirmPassword').blur();
+
+      // Check termd of use checkbox
+      await termsOfUseCheckBox(page, action,true);
+
+      // Check if button subscribe is disabled
+      console.log('Now checking if the subscribe button is enabled...');
+      await checkSubscribeButtonDisabled(page, action,'enabled');
+
+      // Check if error pop up is visible
+      await checkDinamiclyPopUP(page, action,'#toast-container');
+      console.log('Now checking if the error pop up is visible...');
+
     } catch (err) {
-      logError(`❌ An error occurred in termsOfUseCheckBox: ${err.message}`);
-      throw new Error(`❌ An error occurred in termsOfUseCheckBox: ${err.message}`);
+      logError(`❌ An error occurred in regScreenSixcenario: ${err.message}`);
+      throw new Error(`❌ An error occurred in regScreenSixcenario: ${err.message}`);
     }
+  });
+}
+
+async function termsOfUseCheckBox(page, action, checkedCheckbox) {
+  logStep(`Terms of Use CheckBox`);
+  try {
+    const termsOfUseCheckBox = page.locator('#termsOfUseCheckBox');
+
+    if (checkedCheckbox) {
+      await termsOfUseCheckBox.click(); 
+    }
+
+    const isChecked = await termsOfUseCheckBox.evaluate((el) => el.checked);
+    if (isChecked) {
+      console.log('Terms of Use checkbox is checked.');
+    } else {
+      console.log('Terms of Use checkbox is not checked.');
+    }
+  } catch (err) {
+    logError(`❌ An error occurred in termsOfUseCheckBox: ${err.message}`);
+    throw new Error(`❌ An error occurred in termsOfUseCheckBox: ${err.message}`);
+  }
 }
 
 async function checkSubscribeButtonDisabled(page, action, enabled) {
@@ -388,10 +465,13 @@ async function redirectionAfterRegisteration(page, action) {
         const url = `https://${action}-v3-dev.streann.tech/`;
         await expect(page).toHaveURL(url);
         console.log(`✅ Successfully navigated to ${url}`);
-    }else if (action === 'emmanuel') {
 
+        // Log Out the user then check for six scenario od registration screen create new user with already existing email
+        await logOutUser(page, action);
+
+    }else if (action === 'emmanuel') {
        // Check here if will Appear pop up for email verification
-      await emailVerificationPopup(page);
+      await emailVerificationPopup(page,action);
     }
 
   } catch (err) {
@@ -400,11 +480,11 @@ async function redirectionAfterRegisteration(page, action) {
   }
 }
 
-async function emailVerificationPopup(page) {
-    logStep(`Terms of Use CheckBox`);
+async function emailVerificationPopup(page,action) {
+  logStep(`Email Verification Popup`);
   try {
     // Wait for the email verification modal to appear
-    await page.waitForSelector('.mat-mdc-dialog-surface', { timeout: 10000 });
+    await page.waitForSelector('.mat-mdc-dialog-surface', { timeout: 20000 });
     logSuccess('✅ Email verification modal is displayed.');
 
     // Click the "Continue" button
@@ -425,6 +505,44 @@ async function emailVerificationPopup(page) {
   }
 }
 
+async function logOutUser(page,action) {
+  logStep(`Log Out User`);
+try {
+   // Wait for the dropdown button
+    const dropdownButton = await page.waitForSelector('#accountMenu', { timeout: 10000 });
+
+    // Check if the button is visible
+    if (await dropdownButton.isVisible()) {
+        logSuccess("Dropdown My Account is visible, clicking it now...");
+        await dropdownButton.click();
+    } else {
+        logError("The dropdown button exists but is not visible.");
+        throw new Error("❌ The dropdown button exists but is not visible.");
+    }
+
+    // Wait for the "Salir" (Logout) span
+    const logoutSpan = await page.waitForSelector(
+      "//span[contains(text(), 'Salir') or contains(text(), 'Log In')]",
+      { timeout: 10000, state: 'visible' }
+    );
+    
+    const text = await logoutSpan.textContent();
+    console.log('Found span text:', text.trim());
+
+    // Confirm it is visible and enabled
+    if (await logoutSpan.isVisible()) {
+        console.log("The Logout span is visible. Clicking it now...");
+        await logoutSpan.click();
+        logSuccess("Logout clicked successfully.");
+    } else {
+        logError("The Logout span exists but is not visible.");
+        throw new Error("❌ The Logout span exists but is not visible.");
+    }
+} catch (err) {
+  logError(`❌ An error occurred in logOutUser: ${err.message}`);
+  throw new Error(`❌ An error occurred in logOutUser: ${err.message}`);
+}
+}
 
 module.exports = {
   registrationScreen,
