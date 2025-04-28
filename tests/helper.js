@@ -469,6 +469,24 @@ async function selectDropdownByVisibleText(page, dropdownSelector, visibleText) 
       logError(`❌ Unexpected value for "aria-invalid" on field "${field.name}": ${ariaInvalid}`);
     }
   }
+
+  function generateEmail(baseEmail) {
+    // Use a static variable to store the generated value
+    if (!generateEmail.generatedEmail) {
+        // Get the current date and time
+        const now = new Date();
+        const year = now.getFullYear();         // YYYY
+        const month = String(now.getMonth() + 1).padStart(2, '0'); // MM (0-based index, so add 1)
+        const day = String(now.getDate()).padStart(2, '0');        // DD
+        const hours = String(now.getHours()).padStart(2, '0');     // HH
+        const minutes = String(now.getMinutes()).padStart(2, '0'); // MM
+        const seconds = String(now.getSeconds()).padStart(2, '0'); // SS
+
+        // Construct the email with the date and time
+        generateEmail.generatedEmail = baseEmail.replace('+', `+${year}${month}${day}${hours}${minutes}${seconds}`);
+    }
+    return generateEmail.generatedEmail;
+}
   
     
 module.exports = { 
@@ -480,6 +498,7 @@ module.exports = {
     checkPlayerScreen,
     redirectUrl,
     selectDropdownByVisibleText,
-    checkAriaInvalid
+    checkAriaInvalid,
+    generateEmail,
 };
 
