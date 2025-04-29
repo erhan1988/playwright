@@ -393,17 +393,18 @@ async function regScreenSixcenario(page, action, stepNumber) {
 async function termsOfUseCheckBox(page, action, checkedCheckbox) {
   logStep(`Terms of Use CheckBox`);
   try {
-    const termsOfUseCheckBox = page.locator('#termsOfUseCheckBox');
+    const termsOfUseCheckBox = page.locator('#termsOfUseCheckBox-input');
 
     if (checkedCheckbox) {
       await termsOfUseCheckBox.click(); 
     }
 
     const isChecked = await termsOfUseCheckBox.evaluate((el) => el.checked);
+    await page.waitForTimeout(1000); // Wait for 1 seconds to ensure the checkbox state is updated
     if (isChecked) {
-      console.log('Terms of Use checkbox is checked.');
+      console.log('✅ Terms of Use checkbox is checked.');
     } else {
-      console.log('Terms of Use checkbox is not checked.');
+      console.log('❌ Terms of Use checkbox is not checked.');
     }
   } catch (err) {
     logError(`❌ An error occurred in termsOfUseCheckBox: ${err.message}`);
@@ -418,6 +419,7 @@ async function checkSubscribeButtonDisabled(page, action, enabled) {
       if (!isDisabled) {
           logSuccess('✅ Subscribe button is enabled as expected.');
           console.log('Click in the Subscribe button');
+          await page.waitForTimeout(3000); // Wait for 3 seconds 
           await page.locator('#subscribe-button').click();
           await redirectionAfterRegisteration(page, action);
       } else {
