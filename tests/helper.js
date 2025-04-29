@@ -149,8 +149,8 @@ async function buttonsDetailsScreen(page, action) {
                 await redirectUrl(page,'/player');
                 break; // Exit the loop after checking the URL change
             }
-             // Check for "Suscribirse" and "Compartir" when action is "amorir"
-            if (action === 'amorir') {
+             // Check for "Suscribirse" and "Compartir" when action is "amorir" or "prtv"
+            else if (action === 'amorir' || action === 'prtv') {
                 let buttons1 = page.locator("//button[.//span[contains(text(), 'Compartir')]]"); // 🟢 Declare early!
             
                 if (trimmedText.toLowerCase() === 'suscribirse') {
@@ -172,24 +172,27 @@ async function buttonsDetailsScreen(page, action) {
                     logSuccess(`✅ Returned to Details screen. Current URL: ${backUrl}`);
                     await page.waitForTimeout(2000);
             
-                    // After returning to the details screen, click the "Compartir" button
-                    logStep('Looking for the "Compartir" button...');
-                    const compartirButton = buttons1.first();
-                    try {
-                        await compartirButton.waitFor({ state: 'visible', timeout: 5000 });
-                        logSuccess(`✅ Found "Compartir" button at Details screen`);
-                    } catch (error) {
-                        logError(`❌ "Compartir" button not found or not visible after returning to the Details screen.`);
-                        throw new Error(`"Compartir" button not found or not visible.`);
+                    // 🔴 Only continue with "Compartir" if action is 'amorir'
+                    if (action === 'amorir') {
+                        logStep('Looking for the "Compartir" button...');
+                        const compartirButton = buttons1.first();
+                        try {
+                            await compartirButton.waitFor({ state: 'visible', timeout: 5000 });
+                            logSuccess(`✅ Found "Compartir" button at Details screen`);
+                        } catch (error) {
+                            logError(`❌ "Compartir" button not found or not visible after returning to the Details screen.`);
+                            throw new Error(`"Compartir" button not found or not visible.`);
+                        }
+                        logStep(`Clicking on "Compartir" button at Details screen...`);
+                        await compartirButton.click();
+                        await page.waitForTimeout(2000);
+                        await checkSharePopup(page, 'cdk-overlay-0');
+                        logSuccess(`✅ "Compartir" button clicked successfully.`);
                     }
-                    logStep(`Clicking on "Compartir" button at Details screen...`);
-                    await compartirButton.click();
-                    await page.waitForTimeout(2000);
-                    await checkSharePopup(page,'cdk-overlay-0');
-                    logSuccess(`✅ "Compartir" button clicked successfully.`);
-                    break; // Exit the loop after handling "Suscribirse" and "Compartir"
+                    break; // Exit the loop after handling "Suscribirse"
                 }
             }
+            
         }
         if (!watchNowFound && action === 'emmanuel') {
             const msg = '❌ "Watch Now" button not found for action: emmanuel';

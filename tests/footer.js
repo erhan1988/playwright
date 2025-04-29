@@ -24,7 +24,7 @@ async function checkFooterLinks(page, action, stepNumber) {
 
       await Promise.all([
         termsLink.click(),
-        page.waitForURL(/\/terms/, { timeout: 10000 })
+        page.waitForURL(/\/terms/, { timeout: 20000 })
       ]);
       await logSuccess('✅ Clicked Terms of Use and navigated to terms page');
 

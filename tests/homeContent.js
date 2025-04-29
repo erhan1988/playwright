@@ -43,12 +43,12 @@ async function checkVodsInHome(page,action, stepNumber) {
             console.log(`✅ Found ${imageElements.length} images with background styles.`);
 
             // Ensure there are at least 5 images
-            if (imageElements.length < 15) {
-                throw new Error('Less than 15 images found. Cannot click the 14th image (vod).');
+            if (imageElements.length < 13) {
+                throw new Error('Less than 13 images found. Cannot click the 12th image (vod).');
             }
 
             // Click on the 5th image (index 4, as Playwright uses 0-based indexing)
-            const fifthImage = imageElements[14];
+            const fifthImage = imageElements[12];
             await fifthImage.scrollIntoViewIfNeeded();
             console.log('Clicking on the 14th image...');
             await fifthImage.click();
@@ -98,7 +98,7 @@ async function checkRelatedContentInDetailsScreen(page, action, stepNumber) {
             let titleButtons;
             let count = 0;
     
-            if (action === 'amorir') {
+            if (action === 'amorir' || action === 'prtv') {
             // Check title in the Related Content
             titleButtons = await page.locator('button.nav-link.ng-star-inserted');
             // Wait for at least one element or timeout

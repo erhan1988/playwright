@@ -59,7 +59,7 @@ async function checkHomeLinkHeader(page, stepNumber) {
     await test.step(`${stepNumber}. Find link Home in the Header and click`, async () => { 
         logStep(`${stepNumber}. Executing step: 3. Find link Home in the Header and click`);
         try {
-            const homeOrInicioLink = page.locator("//a[contains(text(),'Home') or contains(text(),'Inicio')]");
+            const homeOrInicioLink = page.locator("//a[contains(text(),'Home') or contains(text(),'Inicio') or contains(text(),'WIPR')]");
             const menuButton = page.locator('.navbar-toggler'); 
 
             // Ensure the link is visible, otherwise check menu
@@ -67,7 +67,7 @@ async function checkHomeLinkHeader(page, stepNumber) {
                 logError("Home/Inicio link is not visible. Checking menu...");
                 if (await menuButton.isVisible()) {
                     await menuButton.click();
-                    await page.waitForSelector("//a[contains(text(),'Home') or contains(text(),'Inicio')]", { state: "visible", timeout: 10000 });
+                    await page.waitForSelector("//a[contains(text(),'Home') or contains(text(),'Inicio') or contains(text(),'WIPR')]",{ state: "visible",timeout: 10000 });             
                 }
             }
 
@@ -104,10 +104,10 @@ async function checkHeaderElements(page, action, stepNumber) {
             // Define an array of elements to check
             const headerElements = [
                 { locator:'a.navbar-brand img.img-fluid[alt="logo"]' , name: 'Logo' },
-                { locator: "//*[contains(text(),'Log In') or contains(text(),' Iniciar sesión ')]", name: 'Login Button' },
-                { locator: "//*[contains(text(),'Subscribe Now') or contains(text(),' Suscríbase Ahora ')]", name: 'Register Button' },      
+                { locator: "//*[contains(text(),'Log In') or contains(text(),'Iniciar sesión') or contains(text(),'Ingresar')]",  name: 'Login Button' },   
+                {locator: "//*[contains(text(),'Subscribe Now') or contains(text(),'Suscríbase Ahora') or contains(text(),'¡Hazte Miembro!')]",name: 'Register Button'},
                 { locator: '#search-button', name: 'Search Button' },
-                { locator: "//a[contains(text(),'Home') or contains(text(),'Inicio')]", name: 'Home Link' }
+                { locator: "//a[contains(text(),'Home') or contains(text(),'Inicio') or contains(text(),'WIPR')]", name: 'Home Link' }   
             ];
             // Collect results for each element
             const results = [];
