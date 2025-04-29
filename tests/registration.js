@@ -310,6 +310,8 @@ async function regScreenFivecenario(page, action, stepNumber) {
       // Check if button subscribe is disabled
       console.log('Now checking if the subscribe button is enabled...');
       await checkSubscribeButtonDisabled(page, action,'enabled');
+
+      await redirectionAfterRegistration(page, action);
      
     } catch (err) {
       logError(`❌ An error occurred in regScreenFivecenario: ${err.message}`);
@@ -380,8 +382,8 @@ async function regScreenSixcenario(page, action, stepNumber) {
       await checkSubscribeButtonDisabled(page, action,'enabled');
 
       // Check if error pop up is visible
-      await checkDinamiclyPopUP(page, action,'#toast-container');
-      console.log('Now checking if the error pop up is visible...');
+     await checkDinamiclyPopUP(page, action,'#toast-container');
+     console.log('Now checking if the error pop up is visible...');
 
     } catch (err) {
       logError(`❌ An error occurred in regScreenSixcenario: ${err.message}`);
@@ -419,9 +421,8 @@ async function checkSubscribeButtonDisabled(page, action, enabled) {
       if (!isDisabled) {
           logSuccess('✅ Subscribe button is enabled as expected.');
           console.log('Click in the Subscribe button');
-          await page.waitForTimeout(3000); // Wait for 3 seconds 
+          await page.waitForTimeout(5000); // Wait for 5 seconds 
           await page.locator('#subscribe-button').click();
-          await redirectionAfterRegisteration(page, action);
       } else {
           logError('❌ Subscribe button is disabled when it should be enabled.');
           throw new Error('❌ Subscribe button is disabled when it should be enabled.');
@@ -438,7 +439,7 @@ async function checkSubscribeButtonDisabled(page, action, enabled) {
     }
 }
 
-async function redirectionAfterRegisteration(page, action) {
+async function redirectionAfterRegistration(page, action) {
   try {
     if  (action === 'amorir'){
         // Wait for the URL to change to the expected one
@@ -477,8 +478,8 @@ async function redirectionAfterRegisteration(page, action) {
     }
 
   } catch (err) {
-    logError(`❌ An error occurred in redirectionAfterRegisteration: ${err.message}`);
-    throw new Error(`❌ An error occurred in redirectionAfterRegisteration: ${err.message}`);
+    logError(`❌ An error occurred in redirectionAfterRegistration: ${err.message}`);
+    throw new Error(`❌ An error occurred in redirectionAfterRegistration: ${err.message}`);
   }
 }
 
@@ -509,41 +510,42 @@ async function emailVerificationPopup(page,action) {
 
 async function logOutUser(page,action) {
   logStep(`Log Out User`);
-try {
-   // Wait for the dropdown button
-    const dropdownButton = await page.waitForSelector('#accountMenu', { timeout: 10000 });
+  try {
+    // Wait for the dropdown button
+      const dropdownButton = await page.waitForSelector('#accountMenu', { timeout: 10000 });
 
-    // Check if the button is visible
-    if (await dropdownButton.isVisible()) {
-        logSuccess("Dropdown My Account is visible, clicking it now...");
-        await dropdownButton.click();
-    } else {
-        logError("The dropdown button exists but is not visible.");
-        throw new Error("❌ The dropdown button exists but is not visible.");
-    }
+      // Check if the button is visible
+      if (await dropdownButton.isVisible()) {
+          logSuccess("Dropdown My Account is visible, clicking it now...");
+          await dropdownButton.click();
+      } else {
+          logError("The dropdown button exists but is not visible.");
+          throw new Error("❌ The dropdown button exists but is not visible.");
+      }
 
-    // Wait for the "Salir" (Logout) span
-    const logoutSpan = await page.waitForSelector(
-      "//span[contains(text(), 'Salir') or contains(text(), 'Log In')]",
-      { timeout: 10000, state: 'visible' }
-    );
-    
-    const text = await logoutSpan.textContent();
-    console.log('Found span text:', text.trim());
+      // Wait for the "Salir" (Logout) span
+      const logoutSpan = await page.waitForSelector(
+        "//span[contains(text(), 'Salir') or contains(text(), 'Log In')]",
+        { timeout: 10000, state: 'visible' }
+      );
+      
+      const text = await logoutSpan.textContent();
+      console.log('Found span text:', text.trim());
 
-    // Confirm it is visible and enabled
-    if (await logoutSpan.isVisible()) {
-        console.log("The Logout span is visible. Clicking it now...");
-        await logoutSpan.click();
-        logSuccess("Logout clicked successfully.");
-    } else {
-        logError("The Logout span exists but is not visible.");
-        throw new Error("❌ The Logout span exists but is not visible.");
-    }
-} catch (err) {
-  logError(`❌ An error occurred in logOutUser: ${err.message}`);
-  throw new Error(`❌ An error occurred in logOutUser: ${err.message}`);
-}
+      // Confirm it is visible and enabled
+      if (await logoutSpan.isVisible()) {
+          console.log("The Logout span is visible. Clicking it now...");
+          await logoutSpan.click();
+          logSuccess("Logout clicked successfully.");
+          await page.waitForTimeout(3000); // Wait for 3 seconds to ensure the checkbox state is updated
+      } else {
+          logError("The Logout span exists but is not visible.");
+          throw new Error("❌ The Logout span exists but is not visible.");
+      }
+  } catch (err) {
+    logError(`❌ An error occurred in logOutUser: ${err.message}`);
+    throw new Error(`❌ An error occurred in logOutUser: ${err.message}`);
+  }
 }
 
 module.exports = {

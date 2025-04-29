@@ -497,7 +497,7 @@ async function checkDinamiclyPopUP(page, action, selector) {
 
         const message = await toastContainer.textContent();
         if (message && message.trim()) {
-            logSuccess('Captured message:', message.trim());
+            logSuccess(`Captured message: ${message.trim()}`);
         } else {
             throw new Error('Toast container appeared but no message found.');
         }
@@ -507,47 +507,7 @@ async function checkDinamiclyPopUP(page, action, selector) {
     }
 }
 
-// async function checkDinamiclyPopUP(page,action,selector) {
-//     try {
-//         // Try to locate the element based on passed selector
-//         const toastContainer = await page.waitForSelector(selector, { timeout: 1000 });
-//         let isVisible = false;
-//         for (let attempt = 0; attempt < 5; attempt++) {
-//             try {
-//                 await toastContainer.waitForElementState('visible', { timeout: 500 });
-//                 isVisible = true;
-//                 break;
-//             } catch (error) {
-//                 console.log(`Attempt ${attempt + 1}: ${selector} not visible yet, retrying...`);
-//                 await page.waitForTimeout(2000);
-//             }
-//         }
 
-//         if (!isVisible) {
-//             throw new Error(`${selector} not visible after multiple attempts`);
-//         }
-
-//         let message = '';
-//         const maxAttempts = 5;
-
-//         for (let i = 0; i < maxAttempts; i++) {
-//             try {
-//                 message = await toastContainer.textContent();
-//                 if (message && message.trim()) {
-//                     logSuccess('Captured message:', message.trim());
-//                     break;
-//                 }
-//             } catch (error) {
-//                 logError('Error capturing message from', selector, ':', error);
-//             }
-//             await page.waitForTimeout(500);
-//         }
-//     } catch (err) {
-//         logError(`An error occurred in checkDinamiclyPopUP with selector ${selector}:`, err);
-//         throw new Error(`An error occurred in checkDinamiclyPopUP with selector ${selector}: ${err.message}`);
-//     }
-// }
-  
     
 module.exports = { 
     checkElementExists, 
