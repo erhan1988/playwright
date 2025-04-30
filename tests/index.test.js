@@ -126,6 +126,9 @@ if (action === 'emmanuel') {
             //10. Check different scenario for contact Us
             await contactUsFirstScenario(page,action,10);
 
+            //11. Check different scenario for registration User
+            await registrationScreen(page,action,11);
+
 
         });
     })

@@ -325,6 +325,8 @@ async function regScreenSixcenario(page, action, stepNumber) {
     logStep(`${stepNumber}. Registration Screen Six Scenario:Try to create new User with already exist email`);
     try {
 
+      await page.waitForTimeout(3000); // Wait for 3 
+
       // CLick to redirect to Registration Screen from the Header
       const subscribeButton = page.locator(`xpath=//*[contains(normalize-space(text()), 'Subscribe Now') or contains(normalize-space(text()), 'Suscríbase Ahora')]`);
       if (await subscribeButton.count()) {
@@ -333,6 +335,7 @@ async function regScreenSixcenario(page, action, stepNumber) {
       } else {
         throw new Error("❌ Subscribe button not found!");
       }
+
       // Wait for the Registration screen to load
       await page.waitForSelector('#subscribe-button', { state: 'visible' });
 
@@ -355,7 +358,7 @@ async function regScreenSixcenario(page, action, stepNumber) {
         const email = await page.locator('#email').inputValue();
         console.log(`Email has Value: ${email}`);
       }else {
-        //baseEmail = "test+@streann.com";
+        const baseEmail = "test+@streann.com";
         const emailWithDate1 = generateEmail(baseEmail);
         console.log(emailWithDate1); 
         await page.locator('#email').fill(emailWithDate1); 
@@ -537,8 +540,10 @@ async function logOutUser(page,action) {
           console.log("The Logout span is visible. Clicking it now...");
           await logoutSpan.click();
           logSuccess("Logout clicked successfully.");
-          await page.waitForTimeout(3000); // Wait for 3 seconds to ensure the checkbox state is updated
-      } else {
+          await page.waitForTimeout(3000); // Wait for 3 
+          const url = `https://${action}-v3-dev.streann.tech/`;
+          await page.waitForURL(url, { timeout: 20000 });
+        } else {
           logError("The Logout span exists but is not visible.");
           throw new Error("❌ The Logout span exists but is not visible.");
       }
