@@ -63,7 +63,7 @@ async function registrationScreen(page, action, stepNumber) {
           { locator: '#password', name: 'Password' },
           { locator: '#confirmPassword', name: 'Confirm Password' },
           { locator: '//mat-select[@aria-label="Default select example"]', name: 'Dropdown Select Country' },
-          { locator: '#mat-input-6', name: 'Date' },
+          { locator: '//mat-label[text()="Fecha de nacimiento"]', name: 'Date' }
           { locator: '#voucherCode', name: 'Voucher Code' },
           { locator: '#termsOfUseCheckBox', name: 'Checkbox Terms of Use' },
           { locator: '#subscribe-button', name: 'Submit Button' },
