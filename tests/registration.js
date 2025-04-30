@@ -7,7 +7,7 @@ async function registrationScreen(page, action, stepNumber) {
   logStep(`${stepNumber}. Registration Screen Different Scenario: 1. Scenario check if exist all fields`);
 
     // CLick to redirect to Registration Screen from the Header
-    const subscribeButton = page.locator(`xpath=//*[contains(normalize-space(text()), 'Subscribe Now') or contains(normalize-space(text()), 'Suscríbase Ahora')]`);
+    const subscribeButton = page.locator(`xpath=//*[contains(normalize-space(text()), 'Subscribe Now') or contains(normalize-space(text()), 'Suscríbase Ahora') or contains(normalize-space(text()), '¡Hazte Miembro!')]`);
     if (await subscribeButton.count()) {
       await subscribeButton.first().click();
       console.log("Subscribe button clicked in the header!");
@@ -54,8 +54,21 @@ async function registrationScreen(page, action, stepNumber) {
           { locator: '#termsOfUseCheckBox', name: 'Checkbox Terms of Use' },
           { locator: '#subscribe-button', name: 'Submit Button' },
         ];
+      }else if (action === 'prtv'){
+        requiredFields = [
+          { locator: '#firstname', name: 'First Name' },
+          { locator: '#lastname', name: 'Last Name' },
+          { locator: '#phone', name: 'Phone' },
+          { locator: '#email', name: 'Email' },
+          { locator: '#password', name: 'Password' },
+          { locator: '#confirmPassword', name: 'Confirm Password' },
+          { locator: '//mat-select[@aria-label="Default select example"]', name: 'Dropdown Select Country' },
+          { locator: '#mat-input-6', name: 'Date' },
+          { locator: '#voucherCode', name: 'Voucher Code' },
+          { locator: '#termsOfUseCheckBox', name: 'Checkbox Terms of Use' },
+          { locator: '#subscribe-button', name: 'Submit Button' },
+        ];
       }
-
       for (const element of requiredFields) {
           await checkElementExists(page, element.locator, element.name);
       }
@@ -111,6 +124,12 @@ async function regScreenSecondScenario(page, action, stepNumber) {
        const lastName = await page.locator('#lastname').inputValue();
        console.log(`Last Name has Value: ${lastName}`);
 
+       //Fill Phone 
+       if (action === 'prtv') {
+         await page.locator('#phone').fill('1234567890');
+         const phone = await page.locator('#phone').inputValue();
+         console.log(`Phone has Value: ${phone}`);
+       }
       // Fill Select Country
       await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'Albania');
 
@@ -171,6 +190,13 @@ async function regScreenThirdcenario(page, action, stepNumber) {
        await page.locator('#lastname').fill('Test');
        const lastName = await page.locator('#lastname').inputValue();
        console.log(`Last Name has Value: ${lastName}`);
+      
+      //Fill Phone 
+      if (action === 'prtv') {
+        await page.locator('#phone').fill('1234567890');
+        const phone = await page.locator('#phone').inputValue();
+        console.log(`Phone has Value: ${phone}`);
+      }
 
       // Fill Select Country
       await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'Albania');
@@ -231,6 +257,13 @@ async function regScreenFourcenario(page, action, stepNumber) {
        const lastName = await page.locator('#lastname').inputValue();
        console.log(`Last Name has Value: ${lastName}`);
 
+      //Fill Phone 
+      if (action === 'prtv') {
+        await page.locator('#phone').fill('1234567890');
+        const phone = await page.locator('#phone').inputValue();
+        console.log(`Phone has Value: ${phone}`);
+      }
+
       // Fill Select Country
       await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'Albania');
 
@@ -281,7 +314,13 @@ async function regScreenFivecenario(page, action, stepNumber) {
        await page.locator('#lastname').fill('Test');
        const lastName = await page.locator('#lastname').inputValue();
        console.log(`Last Name has Value: ${lastName}`);
-
+      
+      //Fill Phone 
+      if (action === 'prtv') {
+        await page.locator('#phone').fill('1234567890');
+        const phone = await page.locator('#phone').inputValue();
+        console.log(`Phone has Value: ${phone}`);
+      }
       // Fill Select Country
       await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'Albania');
 
@@ -348,6 +387,13 @@ async function regScreenSixcenario(page, action, stepNumber) {
       await page.locator('#lastname').fill('Test');
       const lastName = await page.locator('#lastname').inputValue();
       console.log(`Last Name has Value: ${lastName}`);
+      
+      //Fill Phone 
+      if (action === 'prtv') {
+        await page.locator('#phone').fill('1234567890');
+        const phone = await page.locator('#phone').inputValue();
+        console.log(`Phone has Value: ${phone}`);
+      }
 
       // Fill Select Country
       await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'Albania');

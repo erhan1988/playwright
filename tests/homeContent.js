@@ -151,6 +151,7 @@ async function checkRelatedContentInDetailsScreen(page, action, stepNumber) {
             // Log the new URL
             const newUrl = page.url();
             logSuccess(`✅ Successfully redirected to: ${newUrl}`);
+            page.waitForTimeout(11000);
         } catch (err) {
         logError(`❌ An error occurred in checkRelatedContentInDetailsScreen: ${err.message}`);
         throw new Error(`❌ An error occurred in checkRelatedContentInDetailsScreen: ${err.message}`);
