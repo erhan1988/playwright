@@ -5,6 +5,7 @@ const { checkPlayerScreen } = require('./helper');
 const { checkFooterLinks } = require('./footer'); 
 const { contactUsFirstScenario } = require('./contactUs'); 
 const { registrationScreen } = require('./registration');
+const { loginScreen } = require('./login');
 
 // Get the action from the command-line argument or environment variable
 const action = process.env.ACTION || process.argv[2]; // Use `ACTION` env variable or second CLI argument
@@ -88,6 +89,9 @@ if (action === 'emmanuel') {
 
             //10. Check different scenario for registration User
             await registrationScreen(page,action,10);
+
+            //11. Check the Login screen
+            await loginScreen(page,action,11);
         });
     });
 }else if (action === 'prtv') {
