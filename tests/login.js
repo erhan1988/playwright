@@ -57,14 +57,75 @@ async function loginScreenSecondScenario(page, action, stepNumber) {
       // Wait for the Registration screen to load
       await page.waitForSelector('#login-button', { state: 'visible' });
 
+      // Check if exist all fields in the Login screen
+       // Check first Title
+       const h1 = page.locator('h1');
+      try {
+        await expect(h1).toHaveText(/Log in|Ingresar/i);
+        const headingText = await h1.textContent();
+        logSuccess(`✅ Found Title: "${headingText?.trim()}"`);
+      } catch (error) {
+        const actualText = await h1.textContent();
+        logError(`❌ Heading did not match expected text. Found: "${actualText?.trim()}"`);
+        throw error;
+      }
 
-      
+      let requiredFields = [];
+      requiredFields = [
+        { locator: '#username', name: 'Email Field' },
+        { locator: '#password', name: 'Password Field' },
+        { locator: '#rememberMe-input', name: 'Remember me checkbox' },
+        { locator: '#forgotPass', name: 'Link Forgot Password' },
+        { locator: '#login-button', name: 'Login Button' },
+      ];
+
+      for (const element of requiredFields) {
+        await checkElementExists(page, element.locator, element.name);
+      }
+
+      // After this i will check also if exist the link for Sign Up
+      const link = await page.locator('a[href="/subscribe"]');
+      const text = await link.textContent();
+      console.log('Link text:', text?.trim());
+      if (await link.isVisible()) {
+        logSuccess('✅ Sign Up link is visible.');
+      } else {
+        logError('❌ Sign Up link is not visible.');
+      }
+      // Check if button login is disabled
+      await checkLoginButtonDisabled(page, action, false);
+      console.log('All fields are empty. Now checking if the login button is disabled...');
 
     } catch (err) {
       logError(`❌ An error occurred in loginScreenSecondScenario: ${err.message}`);
       throw new Error(`❌ An error occurred in loginScreenSecondScenario: ${err.message}`);
     }
   });
+}
+
+async function checkLoginButtonDisabled(page, action, enabled) {
+  if (enabled) {
+    // Should be enabled
+    const isDisabled = await page.locator('#login-button').isDisabled();
+    if (!isDisabled) {
+        logSuccess('✅ Login button is enabled as expected.');
+        console.log('Click in the Login button');
+        await page.waitForTimeout(5000); // Wait for 5 seconds 
+        await page.locator('#login-button').click();
+    } else {
+        logError('❌ Login button is disabled when it should be enabled.');
+        throw new Error('❌ Login button is disabled when it should be enabled.');
+    }
+  } else {
+    // Should be disabled
+    const isDisabled = await page.locator('#login-button').isDisabled();
+    if (isDisabled) {
+        logSuccess('✅ Login button is disabled as expected.');
+    } else {
+        logError('❌ Login button is enabled when it should be disabled.');
+        throw new Error('❌ Login button is enabled when it should be disabled.');
+    }
+  }
 }
 
 // async function regScreenFourcenario(page, action, stepNumber) {

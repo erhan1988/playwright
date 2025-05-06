@@ -49,8 +49,11 @@ if (action === 'emmanuel') {
             //11. Check different scenario for contact Us
             await contactUsFirstScenario(page,action,11);
 
-            //10. Check different scenario for registration User
+            //12. Check different scenario for registration User
             await registrationScreen(page,action,12);
+
+            //13. Check the Login screen
+            await loginScreen(page,action,13);
 
         });
     });
