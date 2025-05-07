@@ -43,12 +43,12 @@ async function checkVodsInHome(page,action, stepNumber) {
             console.log(`✅ Found ${imageElements.length} images with background styles.`);
 
             // Ensure there are at least 5 images
-            if (imageElements.length < 13) {
-                throw new Error('Less than 13 images found. Cannot click the 12th image (vod).');
+            if (imageElements.length < 15) {
+                throw new Error('Less than 5 images found. Cannot click the 5th image (vod).');
             }
 
             // Click on the 5th image (index 4, as Playwright uses 0-based indexing)
-            const fifthImage = imageElements[12];
+            const fifthImage = imageElements[14];
             await fifthImage.scrollIntoViewIfNeeded();
             console.log('Clicking on the 14th image...');
             await fifthImage.click();
