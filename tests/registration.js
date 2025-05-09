@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
-const { checkElementExists ,selectDropdownByVisibleText,checkAriaInvalid,generateEmail,redirectUrl,checkDinamiclyPopUP} = require('./helper'); 
+const { checkElementExists ,selectDropdownByVisibleText,checkAriaInvalid,generateEmail,redirectUrl,checkDinamiclyPopUP, logOutUser} = require('./helper'); 
 
 async function registrationScreen(page, action, stepNumber) {
   await test.step(`${stepNumber}. Registration Screen check Different Scenario: 1. Scenario check if exist all fields`, async () => {
@@ -557,51 +557,10 @@ async function emailVerificationPopup(page,action) {
   }
 }
 
-async function logOutUser(page,action) {
-  logStep(`Log Out User`);
-  try {
-    // Wait for the dropdown button
-      const dropdownButton = await page.waitForSelector('#accountMenu', { timeout: 30000 });
 
-      // Check if the button is visible
-      if (await dropdownButton.isVisible()) {
-          logSuccess("Dropdown My Account is visible, clicking it now...");
-          await dropdownButton.click();
-      } else {
-          logError("The dropdown button exists but is not visible.");
-          throw new Error("❌ The dropdown button exists but is not visible.");
-      }
-
-      // Wait for the "Salir" (Logout) span
-      const logoutSpan = await page.waitForSelector(
-        "//span[contains(text(), 'Salir') or contains(text(), 'Log In')]",
-        { timeout: 10000, state: 'visible' }
-      );
-      
-      const text = await logoutSpan.textContent();
-      console.log('Found span text:', text.trim());
-
-      // Confirm it is visible and enabled
-      if (await logoutSpan.isVisible()) {
-          console.log("The Logout span is visible. Clicking it now...");
-          await logoutSpan.click();
-          logSuccess("Logout clicked successfully.");
-          await page.waitForTimeout(3000); // Wait for 3 
-          const url = `https://${action}-v3-dev.streann.tech/`;
-          await page.waitForURL(url, { timeout: 20000 });
-        } else {
-          logError("The Logout span exists but is not visible.");
-          throw new Error("❌ The Logout span exists but is not visible.");
-      }
-  } catch (err) {
-    logError(`❌ An error occurred in logOutUser: ${err.message}`);
-    throw new Error(`❌ An error occurred in logOutUser: ${err.message}`);
-  }
-}
 
 module.exports = {
   registrationScreen,
-  logOutUser
 };
 
 

@@ -1,7 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
-const { checkElementExists,redirectUrl,checkDinamiclyPopUP,generateEmail} = require('./helper'); 
-const { logOutUser } = require('./registration'); 
+const { checkElementExists,redirectUrl,checkDinamiclyPopUP,generateEmail,logOutUser} = require('./helper'); 
 const { checkCategoryTitleHomeScreen, checkVodsInHome,UserDetailsScreen} = require('./homeContent'); 
 
 async function loginScreen(page, action, stepNumber) {

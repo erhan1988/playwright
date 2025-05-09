@@ -426,7 +426,7 @@ async function checkSharePopup(page, popupId) {
 
             if (!popupGone) {
                 logSuccess("Popup is closed");
-                await page.waitForTimeout(2000);
+                await page.waitForTimeout(3000);
             }
         } else {
             console.log("Share Popup did not appear within 30 seconds.");
@@ -513,6 +513,48 @@ async function checkDinamiclyPopUP(page, action, selector) {
     }
 }
 
+async function logOutUser(page,action) {
+    logStep(`Log Out User`);
+    try {
+      // Wait for the dropdown button
+        const dropdownButton = await page.waitForSelector('#accountMenu', { timeout: 30000 });
+  
+        // Check if the button is visible
+        if (await dropdownButton.isVisible()) {
+            logSuccess("Dropdown My Account is visible, clicking it now...");
+            await dropdownButton.click();
+        } else {
+            logError("The dropdown button exists but is not visible.");
+            throw new Error("❌ The dropdown button exists but is not visible.");
+        }
+  
+        // Wait for the "Salir" (Logout) span
+        const logoutSpan = await page.waitForSelector(
+          "//span[contains(text(), 'Salir') or contains(text(), 'Log In')]",
+          { timeout: 10000, state: 'visible' }
+        );
+        
+        const text = await logoutSpan.textContent();
+        console.log('Found span text:', text.trim());
+  
+        // Confirm it is visible and enabled
+        if (await logoutSpan.isVisible()) {
+            console.log("The Logout span is visible. Clicking it now...");
+            await logoutSpan.click();
+            logSuccess("Logout clicked successfully.");
+            await page.waitForTimeout(3000); // Wait for 3 
+            const url = `https://${action}-v3-dev.streann.tech/`;
+            await page.waitForURL(url, { timeout: 20000 });
+          } else {
+            logError("The Logout span exists but is not visible.");
+            throw new Error("❌ The Logout span exists but is not visible.");
+        }
+    } catch (err) {
+      logError(`❌ An error occurred in logOutUser: ${err.message}`);
+      throw new Error(`❌ An error occurred in logOutUser: ${err.message}`);
+    }
+  }
+
 
     
 module.exports = { 
@@ -526,6 +568,7 @@ module.exports = {
     selectDropdownByVisibleText,
     checkAriaInvalid,
     generateEmail,
-    checkDinamiclyPopUP
+    checkDinamiclyPopUP,
+    logOutUser
 };
 
