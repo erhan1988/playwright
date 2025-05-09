@@ -190,7 +190,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
                         await compartirButton.click();
                         await page.waitForTimeout(2000);
                         await checkSharePopup(page, 'cdk-overlay-0');
-                        logSuccess(`✅ "Compartir" button clicked successfully.`);
+                        //logSuccess(`✅ "Compartir" button clicked successfully.`);
                     }
                     break; // Exit the loop after handling "Suscribirse"
                 }
