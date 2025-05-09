@@ -426,7 +426,7 @@ async function checkSharePopup(page, popupId) {
 
             if (!popupGone) {
                 logSuccess("Popup is closed");
-                await page.waitForTimeout(3000);
+               // await page.waitForTimeout(3000);
             }
         } else {
             console.log("Share Popup did not appear within 30 seconds.");
