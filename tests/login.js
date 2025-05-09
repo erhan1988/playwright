@@ -1,6 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
-const { checkElementExists,redirectUrl,checkDinamiclyPopUP} = require('./helper'); 
+const { checkElementExists,redirectUrl,checkDinamiclyPopUP,generateEmail} = require('./helper'); 
+const { logOutUser } = require('./registration'); 
 
 async function loginScreen(page, action, stepNumber) {
   await test.step(`${stepNumber}. Login Screen check Different Scenario: 1. Scenario from registration if is redirect to te Login Screen`, async () => {
@@ -43,6 +44,9 @@ async function loginScreen(page, action, stepNumber) {
 
     stepNumber += 1;
     await loginScreenFiveScenario(page, action, stepNumber);
+
+    stepNumber += 1;
+    await loginScreenSixScenario(page, action, stepNumber);
   
     } catch (err) {
       logError(`❌ An error occurred in loginScreen: ${err.message}`);
@@ -117,8 +121,8 @@ async function loginScreenThirdScenario(page, action, stepNumber) {
     logStep(`${stepNumber}. Login Screen Third Scenario: Fill Email and password which is not exist in the Base need to appear pop up`);
     try {
       // Fill the Email 
-      await page.locator('#email').fill('nonexistent@example.com');
-      const email = await page.locator('#email').inputValue();
+      await page.locator('#username').fill('nonexistent@example.com');
+      const email = await page.locator('#username').inputValue();
       console.log(`Email has Value: ${email}`);
 
       // Fill the password
@@ -147,8 +151,8 @@ async function loginScreenFourScenario(page, action, stepNumber) {
       await page.waitForSelector('#login-button', { state: 'visible' });
 
       // Fill the Email 
-      await page.locator('#email').fill('test@streann.com');
-      const email = await page.locator('#email').inputValue();
+      await page.locator('#username').fill('test@streann.com');
+      const email = await page.locator('#username').inputValue();
       console.log(`Email has Value: ${email}`);
 
       //Password empty
@@ -175,8 +179,8 @@ async function loginScreenFiveScenario(page, action, stepNumber) {
         await page.waitForSelector('#login-button', { state: 'visible' });
 
       // Email Empty
-      await page.locator('#email').fill('');
-      const email = await page.locator('#email').inputValue();
+      await page.locator('#username').fill('');
+      const email = await page.locator('#username').inputValue();
       console.log(`Email has not Value: ${email}`);
 
       //Fill the Password
@@ -190,6 +194,56 @@ async function loginScreenFiveScenario(page, action, stepNumber) {
     } catch (err) {
       logError(`❌ An error occurred in loginScreenFiveScenario: ${err.message}`);
       throw new Error(`❌ An error occurred in loginScreenFiveScenario: ${err.message}`);
+    }
+  });
+}
+
+async function loginScreenSixScenario(page, action, stepNumber) {
+  await test.step(`${stepNumber}. Login Screen Six Scenario:Succesfyly logged user `, async () => {
+    logStep(`${stepNumber}. Login Screen Six Scenario:Succesfyly logged user `);
+    try {
+        //Refresh the page to reset the form
+      await page.reload();
+      await page.waitForSelector('#login-button', { state: 'visible' });
+
+      if (action === 'emmannuel'){
+         await page.locator('#username').fill('erhan+1115@streann.com');
+         const email = await page.locator('#username').inputValue();
+         console.log(`Email has Value: ${email}`);
+          //Fill the Password
+         await page.locator('#password').fill('123123');
+         const password = await page.locator('#password').inputValue();
+         console.log(`Password has  Value: ${password}`);
+      }else {
+        // Fill Email 
+        const baseEmail = "test+@streann.com";
+        const emailWithDate = generateEmail(baseEmail);
+        console.log(emailWithDate); 
+        await page.locator('#username').fill(emailWithDate);
+        const email = await page.locator('#username').inputValue();
+        console.log(`Email has Value: ${email}`);
+
+        //Fill the Password
+        await page.locator('#password').fill('123123');
+        const password = await page.locator('#password').inputValue();
+        console.log(`Password has  Value: ${password}`);
+      }
+
+      await checkLoginButtonDisabled(page, action,'enabled');
+      console.log('Now checking if the login button is Enabled...');
+
+      if (action !== 'emmannuel'){
+        // after Login be sure that is redirect to the Home Page
+        const url = `https://${action}-v3-dev.streann.tech/`;
+        await expect(page).toHaveURL(url);
+        console.log(`✅ Successfully navigated to ${url}`);
+      }
+      // Log Out the user then check for six scenario od registration screen create new user with already existing email
+      await logOutUser(page, action);
+
+    } catch (err) {
+      logError(`❌ An error occurred in loginScreenSixScenario: ${err.message}`);
+      throw new Error(`❌ An error occurred in loginScreenSixScenario: ${err.message}`);
     }
   });
 }

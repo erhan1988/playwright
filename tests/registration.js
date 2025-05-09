@@ -601,6 +601,7 @@ async function logOutUser(page,action) {
 
 module.exports = {
   registrationScreen,
+  logOutUser
 };
 
 
