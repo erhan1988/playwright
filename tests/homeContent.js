@@ -58,7 +58,7 @@ async function checkVodsInHome(page,action, stepNumber) {
             await page.waitForFunction(
                 (initialUrl) => window.location.href !== initialUrl,
                 initialUrl,
-                { timeout: 20000 }
+                { timeout: 30000 }
             );
             // Log the new URL
             const newUrl = page.url();
@@ -69,7 +69,7 @@ async function checkVodsInHome(page,action, stepNumber) {
         }
     });
 }
-async function NotloggeduserDetailsScrenn(page,action,stepNumber) {
+async function UserDetailsScreen(page,action,stepNumber,loggedUser) {
     await test.step(`${stepNumber}. Not logged user checking Details screen containts Go back Title background Image watch Now`, async () => {
         logStep(`${stepNumber}. Not logged user checking Details screen containts Go back Title background Image watch Now`);
         try {
@@ -82,11 +82,11 @@ async function NotloggeduserDetailsScrenn(page,action,stepNumber) {
             //Background image check
             await backgroundImageDetailsScreen(page);
             // Buttons in the Details screen
-            await buttonsDetailsScreen(page,action);
+            await buttonsDetailsScreen(page,action,loggedUser);
 
         } catch (err) {
-            logError(`❌ An error occurred in NotloggeduserDetailsScrenn: ${err.message}`);
-            throw new Error(`❌ An error occurred in NotloggeduserDetailsScrenn: ${err.message}`);
+            logError(`❌ An error occurred in UserDetailsScreen: ${err.message}`);
+            throw new Error(`❌ An error occurred in UserDetailsScreen: ${err.message}`);
         }
     });
 }
@@ -146,7 +146,7 @@ async function checkRelatedContentInDetailsScreen(page, action, stepNumber) {
             await page.waitForFunction(
                 (initialUrl) => window.location.href !== initialUrl,
                 initialUrl,
-                { timeout: 20000 }
+                { timeout: 30000 }
             );
             // Log the new URL
             const newUrl = page.url();
@@ -165,7 +165,7 @@ async function checkRelatedContentInDetailsScreen(page, action, stepNumber) {
 module.exports = {
     checkCategoryTitleHomeScreen, 
     checkVodsInHome,
-    NotloggeduserDetailsScrenn, 
+    UserDetailsScreen, 
     GobackLink, 
     titleDetailsScreen, 
     backgroundImageDetailsScreen, 

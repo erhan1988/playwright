@@ -2,6 +2,7 @@ const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
 const { checkElementExists,redirectUrl,checkDinamiclyPopUP,generateEmail} = require('./helper'); 
 const { logOutUser } = require('./registration'); 
+const { checkCategoryTitleHomeScreen, checkVodsInHome,UserDetailsScreen} = require('./homeContent'); 
 
 async function loginScreen(page, action, stepNumber) {
   await test.step(`${stepNumber}. Login Screen check Different Scenario: 1. Scenario from registration if is redirect to te Login Screen`, async () => {
@@ -199,7 +200,7 @@ async function loginScreenFiveScenario(page, action, stepNumber) {
 }
 
 async function loginScreenSixScenario(page, action, stepNumber) {
-  await test.step(`${stepNumber}. Login Screen Six Scenario:Succesfyly logged user `, async () => {
+  await test.step(`${stepNumber}. Login Screen Six Scenario:Succesfyly logged user Also check if appear Category Details screen etc  `, async () => {
     logStep(`${stepNumber}. Login Screen Six Scenario:Succesfyly logged user `);
     try {
         //Refresh the page to reset the form
@@ -238,7 +239,18 @@ async function loginScreenSixScenario(page, action, stepNumber) {
         await expect(page).toHaveURL(url);
         console.log(`✅ Successfully navigated to ${url}`);
       }
-      // Log Out the user then check for six scenario od registration screen create new user with already existing email
+
+      // Check Logged User in Home page if is appear category Home etc ...
+      stepNumber += 1;
+      await checkCategoryTitleHomeScreen(page, action, stepNumber);
+
+      stepNumber += 1;
+      await checkVodsInHome(page, action, stepNumber);
+
+      stepNumber += 1;
+      await UserDetailsScreen(page, action, stepNumber,'loggedUser');
+
+      // Log Out the user then check for six scenario of registration screen create new user with already existing email
       await logOutUser(page, action);
 
     } catch (err) {

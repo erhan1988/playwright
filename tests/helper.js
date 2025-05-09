@@ -117,7 +117,7 @@ async function backgroundImageDetailsScreen(page) {
     }
 }
 
-async function buttonsDetailsScreen(page, action) {
+async function buttonsDetailsScreen(page, action, loggedUser) {
     logStep('Checking for buttons in Details screen...');
     try {
         await page.evaluate(() => window.scrollBy(0, 200));
@@ -163,8 +163,11 @@ async function buttonsDetailsScreen(page, action) {
                     await page.waitForTimeout(4000);
             
                     // Wait for the URL to change
-                    await redirectUrl(page, '/login');
-            
+                    if (loggedUser){
+                        await redirectUrl(page, '/user/choose-plan');
+                    }else{
+                        await redirectUrl(page, '/login');
+                    }
                     // Go back to the details screen
                     logStep('Navigating back to the Details screen...');
                     await page.goBack();

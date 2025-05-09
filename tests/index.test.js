@@ -1,6 +1,6 @@
 const { test, expect} = require('@playwright/test');
 const { checkHomeLinkHeader, navigatetoURL, checkFaviconIcon,checkHeaderElements } = require('./header');
-const { checkCategoryTitleHomeScreen,checkVodsInHome,NotloggeduserDetailsScrenn,checkRelatedContentInDetailsScreen} = require('./homeContent');
+const { checkCategoryTitleHomeScreen,checkVodsInHome,UserDetailsScreen,checkRelatedContentInDetailsScreen} = require('./homeContent');
 const { checkPlayerScreen } = require('./helper'); 
 const { checkFooterLinks } = require('./footer'); 
 const { contactUsFirstScenario } = require('./contactUs'); 
@@ -35,7 +35,7 @@ if (action === 'emmanuel') {
             await checkVodsInHome(page, action,6);
             
             //7.Not logged user checking Details screen containts Go back Title background Image watch Now etc'
-            await NotloggeduserDetailsScrenn(page, action,7);
+            await UserDetailsScreen(page, action,7);
 
             //8.Check the player screen
             await checkPlayerScreen(page, action,8,'undefined');
@@ -82,7 +82,7 @@ if (action === 'emmanuel') {
             await checkVodsInHome(page, action,6);
 
             //7.Not logged user checking Details screen containts Go back Title background Image Subscribe etc'
-            await NotloggeduserDetailsScrenn(page, action,7);
+            await UserDetailsScreen(page, action,7);
 
             //8.Check Related Content in Details screen
             await checkRelatedContentInDetailsScreen(page, action,8);
@@ -122,7 +122,7 @@ if (action === 'emmanuel') {
             await checkVodsInHome(page, action,6);
 
             //7.Not logged user checking Details screen containts Go back Title background Image Subscribe etc'
-            await NotloggeduserDetailsScrenn(page, action,7);
+            await UserDetailsScreen(page, action,7);
 
             //8.Check Related Content in Details screen
             await checkRelatedContentInDetailsScreen(page, action,8);

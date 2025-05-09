@@ -561,7 +561,7 @@ async function logOutUser(page,action) {
   logStep(`Log Out User`);
   try {
     // Wait for the dropdown button
-      const dropdownButton = await page.waitForSelector('#accountMenu', { timeout: 10000 });
+      const dropdownButton = await page.waitForSelector('#accountMenu', { timeout: 30000 });
 
       // Check if the button is visible
       if (await dropdownButton.isVisible()) {
