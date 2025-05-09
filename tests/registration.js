@@ -364,7 +364,7 @@ async function regScreenSixcenario(page, action, stepNumber) {
     logStep(`${stepNumber}. Registration Screen Six Scenario:Try to create new User with already exist email`);
     try {
 
-      await page.waitForTimeout(3000); // Wait for 3 
+      await page.waitForSelector('#navbarToggler', { state: 'visible' });
 
       // CLick to redirect to Registration Screen from the Header
       const subscribeButton = page.locator(`xpath=//*[contains(normalize-space(text()), 'Subscribe Now') or contains(normalize-space(text()), 'Suscríbase Ahora')]`);
@@ -470,7 +470,7 @@ async function checkSubscribeButtonDisabled(page, action, enabled) {
       if (!isDisabled) {
           logSuccess('✅ Subscribe button is enabled as expected.');
           console.log('Click in the Subscribe button');
-          await page.waitForTimeout(5000); // Wait for 5 seconds 
+          await page.waitForTimeout(7000); // Wait for 5 seconds 
           await page.locator('#subscribe-button').click();
       } else {
           logError('❌ Subscribe button is disabled when it should be enabled.');

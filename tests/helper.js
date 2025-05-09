@@ -172,8 +172,8 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
                     logStep('Navigating back to the Details screen...');
                     await page.goBack();
                     const backUrl = page.url();
+                    await page.waitForSelector('a.my-1.d-flex.align-items-center.fs-5', { state: 'visible' });
                     logSuccess(`✅ Returned to Details screen. Current URL: ${backUrl}`);
-                    await page.waitForTimeout(2000);
             
                     // 🔴 Only continue with "Compartir" if action is 'amorir'
                     if (action === 'amorir') {
