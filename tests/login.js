@@ -267,12 +267,6 @@ async function loginScreenSixScenario(page, action, stepNumber) {
   });
 }
 
-// NEXT i NEED TO CHECK TO LOGIN AND THEN TO LOG OUT ..
-// THEN TO CHECK FORGOT PASSWORD SCREEN
-
-
-
-
 async function checkLoginButtonDisabled(page, action, enabled) {
   if (enabled) {
     // Should be enabled
