@@ -470,7 +470,8 @@ async function checkSubscribeButtonDisabled(page, action, enabled) {
       if (!isDisabled) {
           logSuccess('✅ Subscribe button is enabled as expected.');
           console.log('Click in the Subscribe button');
-          await page.waitForTimeout(7000); // Wait for 5 seconds 
+          //await page.waitForTimeout(7000); // Wait for 5 seconds 
+          await page.waitForSelector('#subscribe-button', { state: 'visible' });
           await page.locator('#subscribe-button').click();
       } else {
           logError('❌ Subscribe button is disabled when it should be enabled.');
