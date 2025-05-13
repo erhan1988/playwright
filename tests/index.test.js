@@ -95,6 +95,9 @@ if (action === 'emmanuel') {
 
             //11. Check the Login screen
             await loginScreen(page,action,11);
+
+            //12. Check the Forgot Password screen
+            await forgotScreen(page,action,12);
         });
     });
 }else if (action === 'prtv') {
