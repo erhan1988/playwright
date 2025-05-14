@@ -6,6 +6,7 @@ const { checkFooterLinks } = require('./footer');
 const { contactUsFirstScenario } = require('./contactUs'); 
 const { registrationScreen } = require('./registration');
 const { loginScreen } = require('./login');
+const { forgotScreen } = require('./forgotScreen');
 
 // Get the action from the command-line argument or environment variable
 const action = process.env.ACTION || process.argv[2]; // Use `ACTION` env variable or second CLI argument

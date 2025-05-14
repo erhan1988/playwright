@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
-//const { checkElementExists,redirectUrl,checkDinamiclyPopUP,generateEmail,logOutUser} = require('./helper'); 
+const { checkElementExists} = require('./helper'); 
 
 async function forgotScreen(page, action, stepNumber) {
   await test.step(`${stepNumber}. Forgot Screen Different Scenario: 1. Check if exist all fields `, async () => {
