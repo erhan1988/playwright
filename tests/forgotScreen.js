@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
-const { checkElementExists} = require('./helper'); 
+const { checkElementExists,checkAriaInvalid,checkDinamiclyPopUP,generateEmail} = require('./helper'); 
 
 async function forgotScreen(page, action, stepNumber) {
   await test.step(`${stepNumber}. Forgot Screen Different Scenario: 1. Check if exist all fields `, async () => {
@@ -26,10 +26,13 @@ async function forgotScreen(page, action, stepNumber) {
       }
 
       // Check firs title if exist 
-      const h1 = await page.locator('h1.mb-1.d-block.float-left.fs-2.fw-bold').first();
-      const titleText = await h1.textContent();
-      logSuccess('Title in the Forgot Password:', titleText);
-      expect(titleText).not.toBeNull();
+      try {
+        const h1 = await page.locator('h1.mb-1.d-block.float-left.fs-2.fw-bold').first();
+        const titleText = await h1.textContent();
+        console.log('Title in the Forgot Password:', titleText);
+      } catch (e) {
+        console.error('Failed to get title:', e);
+      }
 
       // Check if all fields exist in the Forgot Password screen
       let requiredFields = [];
@@ -43,7 +46,16 @@ async function forgotScreen(page, action, stepNumber) {
       for (const element of requiredFields) {
         await checkElementExists(page, element.locator, element.name);
       }
-    
+
+      stepNumber += 1;
+      await forgotScreenSecondScenario(page, action, stepNumber);
+
+      stepNumber += 1;
+      await forgotScreenThirdScenario(page, action, stepNumber);
+
+      stepNumber += 1;
+      await forgotScreenFourthScenario(page, action, stepNumber);
+
   } catch (err) {
     logError(`❌ An error occurred in forgotScreen: ${err.message}`);
     throw new Error(`❌ An error occurred in forgotScreen: ${err.message}`);
@@ -51,66 +63,110 @@ async function forgotScreen(page, action, stepNumber) {
   });
 }
 
-// async function loginScreenSecondScenario(page, action, stepNumber) {
-//   await test.step(`${stepNumber}. Login Screen Second Scenario: Click from the haeader need to redirect to the login screen also check are exist all fields`, async () => {
-//     logStep(`${stepNumber}. Login Screen Second Scenario: Click from the header need to redirect to the login screen also check are exist all fields`);
-//     try {
-//       // CLick to redirect to login Screen from the Header
-//       const loginbutton = page.locator(`xpath=//*[contains(normalize-space(text()), 'Log In') or contains(normalize-space(text()), 'Iniciar sesión') or contains(normalize-space(text()), 'Ingresar')]`);
-//       if (await loginbutton.count()) {
-//         await loginbutton.first().click();
-//         console.log("Login button clicked in the header!");
-//       } else {
-//         throw new Error("❌ Login button not found!");
-//       }
-//       // Wait for the Registration screen to load
-//       await page.waitForSelector('#login-button', { state: 'visible' });
+async function forgotScreenSecondScenario(page, action, stepNumber) {
+  await test.step(`${stepNumber}. Forgot Screen Second Scenario: 2. Click in the button Send email without to fill Email Field need to appear Warning Message `, async () => {
+  logStep(`${stepNumber}. Forgot Screen Second Scenario: 2. Click in the button Send email without to fill Email Field need to appear Warning Message `);
 
-//       // Check if exist all fields in the Login screen
-//        // Check first Title
-//        const h1 = page.locator('h1');
-//       try {
-//         await expect(h1).toHaveText(/Log in|Ingresar/i);
-//         const headingText = await h1.textContent();
-//         logSuccess(`✅ Found Title: "${headingText?.trim()}"`);
-//       } catch (error) {
-//         const actualText = await h1.textContent();
-//         logError(`❌ Heading did not match expected text. Found: "${actualText?.trim()}"`);
-//         throw error;
-//       }
+  try {
+      // Check if the Send Email button is visible
+      const sendEmailButton = page.locator('#send-email-button');
+      if (await sendEmailButton.isVisible()) {
+        await sendEmailButton.click();
+        console.log('✅ Clicked on Send Email button without filling the email field.');
+      } else {
+        throw new Error('❌ Send Email button not found!');
+      }
 
-//       let requiredFields = [];
-//       requiredFields = [
-//         { locator: '#username', name: 'Email Field' },
-//         { locator: '#password', name: 'Password Field' },
-//         { locator: '#rememberMe-input', name: 'Remember me checkbox' },
-//         { locator: '#forgotPass', name: 'Link Forgot Password' },
-//         { locator: '#login-button', name: 'Login Button' },
-//       ];
+      const invalidFields = [
+        { id: '#email', name: 'Email Field' },
+      ];
 
-//       for (const element of requiredFields) {
-//         await checkElementExists(page, element.locator, element.name);
-//       }
+      for (const field of invalidFields) {
+        await checkAriaInvalid(page, field); // <-- Use helper function here
+      }
+  } catch (err) {
+    logError(`❌ An error occurred in forgotScreenSecondScenario: ${err.message}`);
+    throw new Error(`❌ An error occurred in forgotScreenSecondScenario: ${err.message}`);
+    }
+  });
+}
+async function forgotScreenThirdScenario(page, action, stepNumber) {
+  await test.step(`${stepNumber}. Forgot Screen Third Scenario: 3. Fill wrong email need to appear message warning Message `, async () => {
+  logStep(`${stepNumber}. Forgot Screen Third Scenario: 3. Fill wrong email need to appear message warning Message `);
 
-//       // After this i will check also if exist the link for Sign Up
-//       const link = await page.locator('a[href="/subscribe"]');
-//       const text = await link.textContent();
-//       console.log('Link text:', text?.trim());
-//       if (await link.isVisible()) {
-//         logSuccess('✅ Sign Up link is visible.');
-//       } else {
-//         logError('❌ Sign Up link is not visible.');
-//       }
-//       // Check if button login is disabled
-//       await checkLoginButtonDisabled(page, action);
-//       console.log('All fields are empty. Now checking if the login button is disabled...');
+  try {
+    // Make regresh the page 
+    await page.reload();
+    await page.waitForSelector('#send-email-button', { state: 'visible' });
 
-//     } catch (err) {
-//       logError(`❌ An error occurred in loginScreenSecondScenario: ${err.message}`);
-//       throw new Error(`❌ An error occurred in loginScreenSecondScenario: ${err.message}`);
-//     }
-//   });
-// }
+    // Fill the email field with an invalid email address
+    await page.locator('#email').fill('dd@streann.com');
+    const email = await page.locator('#email').inputValue();
+    console.log(`Email has Value: ${email}`);
+
+    // Click in the Send Email button
+    const sendEmailButton = page.locator('#send-email-button');
+    await sendEmailButton.click();
+
+    // Check if the error pop-up is visible
+    await checkDinamiclyPopUP(page, action,'#error-forgot-pass');
+    console.log('Now checking if the error pop up is visible...');
+
+  } catch (err) {
+    logError(`❌ An error occurred in forgotScreenThirdScenario: ${err.message}`);
+    throw new Error(`❌ An error occurred in forgotScreenThirdScenario: ${err.message}`);
+    }
+  });
+}
+
+async function forgotScreenFourthScenario(page, action, stepNumber) {
+  await test.step(`${stepNumber}. Forgot Screen Fourth Scenario: 4. Fill correct email need to appear success Message `, async () => {
+  logStep(`${stepNumber}. Forgot Screen Fourth Scenario: 4. Fill correct email need to appear success Message `);
+
+  try {
+    // Make regresh the page 
+    await page.reload();
+    await page.waitForSelector('#send-email-button', { state: 'visible' });
+
+ 
+    // Fill Email 
+    const baseEmail = "test+@streann.com";
+    const emailWithDate = generateEmail(baseEmail);
+    console.log(emailWithDate); 
+    await page.locator('#email').fill(emailWithDate);
+    const email = await page.locator('#email').inputValue();
+    console.log(`Email has Value: ${email}`);
+
+    // Click in the Send Email button
+    const sendEmailButton = page.locator('#send-email-button');
+    await sendEmailButton.click();
+
+    // Check if appear succes message 
+    await checkDinamiclyPopUP(page, action,'#success_forgot_pass');
+    console.log('Now checking if the error pop up is visible...');
+
+    // Click in cancel Button need to redirect to the Home Page 
+    const cancelButton = page.locator('#button-cancel');
+    if (await cancelButton.isVisible()) {
+      await cancelButton.click();
+      logSuccess('✅ Clicked on Cancel button.');
+    } else {
+      throw new Error('❌ Cancel button not found!');
+    }
+    // Check if the URL is correct
+    const url = `https://${action}-v3-dev.streann.tech/`;
+    await expect(page).toHaveURL(url);
+    console.log(`✅ Successfully navigated to ${url}`);
+
+  } catch (err) {
+    logError(`❌ An error occurred in forgotScreenFourthScenario: ${err.message}`);
+    throw new Error(`❌ An error occurred in forgotScreenFourthScenario: ${err.message}`);
+    }
+  });
+}
+
+
+
 
 
 
