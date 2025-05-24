@@ -4,8 +4,8 @@ const { checkElementExists,redirectUrl,checkDinamiclyPopUP,generateEmail,logOutU
 const { checkCategoryTitleHomeScreen, checkVodsInHome,UserDetailsScreen} = require('./homeContent'); 
 
 async function loginScreen(page, action, stepNumber) {
-  await test.step(`${stepNumber}. Login Screen check Different Scenario: 1. Scenario from registration if is redirect to te Login Screen`, async () => {
-  logStep(`${stepNumber}. Login Screen check Different Scenario: 1. Scenario from registration if is redirect to te Login Screen`);
+  await test.step(`${stepNumber}. Login Screen check Different Scenario: 1. Scenario from registration if is redirect to the Login Screen`, async () => {
+  logStep(`${stepNumber}. Login Screen check Different Scenario: 1. Scenario from registration if is redirect to the Login Screen`);
 
   try {
     // Check first from registration if is redirect to the Login screen 
@@ -199,8 +199,8 @@ async function loginScreenFiveScenario(page, action, stepNumber) {
 }
 
 async function loginScreenSixScenario(page, action, stepNumber) {
-  await test.step(`${stepNumber}. Login Screen Six Scenario:Succesfyly logged user Also check if appear Category Details screen etc  `, async () => {
-    logStep(`${stepNumber}. Login Screen Six Scenario:Succesfyly logged user `);
+  await test.step(`${stepNumber}. Login Screen Six Scenario:Successfully logged user Also check if appear Category Details screen etc  `, async () => {
+    logStep(`${stepNumber}. Login Screen Six Scenario:Successfully logged user `);
     try {
         //Refresh the page to reset the form
       await page.reload();
@@ -257,7 +257,6 @@ async function loginScreenSixScenario(page, action, stepNumber) {
       stepNumber += 1;
       await UserDetailsScreen(page, action, stepNumber,'loggedUser');
 
-      // Log Out the user then check for six scenario of registration screen create new user with already existing email
       await logOutUser(page, action);
 
     } catch (err) {
@@ -296,6 +295,7 @@ async function checkLoginButtonDisabled(page, action, enabled) {
 
 module.exports = {
   loginScreen,
+  checkLoginButtonDisabled
 };
 
 

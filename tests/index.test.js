@@ -7,6 +7,7 @@ const { contactUsFirstScenario } = require('./contactUs');
 const { registrationScreen } = require('./registration');
 const { loginScreen } = require('./login');
 const { forgotScreen } = require('./forgotScreen');
+const { loggedUserMyAccount} = require('./myAccountScreen');
 
 // Get the action from the command-line argument or environment variable
 const action = process.env.ACTION || process.argv[2]; // Use `ACTION` env variable or second CLI argument
@@ -76,20 +77,20 @@ if (action === 'emmanuel') {
             //Step 4: Check if Header elements exist
             await checkHeaderElements(page, action,4);
 
-            //5.Check the Home screen Need to print title of all category
-            await checkCategoryTitleHomeScreen(page, action,5);
+            // //5.Check the Home screen Need to print title of all category
+             await checkCategoryTitleHomeScreen(page, action,5);
 
-            //6.Check the VODs in Home screen
-            await checkVodsInHome(page, action,6);
+            // //6.Check the VODs in Home screen
+             await checkVodsInHome(page, action,6);
 
-            //7.Not logged user checking Details screen containts Go back Title background Image Subscribe etc'
-            await UserDetailsScreen(page, action,7);
+            // //7.Not logged user checking Details screen containts Go back Title background Image Subscribe etc'
+             await UserDetailsScreen(page, action,7);
 
-            //8.Check Related Content in Details screen
-            await checkRelatedContentInDetailsScreen(page, action,8);
+            // //8.Check Related Content in Details screen
+             await checkRelatedContentInDetailsScreen(page, action,8);
 
-            //9. Check footer Section 
-            await checkFooterLinks (page,action,9);
+            // //9. Check footer Section 
+             await checkFooterLinks (page,action,9);
 
             //10. Check different scenario for registration User
             await registrationScreen(page,action,10);
@@ -99,6 +100,9 @@ if (action === 'emmanuel') {
 
             //12. Check the Forgot Password screen
             await forgotScreen(page,action,12);
+
+            //13.Logged User my Account
+            await loggedUserMyAccount (page,action,13);
         });
     });
 }else if (action === 'prtv') {
