@@ -10,11 +10,8 @@ async function loggedUserMyAccount(page, action, stepNumber) {
   try {
       // navigate to the Login screen
       const baseUrl = `https://${action}-v3-dev.streann.tech/login`;
-      await page.goto(baseUrl, { waitUntil: 'networkidle' });
-
-      // Wait for the login screen to load
-      await page.waitForSelector('#login-button', { state: 'visible' });
-  
+      await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });      // Wait for the login screen to load
+      await page.waitForSelector('#login-button', { state: 'visible', timeout: 20000 });  
      // Login in the WEB 
       if (action === 'emmannuel'){
          await page.locator('#username').fill('erhan+1115@streann.com');
@@ -62,6 +59,10 @@ async function loggedUserMyAccount(page, action, stepNumber) {
 
       stepNumber += 1;
       await myUserScreen(page, action, stepNumber);
+
+      stepNumber += 1;
+      await myUserChangePassword(page, action, stepNumber);
+
   } catch (err) {
     logError(`❌ An error occurred in loggedUserMyAccount: ${err.message}`);
     throw new Error(`❌ An error occurred in loggedUserMyAccount: ${err.message}`);
@@ -148,6 +149,62 @@ async function myUserScreen(page, action, stepNumber) {
   } catch (err) {
     logError(`❌ An error occurred in myUserScreen: ${err.message}`);
     throw new Error(`❌ An error occurred in myUserScreen: ${err.message}`);
+    }
+  });
+}
+
+async function myUserChangePassword(page, action, stepNumber) {
+  await test.step(`${stepNumber}. My Account Screen: 4. Check in /user page if exist user Change user Password `, async () => {
+  logStep(`${stepNumber}. My Account Screen: 4. Check in /user page if exist user Change user Password `);
+
+  try {
+     // Click the element by class
+    await page.getByText(/Cambiar Contraseña|Change Password/).click();
+    // Wait for navigation to complete
+    await page.waitForLoadState('networkidle');
+    expect(page.url()).toBe(`https://${action}-v3-dev.streann.tech/user/user-password`);
+
+    // Check in the Change User Password if exist all fields 
+    let requiredFields = [];
+      requiredFields = [
+        { locator: '#back-button', name: 'Go Back Link' },
+        { locator: '#password', name: 'Password Field' },
+        { locator: '#newPassword', name: 'New Password Field' },
+        { locator: '#confirmPassword', name: 'Confirm Password Field' },
+        { locator: '#user-email-button', name: 'Button Change' },
+        { locator: '#button-cancel', name: 'Button Cancel' },
+      ];
+    for (const element of requiredFields) {
+      await checkElementExists(page, element.locator, element.name);
+    }
+
+    // Change the Password 
+    await page.locator('#password').fill('123123');
+    const password = await page.locator('#password').inputValue();
+    console.log(`Password has  Value: ${password}`);
+
+    await page.locator('#newPassword').fill('111111');  
+    const newPassword = await page.locator('#newPassword').inputValue();
+    console.log(`New Password has  Value: ${newPassword}`);
+
+    await page.locator('#confirmPassword').fill('111111'); 
+    const confirmPassword = await page.locator('#confirmPassword').inputValue();
+    console.log(`Confirm Password has  Value: ${confirmPassword}`);
+
+    // click the Change Password Button
+    const changePasswordButton = page.locator('#user-email-button');
+    console.log('Clicking Change Password Button');
+    await changePasswordButton.click();
+
+    await checkDinamiclyPopUP(page, action,'#toast-container');
+
+    await page.waitForURL(`https://${action}-v3-dev.streann.tech/user`, { timeout: 20000 });
+    console.log(`✅ Successfully navigated to https://${action}-v3-dev.streann.tech/user after changing password`)
+    expect(page.url()).toBe(`https://${action}-v3-dev.streann.tech/user`);
+
+  } catch (err) {
+    logError(`❌ An error occurred in myUserChangePassword: ${err.message}`);
+    throw new Error(`❌ An error occurred in myUserChangePassword: ${err.message}`);
     }
   });
 }
