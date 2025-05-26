@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
-const { checkElementExists,checkAriaInvalid,checkDinamiclyPopUP,generateEmail} = require('./helper'); 
+const { checkElementExists,checkAriaInvalid,checkDinamiclyPopUP,generateEmail,logOutUser} = require('./helper'); 
 const { checkLoginButtonDisabled} = require('./login');
 
 async function loggedUserMyAccount(page, action, stepNumber) {
@@ -63,6 +63,8 @@ async function loggedUserMyAccount(page, action, stepNumber) {
       stepNumber += 1;
       await myUserChangePassword(page, action, stepNumber);
 
+      stepNumber += 1;
+      await myAccountScreenPage(page,action,stepNumber)
   } catch (err) {
     logError(`❌ An error occurred in loggedUserMyAccount: ${err.message}`);
     throw new Error(`❌ An error occurred in loggedUserMyAccount: ${err.message}`);
@@ -154,8 +156,8 @@ async function myUserScreen(page, action, stepNumber) {
 }
 
 async function myUserChangePassword(page, action, stepNumber) {
-  await test.step(`${stepNumber}. My Account Screen: 4. Check in /user page if exist user Change user Password `, async () => {
-  logStep(`${stepNumber}. My Account Screen: 4. Check in /user page if exist user Change user Password `);
+  await test.step(`${stepNumber}. My Account Screen: 4. Check in /user page if exist user Change user Password and change the password`, async () => {
+  logStep(`${stepNumber}. My Account Screen: 4. Check in /user page if exist user Change user Password and change the password`);
 
   try {
      // Click the element by class
@@ -177,7 +179,6 @@ async function myUserChangePassword(page, action, stepNumber) {
     for (const element of requiredFields) {
       await checkElementExists(page, element.locator, element.name);
     }
-
     // Change the Password 
     await page.locator('#password').fill('123123');
     const password = await page.locator('#password').inputValue();
@@ -205,6 +206,39 @@ async function myUserChangePassword(page, action, stepNumber) {
   } catch (err) {
     logError(`❌ An error occurred in myUserChangePassword: ${err.message}`);
     throw new Error(`❌ An error occurred in myUserChangePassword: ${err.message}`);
+    }
+  });
+}
+async function myAccountScreenPage(page, action, stepNumber) {
+  await test.step(`${stepNumber}. My Account Screen: 5. Check in /user page if exist Button Plans and Form for contact Us`, async () => {
+  logStep(`${stepNumber}. My Account Screen: 5. Check in /user page if exist Button Plans and Form for contact Us`);
+
+  try {
+      // Check if exist button for Plans 
+      const link = page.locator('[routerlink="/user/choose-plan"]');
+      if (await link.count() > 0) {
+        const title = await link.textContent();
+        console.log("Element exists. Title:", title?.trim());
+      } else {
+        console.log("Element does not exist.");
+      }
+    // Check in the Change User Password if exist all fields 
+    let requiredFields = [];
+      requiredFields = [
+        { locator: '#customer-service', name: 'Form Contact Us' },
+        { locator: '#subject', name: 'Subject' },
+        { locator: '#issue', name: 'Text Area'},
+        { locator: '#submit-button', name: 'Submit Button'},
+      ];
+    for (const element of requiredFields) {
+      await checkElementExists(page, element.locator, element.name);
+    }
+    // Not log out the user
+    await logOutUser(page, action);
+
+  } catch (err) {
+    logError(`❌ An error occurred in myAccountScreenPage: ${err.message}`);
+    throw new Error(`❌ An error occurred in myAccountScreenPage: ${err.message}`);
     }
   });
 }
