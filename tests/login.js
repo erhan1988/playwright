@@ -47,7 +47,7 @@ async function loginScreen(page, action, stepNumber) {
 
     stepNumber += 1;
     await loginScreenSixScenario(page, action, stepNumber);
-  
+
     } catch (err) {
       logError(`❌ An error occurred in loginScreen: ${err.message}`);
       throw new Error(`❌ An error occurred in loginScreen: ${err.message}`);
@@ -291,17 +291,68 @@ async function checkLoginButtonDisabled(page, action, enabled) {
   }
 }
 
+async function loginScreenNewPassword(page, action, stepNumber) {
+  await test.step(`${stepNumber}. Last Step login with New Password`, async () => {
+  logStep(`${stepNumber}. Last Step login with New Password`);
 
+  try {
+      // navigate to the Login screen
+      const baseUrl = `https://${action}-v3-dev.streann.tech/login`;
+      await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });      // Wait for the login screen to load
+      await page.waitForSelector('#login-button', { state: 'visible', timeout: 20000 });  
+    
+      if (action === 'emmannuel'){
+        await page.locator('#username').fill('erhan+1115@streann.com');
+        const email = await page.locator('#username').inputValue();
+        console.log(`Email has Value: ${email}`);
+          //Fill the Password
+        await page.locator('#password').fill('111111');
+        const password = await page.locator('#password').inputValue();
+        console.log(`Password has  Value: ${password}`);
+      }else {
+          // Fill Email 
+        const baseEmail = "test+@streann.com";
+        const emailWithDate = generateEmail(baseEmail);
+        console.log(emailWithDate); 
+        await page.locator('#username').fill(emailWithDate);
+        const email = await page.locator('#username').inputValue();
+        console.log(`Email has Value: ${email}`);
+
+        //Fill the Password
+        await page.locator('#password').fill('111111');
+        const password = await page.locator('#password').inputValue();
+        console.log(`Password has  Value: ${password}`);
+      }
+
+      await checkLoginButtonDisabled(page, action,'enabled');
+      console.log('Now checking if the login button is Enabled...');
+
+      // Emmanuel when is logged is redirect to the Profile Page
+      if (action === 'emmannuel'){
+        // after Login be sure that is redirect to the Profile Page
+        const url = `https://${action}-v3-dev.streann.tech/profile/select-profile`;
+        await expect(page).toHaveURL(url);
+        console.log(`✅ Successfully navigated to ${url}`);
+        await page.click('.card.mx-2.d-flex.flex-column.align-items-center.ng-star-inserted');
+        // await page.waitForTimeout(5000); // Wait for 5 seconds
+      }
+        
+        // after Login be sure that is redirect to the Home Page
+        const url = `https://${action}-v3-dev.streann.tech/`;
+        await expect(page).toHaveURL(url);
+        console.log(`✅ Successfully navigated to ${url}`);
+
+    } catch (err) {
+      logError(`❌ An error occurred in loginScreenNewPassword: ${err.message}`);
+      throw new Error(`❌ An error occurred in loginScreenNewPassword: ${err.message}`);
+    }
+  });
+}
 
 module.exports = {
   loginScreen,
-  checkLoginButtonDisabled
+  checkLoginButtonDisabled,
+  loginScreenNewPassword,
 };
-
-
-
-
-
-
 
 

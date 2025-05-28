@@ -5,7 +5,7 @@ const { checkPlayerScreen } = require('./helper');
 const { checkFooterLinks } = require('./footer'); 
 const { contactUsFirstScenario } = require('./contactUs'); 
 const { registrationScreen } = require('./registration');
-const { loginScreen } = require('./login');
+const { loginScreen,loginScreenNewPassword } = require('./login');
 const { forgotScreen } = require('./forgotScreen');
 const { loggedUserMyAccount} = require('./myAccountScreen');
 
@@ -103,6 +103,9 @@ if (action === 'emmanuel') {
 
             //13.Logged User my Account
             await loggedUserMyAccount (page,action,13);
+
+            // 14.Login with New Password
+            await loginScreenNewPassword(page,action,14);
         });
     });
 }else if (action === 'prtv') {
