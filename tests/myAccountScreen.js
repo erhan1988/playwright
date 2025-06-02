@@ -98,11 +98,13 @@ async function myAccountPage(page, action, stepNumber) {
     // Confirm it is visible and enabled
     if (await myAccountSpan.isVisible()) {
       console.log("The MyAccount span is visible. Clicking it now...");
-      await myAccountSpan.click();
-      logSuccess("MyAccount clicked successfully.");
-      await page.waitForTimeout(3000); // Wait for 3 
       const url = `https://${action}-v3-dev.streann.tech/user`;
-      await page.waitForURL(url, { timeout: 20000 });
+      await Promise.all([
+        page.waitForURL(url, { timeout: 20000 }),
+        myAccountSpan.click(),
+      ]);
+      logSuccess("MyAccount clicked and navigation detected.");
+      console.log('Current URL after click:', page.url());
     } else {
       logError("The MyAccount span exists but is not visible.");
       throw new Error("❌ The MyAccount span exists but is not visible.");
