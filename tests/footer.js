@@ -35,7 +35,8 @@ async function checkFooterLinks(page, action, stepNumber) {
       // ✅ Now check the expected terms content
       await checkTextExist(page, [
         "Welcome to Emmanuel TV!",
-        "Términos de Uso"
+        "Términos de Uso",
+        "Términos y Condiciones"
       ]);
 
       // 🛑 Now move to privacy policy **only after above check passes**
@@ -82,13 +83,14 @@ async function privacyPolicy(page) {
     await page.waitForSelector('body', { timeout: 8000 });
     await page.waitForFunction(() => {
     const bodyText = document.body.innerText;
-      return bodyText.includes('Privacy Policy Effective Since') || bodyText.includes('Política de Privacidad');
+      return bodyText.includes('Privacy Policy Effective Since') || bodyText.includes('Política de Privacidad') || bodyText.includes('Avisos Legales');
     });
 
     // ✅ Check privacy page content
     await checkTextExist(page, [
       "Privacy Policy Effective Since",
-      "Política de Privacidad"
+      "Política de Privacidad",
+      "Avisos Legales"
     ]);
   } catch (err) {
     logError(`❌ An error occurred in privacyPolicy: ${err.message}`);

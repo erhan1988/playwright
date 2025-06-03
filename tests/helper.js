@@ -66,12 +66,16 @@ async function GobackLink(page, value) {
     }
 }
 
-async function titleDetailsScreen(page) {
+async function titleDetailsScreen(page,action) {
     logStep('Checking for the title on the Details screen...');
     try {
-        const titleLocator = page.locator('h1.title-title.fs-3');
+        let titleLocator;
+        if (action === 'okgol'){
+             titleLocator = page.locator('h5.title-title');
+        }else {
+             titleLocator = page.locator('h1.title-title.fs-3');
+        }
         await titleLocator.waitFor({ state: 'visible', timeout: 10000 });
-
         const titleElements = await titleLocator.all();
 
         if (titleElements.length === 0) {
@@ -92,12 +96,16 @@ async function titleDetailsScreen(page) {
     }
 }
 
-async function backgroundImageDetailsScreen(page) {
+async function backgroundImageDetailsScreen(page,action) {
     logStep('Checking for background images in the Details screen...');
     try {
-        const imageLocator = page.locator('div.details-image.details-image-desktop');
+        let imageLocator;
+        if (action === 'okgol') {
+            imageLocator = page.locator('img.img-fluid').nth(1);
+        } else {
+            imageLocator = page.locator('div.details-image.details-image-desktop');
+        }
         await imageLocator.waitFor({ state: 'visible', timeout: 5000 });
-
         const imageCount = await imageLocator.count();
         logSuccess(`✅ Found ${imageCount} background image(s).`);
 
@@ -125,7 +133,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
 
         const buttons = page.locator("//button[.//span[@class='mat-mdc-button-touch-target']]");
         const buttonCount = await buttons.count();
-        //logSuccess(`✅ Found ${buttonCount} buttons in the Details screen.`);
+        logSuccess(`✅ Found ${buttonCount} buttons in the Details screen.`);
 
         let watchNowFound = false;
         let suscribirseFound = false; // Declare the variable
@@ -150,7 +158,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
                 break; // Exit the loop after checking the URL change
             }
              // Check for "Suscribirse" and "Compartir" when action is "amorir" or "prtv"
-            else if (action === 'amorir' || action === 'prtv') {
+            else if (action === 'amorir' || action === 'okgol') {
                 let buttons1 = page.locator("//button[.//span[contains(text(), 'Compartir')]]"); // 🟢 Declare early!
             
                 if (trimmedText.toLowerCase() === 'suscribirse') {
@@ -176,7 +184,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
                     logSuccess(`✅ Returned to Details screen. Current URL: ${backUrl}`);
             
                     // 🔴 Only continue with "Compartir" if action is 'amorir'
-                    if (action === 'amorir') {
+                    if (action === 'amorir' || action === 'okgol') {
                         logStep('Looking for the "Compartir" button...');
                         const compartirButton = buttons1.first();
                         try {
@@ -202,7 +210,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
             logError(msg);
             throw new Error(msg);
         }
-        if (action === 'amorir') {
+        if (action === 'amorir' || action === 'okgol') {
             if (!suscribirseFound) {
                 const msg = '❌ "Suscribirse" button not found for action: amorir';
                 logError(msg);

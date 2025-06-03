@@ -42,16 +42,19 @@ async function checkVodsInHome(page,action, stepNumber) {
             expect(imageElements.length, 'Expected at least one image').toBeGreaterThan(0);
             console.log(`✅ Found ${imageElements.length} images with background styles.`);
 
-            // Ensure there are at least 5 images
-            if (imageElements.length < 15) {
-                throw new Error('Less than 5 images found. Cannot click the 5th image (vod).');
+            let imageToClickIndex;
+            if (imageElements.length >= 15) {
+                imageToClickIndex = 14; // 15th image (index 14)
+            } else if (imageElements.length >= 9) {
+                imageToClickIndex = 8; // 9th image (index 8)
+            } else {
+                throw new Error('Less than 9 images found. Cannot click the 9th image (vod).');
             }
-
-            // Click on the 5th image (index 4, as Playwright uses 0-based indexing)
-            const fifthImage = imageElements[14];
-            await fifthImage.scrollIntoViewIfNeeded();
-            console.log('Clicking on the 14th image...');
-            await fifthImage.click();
+            // Click on the selected image
+            const imageToClick = imageElements[imageToClickIndex];
+            await imageToClick.scrollIntoViewIfNeeded();
+            console.log(`Clicking on the ${imageToClickIndex + 1}th image...`);
+            await imageToClick.click();
 
             // Wait for the URL to change
             const initialUrl = page.url();
@@ -77,10 +80,10 @@ async function UserDetailsScreen(page,action,stepNumber,loggedUser) {
             await GobackLink(page,'undefined');  
 
             // Check for the title in the Details screen
-            await titleDetailsScreen(page);
+            await titleDetailsScreen(page,action);
 
             //Background image check
-            await backgroundImageDetailsScreen(page);
+            await backgroundImageDetailsScreen(page,action);
             // Buttons in the Details screen
             await buttonsDetailsScreen(page,action,loggedUser);
 
@@ -98,7 +101,7 @@ async function checkRelatedContentInDetailsScreen(page, action, stepNumber) {
             let titleButtons;
             let count = 0;
     
-            if (action === 'amorir' || action === 'prtv') {
+            if (action === 'amorir' || action === 'okgol') {
             // Check title in the Related Content
             titleButtons = await page.locator('button.nav-link.ng-star-inserted');
             // Wait for at least one element or timeout

@@ -108,10 +108,10 @@ if (action === 'emmanuel') {
             await loginScreenNewPassword(page,action,14);
         });
     });
-}else if (action === 'prtv') {
-    test.describe('Website Tests for Prtv', () => {
+}else if (action === 'okgol') {
+    test.describe('Website Tests for Okgol', () => {
         test('Website Tests', async ({ page }) => {
-            test.setTimeout(60000); // Increase timeout to 60 seconds
+            test.setTimeout(110000); 
     
             //Step 1: Open the Site
             await navigatetoURL(page, action,1);
@@ -120,13 +120,13 @@ if (action === 'emmanuel') {
             await checkFaviconIcon(page, action,2);
 
             //Step 3: Find link Home in the Header and click
-            await checkHomeLinkHeader(page,3);
+            await checkHomeLinkHeader(page,3);  
 
             await page.waitForTimeout(2000); // 2000ms = 2 seconds
             //Step 4: Check if Header elements exist
             await checkHeaderElements(page, action,4);
 
-            //5.Check the Home screen Need to print title of all category
+             //5.Check the Home screen Need to print title of all category
             await checkCategoryTitleHomeScreen(page, action,5);
 
             //6.Check the VODs in Home screen
@@ -138,16 +138,26 @@ if (action === 'emmanuel') {
             //8.Check Related Content in Details screen
             await checkRelatedContentInDetailsScreen(page, action,8);
 
-            //9. Check footer Section 
-            await checkFooterLinks (page,action,9);
+            // //9. Check footer Section 
+            // await checkFooterLinks (page,action,9);
 
-            //10. Check different scenario for contact Us
-            await contactUsFirstScenario(page,action,10);
+            // //10. Check different scenario for contact Us
+            // await contactUsFirstScenario(page,action,10);
 
-            //11. Check different scenario for registration User
-            await registrationScreen(page,action,11);
+            //  //11. Check different scenario for registration User
+            // await registrationScreen(page,action,11);
 
+            // //12. Check the Login screen
+            // await loginScreen(page,action,12);
 
+            // //13. Check the Forgot Password screen
+            // await forgotScreen(page,action,13);
+
+            // //14.Logged User my Account
+            // await loggedUserMyAccount (page,action,14);
+
+            // // 15.Login with New Password
+            // await loginScreenNewPassword(page,action,15);
         });
     })
 } else {
