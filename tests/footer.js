@@ -100,8 +100,8 @@ async function privacyPolicy(page) {
 
 async function contactUs(page) {
   try {
-    const contactLink = page.getByRole('link', { name: /contact us|contáctenos/i });
-    await contactLink.waitFor({ state: 'visible', timeout: 8000 });
+    const contactLink = page.getByText(/contact us|contáctenos/i, { exact: false });
+    await expect(contactLink).toBeVisible();
     const contactUsText = await contactLink.textContent();
     await logSuccess(`Found Contact Us link: "${contactUsText?.trim()}"`);
     await Promise.all([

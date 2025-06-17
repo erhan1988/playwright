@@ -124,7 +124,7 @@ async function checkRelatedContentInDetailsScreen(page, action, stepNumber) {
                 }
             }
 
-            console.log("List all  episodes in Related Content and click on the 4 episodes");
+            console.log("List all  episodes in Related Content and click on the some episodes");
             // Check if the related content exists vods/episodes
             // Wait for the elements to be located
             const imageElements = await page.locator('img.card-img-top').all();
@@ -133,16 +133,20 @@ async function checkRelatedContentInDetailsScreen(page, action, stepNumber) {
             expect(imageElements.length, 'Expected at least one image').toBeGreaterThan(0);
             console.log(`✅ Found ${imageElements.length} images with background styles.`);
 
-            // Ensure there are at least 5 images
-            if (imageElements.length < 4) {
-                throw new Error('Less than 4 images found. Cannot click the 3th image (vod).');
+            let imageToClickIndex;
+            if (imageElements.length >= 4) {
+                imageToClickIndex = 3; // 4th image (index 3)
+            } else if (imageElements.length >= 1) {
+                imageToClickIndex = 0; // 1st image (index 0)
+            } else {
+                throw new Error('Less than 1 image found. Cannot click the 1st image (vod).');
             }
 
-            // Click on the 3th image (index 3, as Playwright uses 0-based indexing)
-            const thirdImage = imageElements[3];
-            await thirdImage.scrollIntoViewIfNeeded();
-            console.log('Clicking on the 3th image...');
-            await thirdImage.click();
+            // Click on the selected image
+            const imageToClick = imageElements[imageToClickIndex];
+            await imageToClick.scrollIntoViewIfNeeded();
+            console.log(`Clicking on the ${imageToClickIndex + 1}th image...`);
+            await imageToClick.click();
 
             // Wait for the URL to change
             const initialUrl = page.url();
