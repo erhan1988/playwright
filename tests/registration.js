@@ -7,12 +7,48 @@ async function registrationScreen(page, action, stepNumber) {
   logStep(`${stepNumber}. Registration Screen Different Scenario: 1. Scenario check if exist all fields`);
 
     // CLick to redirect to Registration Screen from the Header
-    const subscribeButton = page.locator(`xpath=//*[contains(normalize-space(text()), 'Subscribe Now') or contains(normalize-space(text()), 'Suscríbase Ahora') or contains(normalize-space(text()), '¡Hazte Miembro!')]`);
-    if (await subscribeButton.count()) {
-      await subscribeButton.first().click();
-      console.log("Subscribe button clicked in the header!");
-    } else {
-      throw new Error("❌ Subscribe button not found!");
+    if (action !== 'okgol') {
+      const subscribeButton = page.locator(`xpath=//*[contains(normalize-space(text()), 'Subscribe Now') or contains(normalize-space(text()), 'Suscríbase Ahora') or contains(normalize-space(text()), '¡Hazte Miembro!')]`);
+      if (await subscribeButton.count()) {
+        await subscribeButton.first().click();
+        console.log("Subscribe button clicked in the header!");
+      } else {
+        throw new Error("❌ Subscribe button not found!");
+      }
+    }else{
+      // Here in the registration screen we go from the header login screen
+       const loginbutton = page.locator(`xpath=//*[contains(normalize-space(text()), 'Log In') or contains(normalize-space(text()), 'Iniciar sesión') or contains(normalize-space(text()), 'Ingresar')]`);
+      if (await loginbutton.count()) {
+        await loginbutton.first().click();
+        console.log("Login button clicked in the header!");
+      } else {
+        throw new Error("❌ Login button not found!");
+      }
+      // Wait for the Registration screen to load
+      await page.waitForSelector('#login-button', { state: 'visible' });
+
+      // Check first Title
+       const h1 = page.locator('h1');
+      try {
+        await expect(h1).toHaveText(/Log in|Ingresar/i);
+        const headingText = await h1.textContent();
+        logSuccess(`✅ Found Title: "${headingText?.trim()}"`);
+      } catch (error) {
+        const actualText = await h1.textContent();
+        logError(`❌ Heading did not match expected text. Found: "${actualText?.trim()}"`);
+        throw error;
+      }
+
+      const link = await page.locator('a[href="/subscribe"]');
+      const text = await link.textContent();
+      console.log('Link text:', text?.trim());
+      if (await link.isVisible()) {
+        logSuccess('✅ Sign Up link is visible.');
+        await link.click();
+        logSuccess('✅ Sign Up link clicked.');
+      } else {
+        logError('❌ Sign Up link is not visible.');
+      }
     }
 
     // Wait for the Registration screen to load
@@ -33,17 +69,17 @@ async function registrationScreen(page, action, stepNumber) {
       let requiredFields = [];
       if (action === 'emmanuel') {
         // Check if all input fields exist on the Contact Us page
-        requiredFields = [
-          { locator: '#firstname', name: 'First Name' },
-          { locator: '#lastname', name: 'Last Name' },
-          { locator: '#email', name: 'Email' },
-          { locator: '#password', name: 'Password' },
-          { locator: '#confirmPassword', name: 'Confirm Password' },
-          { locator: '//mat-select[@aria-label="Default select example"]', name: 'Dropdown Select Country' },
-          { locator: '#termsOfUseCheckBox', name: 'Checkbox Terms of Use' },
-          { locator: '#receiveEmailsCheckBox', name: 'receiveEmailsCheckBox' },
-          { locator: '#subscribe-button', name: 'Submit Button' },
-        ];
+        // requiredFields = [
+        //   { locator: '#firstname', name: 'First Name' },
+        //   { locator: '#lastname', name: 'Last Name' },
+        //   { locator: '#email', name: 'Email' },
+        //   { locator: '#password', name: 'Password' },
+        //   { locator: '#confirmPassword', name: 'Confirm Password' },
+        //   { locator: '//mat-select[@aria-label="Default select example"]', name: 'Dropdown Select Country' },
+        //   { locator: '#termsOfUseCheckBox', name: 'Checkbox Terms of Use' },
+        //   { locator: '#receiveEmailsCheckBox', name: 'receiveEmailsCheckBox' },
+        //   { locator: '#subscribe-button', name: 'Submit Button' },
+        // ];
       }else if (action === 'amorir') {
         requiredFields = [
           { locator: '#firstname', name: 'First Name' },
@@ -55,20 +91,31 @@ async function registrationScreen(page, action, stepNumber) {
           { locator: '#subscribe-button', name: 'Submit Button' },
         ];
       }else if (action === 'prtv'){
+        // requiredFields = [
+        //   { locator: '#firstname', name: 'First Name' },
+        //   { locator: '#lastname', name: 'Last Name' },
+        //   { locator: '#phone', name: 'Phone' },
+        //   { locator: '#email', name: 'Email' },
+        //   { locator: '#password', name: 'Password' },
+        //   { locator: '#confirmPassword', name: 'Confirm Password' },
+        //   { locator: '//mat-select[@aria-label="Default select example"]', name: 'Dropdown Select Country' },
+        //   { locator: '//mat-label[text()="Fecha de nacimiento"]', name: 'Date' },
+        //   { locator: '#voucherCode', name: 'Voucher Code' },
+        //   { locator: '#termsOfUseCheckBox', name: 'Checkbox Terms of Use' },
+        //   { locator: '#subscribe-button', name: 'Submit Button' },
+        // ];
+      }else if (action === 'okgol'){
         requiredFields = [
           { locator: '#firstname', name: 'First Name' },
-          { locator: '#lastname', name: 'Last Name' },
-          { locator: '#phone', name: 'Phone' },
           { locator: '#email', name: 'Email' },
           { locator: '#password', name: 'Password' },
           { locator: '#confirmPassword', name: 'Confirm Password' },
           { locator: '//mat-select[@aria-label="Default select example"]', name: 'Dropdown Select Country' },
-          { locator: '//mat-label[text()="Fecha de nacimiento"]', name: 'Date' },
-          { locator: '#voucherCode', name: 'Voucher Code' },
           { locator: '#termsOfUseCheckBox', name: 'Checkbox Terms of Use' },
-          { locator: '#subscribe-button', name: 'Submit Button' },
+          { locator: '#subscribe-button', name: 'Submit Button' }
         ];
       }
+
       for (const element of requiredFields) {
           await checkElementExists(page, element.locator, element.name);
       }
@@ -120,10 +167,11 @@ async function regScreenSecondScenario(page, action, stepNumber) {
        console.log(`First Name has Value: ${firstName}`);
 
        //Fill Last Name
-       await page.locator('#lastname').fill('Test');
-       const lastName = await page.locator('#lastname').inputValue();
-       console.log(`Last Name has Value: ${lastName}`);
-
+       if (action !== 'okgol') {
+          await page.locator('#lastname').fill('Test');
+          const lastName = await page.locator('#lastname').inputValue();
+          console.log(`Last Name has Value: ${lastName}`);
+       }
        //Fill Phone 
        if (action === 'prtv') {
          await page.locator('#phone').fill('1234567890');
@@ -187,10 +235,11 @@ async function regScreenThirdcenario(page, action, stepNumber) {
        console.log(`First Name has Value: ${firstName}`);
 
        //Fill Last Name
-       await page.locator('#lastname').fill('Test');
-       const lastName = await page.locator('#lastname').inputValue();
-       console.log(`Last Name has Value: ${lastName}`);
-      
+       if (action !== 'okgol') {
+          await page.locator('#lastname').fill('Test');
+          const lastName = await page.locator('#lastname').inputValue();
+          console.log(`Last Name has Value: ${lastName}`);
+       }
       //Fill Phone 
       if (action === 'prtv') {
         await page.locator('#phone').fill('1234567890');
@@ -253,10 +302,11 @@ async function regScreenFourcenario(page, action, stepNumber) {
        console.log(`First Name has Value: ${firstName}`);
 
        //Fill Last Name
-       await page.locator('#lastname').fill('Test');
-       const lastName = await page.locator('#lastname').inputValue();
-       console.log(`Last Name has Value: ${lastName}`);
-
+       if ( action !== 'okgol') {
+        await page.locator('#lastname').fill('Test');
+        const lastName = await page.locator('#lastname').inputValue();
+        console.log(`Last Name has Value: ${lastName}`);
+      }
       //Fill Phone 
       if (action === 'prtv') {
         await page.locator('#phone').fill('1234567890');
@@ -311,10 +361,11 @@ async function regScreenFivecenario(page, action, stepNumber) {
        console.log(`First Name has Value: ${firstName}`);
 
        //Fill Last Name
-       await page.locator('#lastname').fill('Test');
-       const lastName = await page.locator('#lastname').inputValue();
-       console.log(`Last Name has Value: ${lastName}`);
-      
+       if (action !== 'okgol') {
+        await page.locator('#lastname').fill('Test');
+        const lastName = await page.locator('#lastname').inputValue();
+        console.log(`Last Name has Value: ${lastName}`);
+       }
       //Fill Phone 
       if (action === 'prtv') {
         await page.locator('#phone').fill('1234567890');
@@ -384,10 +435,11 @@ async function regScreenSixcenario(page, action, stepNumber) {
       console.log(`First Name has Value: ${firstName}`);
 
        //Fill Last Name
-      await page.locator('#lastname').fill('Test');
-      const lastName = await page.locator('#lastname').inputValue();
-      console.log(`Last Name has Value: ${lastName}`);
-      
+      if (action !== 'okgol') {
+        await page.locator('#lastname').fill('Test');
+        const lastName = await page.locator('#lastname').inputValue();
+        console.log(`Last Name has Value: ${lastName}`);
+      }
       //Fill Phone 
       if (action === 'prtv') {
         await page.locator('#phone').fill('1234567890');
@@ -491,7 +543,7 @@ async function checkSubscribeButtonDisabled(page, action, enabled) {
 
 async function redirectionAfterRegistration(page, action) {
   try {
-    if  (action === 'amorir'){
+    if  (action === 'amorir' || action === 'okgol') {
         // Wait for the URL to change to the expected one
         await page.waitForURL(/\/user\/choose-plan/, { timeout: 10000 });
         // Check if the URL contains the expected path
@@ -509,7 +561,9 @@ async function redirectionAfterRegistration(page, action) {
         logSuccess(`✅ Found Title: "${headingText?.trim()}"`);
 
         // Check if the "Choose Plan Screen" button Continue is visible
-        const buttonContinueWithoutPlan = page.locator("//button[.//span[text()='Continuar sin suscripción']]");
+        const buttonContinueWithoutPlan = page.locator(
+          "//button[.//span[text()='Continuar sin suscripción'] or .//span[text()='No quiero un plan ahora']]"
+        );
         await buttonContinueWithoutPlan.waitFor({ timeout: 20000 }); // wait for up to 20 seconds
         await buttonContinueWithoutPlan.click(); // click it
         logSuccess('✅ Clicked "Choose Plan" Continue button and navigated to the Home Page');
@@ -526,7 +580,6 @@ async function redirectionAfterRegistration(page, action) {
        // Check here if will Appear pop up for email verification
       await emailVerificationPopup(page,action);
     }
-
   } catch (err) {
     logError(`❌ An error occurred in redirectionAfterRegistration: ${err.message}`);
     throw new Error(`❌ An error occurred in redirectionAfterRegistration: ${err.message}`);
