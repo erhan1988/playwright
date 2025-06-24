@@ -98,18 +98,54 @@ async function privacyPolicy(page) {
   }
 }
 
-async function contactUs(page) {
+async function contactUs(page, action) {
   try {
     const contactLink = page.getByText(/contact us|contáctenos/i, { exact: false });
     await expect(contactLink).toBeVisible();
     const contactUsText = await contactLink.textContent();
     await logSuccess(`Found Contact Us link: "${contactUsText?.trim()}"`);
-    await Promise.all([
-      contactLink.click(),
-      page.waitForURL(/\/contact-us/, { timeout: 10000 })
-    ]);
+    if (action !== 'okgol'){
+      await Promise.all([
+        contactLink.click(),
+        page.waitForURL(/\/contact-us/, { timeout: 10000 })
+      ]);
+      expect(page.url()).toContain('/contact-us');
+    } else if ( action === 'okgol'){
+      const originalPage = page; // Save the main tab (https://okgol-v3-dev.streann.tech/privacy)
+
+      const [newPage] = await Promise.all([
+        page.context().waitForEvent('page'),
+        contactLink.click()
+      ]);
+
+      await newPage.waitForLoadState('domcontentloaded');
+      console.log('New page after loadState URL:', newPage.url());
+
+      // Wait up to 10 seconds for the WhatsApp URL to appear
+      let retries = 20;
+      while (retries-- > 0) {
+        const currentUrl = newPage.url();
+        if (/https:\/\/api\.whatsapp\.com\//.test(currentUrl)) break;
+        await newPage.waitForTimeout(500);
+      }
+      expect(newPage.url()).toContain('https://api.whatsapp.com/');
+
+      await newPage.close();
+
+      await originalPage.bringToFront();
+      await originalPage.waitForLoadState('domcontentloaded');
+
+      // Wait until the URL is correct (retry if needed)
+      let retries2 = 10;
+      while (retries2-- > 0) {
+        const currentUrl = await originalPage.url();
+        if (currentUrl === 'https://okgol-v3-dev.streann.tech/privacy') break;
+        await originalPage.waitForTimeout(500);
+      }
+      expect(await originalPage.url()).toBe('https://okgol-v3-dev.streann.tech/privacy');
+      console.log('Back to original tab:', await originalPage.url());
+    }
     await logSuccess('✅ Clicked Contact Us and navigated to Contact Us Page');
-    expect(page.url()).toContain('/contact-us');
   } catch (err) {
     logError(`❌ An error occurred in contactUs: ${err.message}`);
     throw err;
