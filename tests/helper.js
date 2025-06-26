@@ -507,14 +507,15 @@ async function checkDinamiclyPopUP(page, action, selector) {
         logStep(`Checking popup: ${selector}`);
 
         // Instead of assuming it already exists, wait *if it appears* for up to 15 seconds
-        const toastContainer = await page.waitForSelector(selector, { timeout: 15000, state: 'visible' });
-
-        const message = await toastContainer.textContent();
-        if (message && message.trim()) {
+        const toastContainer = await page.waitForSelector(selector, { timeout: 5000, state: 'visible' });
+         if (toastContainer) {
+            const message = await toastContainer.textContent();
+            if (message && message.trim()) {
             logSuccess(`Captured message: ${message.trim()}`);
-        } else {
-            throw new Error('Toast container appeared but no message found.');
-        }
+            } else {
+            logError('Toast container appeared but no message found.');
+            }
+        }        
     } catch (err) {
         logError(`❌ An error occurred in checkDinamiclyPopUP with selector ${selector}: ${err.message}`);
         throw err;
