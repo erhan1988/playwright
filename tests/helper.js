@@ -551,8 +551,18 @@ async function logOutUser(page,action) {
             await logoutSpan.click();
             logSuccess("Logout clicked successfully.");
 
+            await page.waitForSelector('#accountMenu', { state: 'detached', timeout: 10000 });
+            //await page.waitForTimeout(3000);
             const url = `https://${action}-v3-dev.streann.tech/`;
             await page.waitForURL(url, { timeout: 20000 });
+
+            const accountMenu = page.locator('#accountMenu');
+            if (await accountMenu.count() === 0 || !(await accountMenu.first().isVisible())) {
+                logSuccess('✅ Account menu is not visible after logout (user is logged out).');
+            } else {
+                logError('❌ Account menu is still visible after logout (user may not be logged out).');
+                throw new Error('Account menu is still visible after logout.');
+            }
 
             // Now check the URL
             const currentUrl = page.url();
