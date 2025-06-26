@@ -10,10 +10,10 @@ async function forgotScreen(page, action, stepNumber) {
       // navigate to the Login screen
       const baseUrl = `https://${action}-v3-dev.streann.tech/login`;
       await page.goto(baseUrl, { waitUntil: 'networkidle' });
-
+      
       // Wait for the login screen to load
-      await page.waitForSelector('#login-button', { state: 'visible' });
-  
+      await page.waitForSelector('#login-button', { state: 'visible', timeout: 10000 });
+
       // click in the link Forgot Password 
       const forgotPasswordLink = page.locator('#forgotPass');
       if (await forgotPasswordLink.isVisible()) {

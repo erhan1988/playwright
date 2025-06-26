@@ -415,10 +415,10 @@ async function regScreenSixcenario(page, action, stepNumber) {
     logStep(`${stepNumber}. Registration Screen Six Scenario:Try to create new User with already exist email`);
     try {
 
-      await page.waitForSelector('#navbarToggler', { state: 'visible' });
-
+      await page.waitForSelector('#navbarToggler', { state: 'visible', timeout: 4000 });
       // CLick to redirect to Registration Screen from the Header
-      const subscribeButton = page.locator(`xpath=//*[contains(normalize-space(text()), 'Subscribe Now') or contains(normalize-space(text()), 'Suscríbase Ahora')]`);
+      await page.waitForTimeout(3000); // Wait for 2 seconds
+      const subscribeButton = page.getByText(/subscribe now|suscr[ií]base ahora|¡hazte miembro!/i, { exact: false });
       if (await subscribeButton.count()) {
         await subscribeButton.first().click();
         console.log("Subscribe button clicked in the header!");

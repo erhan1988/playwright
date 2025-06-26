@@ -550,9 +550,19 @@ async function logOutUser(page,action) {
             console.log("The Logout span is visible. Clicking it now...");
             await logoutSpan.click();
             logSuccess("Logout clicked successfully.");
-            await page.waitForTimeout(3000); // Wait for 3 
+
             const url = `https://${action}-v3-dev.streann.tech/`;
             await page.waitForURL(url, { timeout: 20000 });
+
+            // Now check the URL
+            const currentUrl = page.url();
+            console.log('Current URL after logout:', currentUrl);
+            if (currentUrl === url) {
+                logSuccess(`✅ Successfully redirected to: ${currentUrl}`);
+            } else {
+                logError(`❌ Not redirected to expected URL. Current URL: ${currentUrl}`);
+                throw new Error(`Not redirected to expected URL. Current URL: ${currentUrl}`);
+            }
           } else {
             logError("The Logout span exists but is not visible.");
             throw new Error("❌ The Logout span exists but is not visible.");
