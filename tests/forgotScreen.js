@@ -126,8 +126,7 @@ async function forgotScreenFourthScenario(page, action, stepNumber) {
   try {
     // Make refresh the page 
     await page.reload();
-    await page.waitForSelector('#send-email-button', { state: 'visible' });
-
+await page.waitForSelector('#send-email-button', { state: 'visible', timeout: 7000 });
     // Fill Email 
     const baseEmail = "test+@streann.com";
     const emailWithDate = generateEmail(baseEmail);

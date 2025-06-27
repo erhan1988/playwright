@@ -121,10 +121,10 @@ async function myUserScreen(page, action, stepNumber) {
   logStep(`${stepNumber}. My Account Screen: 3. Check in /user page if exist user Change user Details `);
 
   try {
-     // Click the element by class
-    await page.getByText(/Cambiar Detalle de Usuario|Change User Details/).click();
-    // Wait for navigation to complete
-    await page.waitForLoadState('networkidle');
+    const changeDetailsButton = page.getByText(/Cambiar Detalle de Usuario|Change User Details/);
+    await expect(changeDetailsButton).toBeVisible();
+    await changeDetailsButton.click();
+    await page.waitForURL(`**/user/user-email`, { timeout: 20000 });
     expect(page.url()).toBe(`https://${action}-v3-dev.streann.tech/user/user-email`);
 
     // Check in the Change User Details if exist all fields 
@@ -225,7 +225,7 @@ async function myAccountScreenPage(page, action, stepNumber) {
       console.log("Element does not exist.");
       throw new Error("❌ Element does not exist.");
     }
-    
+
     if ( action === 'okgol'){
       const whatsappButton = page.getByText(/contactar por whatsapp/i, { exact: false });
       if (await whatsappButton.count() > 0) {

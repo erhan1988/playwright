@@ -298,8 +298,9 @@ async function loginScreenNewPassword(page, action, stepNumber) {
   try {
       // navigate to the Login screen
       const baseUrl = `https://${action}-v3-dev.streann.tech/login`;
-      await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });      // Wait for the login screen to load
-      await page.waitForSelector('#login-button', { state: 'visible', timeout: 20000 });  
+      await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });      // Wait for the login screen to load
+      console.log('Current URL after goto:', page.url());
+      await page.waitForSelector('#login-button', { state: 'visible', timeout: 40000 });  
     
       if (action === 'emmannuel'){
         await page.locator('#username').fill('erhan+1115@streann.com');
