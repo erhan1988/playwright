@@ -143,8 +143,8 @@ if (action === 'emmanuel') {
             //10. Check different scenario for registration User
             await registrationScreen(page,action,10);
 
-            // //12. Check the Login screen
-            // await loginScreen(page,action,12);
+            //11. Check the Login screen
+            await loginScreen(page,action,11);
 
             // //13. Check the Forgot Password screen
             // await forgotScreen(page,action,13);
