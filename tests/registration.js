@@ -416,20 +416,26 @@ async function regScreenSixcenario(page, action, stepNumber) {
     try {
 
       await page.waitForSelector('#navbarToggler', { state: 'visible', timeout: 4000 });
-      // CLick to redirect to Registration Screen from the Header
-      await page.waitForTimeout(3000); // Wait for 2 seconds
-      const subscribeButton = page.getByText(/subscribe now|suscr[ií]base ahora|¡hazte miembro!/i, { exact: false });
-      if (await subscribeButton.count()) {
-        await subscribeButton.first().click();
-        console.log("Subscribe button clicked in the header!");
-      } else {
-        throw new Error("❌ Subscribe button not found!");
+
+      if (action === 'okgol'){
+         const baseUrl = `https://${action}-v3-dev.streann.tech/subscribe`;
+         await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });      // Wait for the login screen to load
+      }else{
+        // CLick to redirect to Registration Screen from the Header
+        await page.waitForTimeout(5000); // Wait for 5 seconds
+        const subscribeButton = page.getByText(/subscribe now|suscr[ií]base ahora|¡hazte miembro!/i, { exact: false });
+        if (await subscribeButton.count()) {
+          await subscribeButton.first().click();
+          console.log("Subscribe button clicked in the header!");
+        } else {
+          throw new Error("❌ Subscribe button not found!");
+        }
       }
 
       // Wait for the Registration screen to load
-      await page.waitForSelector('#subscribe-button', { state: 'visible' });
+      await page.waitForSelector('#subscribe-button', { state: 'visible', timeout: 20000 });  
 
-        // Fill First Name ( NOTES ALL FIELDS ARE FILLED)
+      // Fill First Name ( NOTES ALL FIELDS ARE FILLED)
       await page.locator('#firstname').fill('Test');
       const firstName = await page.locator('#firstname').inputValue();
       console.log(`First Name has Value: ${firstName}`);
