@@ -216,24 +216,40 @@ async function myAccountScreenPage(page, action, stepNumber) {
   logStep(`${stepNumber}. My Account Screen: 5. Check in /user page if exist Button Plans and Form for contact Us`);
 
   try {
-      // Check if exist button for Plans 
-      const link = page.locator('[routerlink="/user/choose-plan"]');
-      if (await link.count() > 0) {
-        const title = await link.textContent();
-        console.log("Element exists. Title:", title?.trim());
+    // Check if exist button for Plans 
+    const link = page.locator('[routerlink="/user/choose-plan"]');
+    if (await link.count() > 0) {
+      const title = await link.textContent();
+      console.log("Element exists. Title:", title?.trim());
+    } else {
+      console.log("Element does not exist.");
+      throw new Error("❌ Element does not exist.");
+    }
+    
+    if ( action === 'okgol'){
+      const whatsappButton = page.getByText(/contactar por whatsapp/i, { exact: false });
+      if (await whatsappButton.count() > 0) {
+        const title = await whatsappButton.first().textContent();
+        console.log('WhatsApp button title:', title?.trim());
       } else {
-        console.log("Element does not exist.");
+        console.log('WhatsApp button not found!');
+        throw new Error("❌ WhatsApp button does not exist.");
       }
-    // Check in the Change User Password if exist all fields 
-    let requiredFields = [];
-      requiredFields = [
-        { locator: '#customer-service', name: 'Form Contact Us' },
-        { locator: '#subject', name: 'Subject' },
-        { locator: '#issue', name: 'Text Area'},
-        { locator: '#submit-button', name: 'Submit Button'},
-      ];
-    for (const element of requiredFields) {
-      await checkElementExists(page, element.locator, element.name);
+      
+      logSuccess('for OkGol is not exist Form Contact US im my Account Screen /user');
+    }
+    // Check if exist Form Contact Us
+    if ( action !== 'okgol'){
+        let requiredFields = [];
+        requiredFields = [
+          { locator: '#customer-service', name: 'Form Contact Us' },
+          { locator: '#subject', name: 'Subject' },
+          { locator: '#issue', name: 'Text Area'},
+          { locator: '#submit-button', name: 'Submit Button'},
+        ];
+      for (const element of requiredFields) {
+        await checkElementExists(page, element.locator, element.name);
+      }
     }
     // Not log out the user
     await logOutUser(page, action);
@@ -248,11 +264,6 @@ async function myAccountScreenPage(page, action, stepNumber) {
 module.exports = {
   loggedUserMyAccount,
 };
-
-
-
-
-
 
 
 

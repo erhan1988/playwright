@@ -146,17 +146,17 @@ if (action === 'emmanuel') {
             //11. Check the Login screen
             await loginScreen(page,action,11);
 
-            // //13. Check the Forgot Password screen
-            // await forgotScreen(page,action,13);
+            //12. Check the Forgot Password screen
+            await forgotScreen(page,action,12);
 
-            // //14.Logged User my Account
-            // await loggedUserMyAccount (page,action,14);
+            //13.Logged User my Account
+            await loggedUserMyAccount (page,action,13);
 
-            // // 15.Login with New Password
-            // await loginScreenNewPassword(page,action,15);
+            // 14.Login with New Password
+            await loginScreenNewPassword(page,action,14);
         });
     })
 } else {
-    console.log('No valid action provided. Use "emmanuel,Prtv" or "amorir".');
+    console.log('No valid action provided. Use "Amorir,OkGol" or "Emmanuel".');
     process.exit(1);
 }

@@ -124,11 +124,10 @@ async function forgotScreenFourthScenario(page, action, stepNumber) {
   logStep(`${stepNumber}. Forgot Screen Fourth Scenario: 4. Fill correct email need to appear success Message `);
 
   try {
-    // Make regresh the page 
+    // Make refresh the page 
     await page.reload();
     await page.waitForSelector('#send-email-button', { state: 'visible' });
 
- 
     // Fill Email 
     const baseEmail = "test+@streann.com";
     const emailWithDate = generateEmail(baseEmail);
