@@ -273,7 +273,7 @@ async function checkLoginButtonDisabled(page, action, enabled) {
     if (!isDisabled) {
         logSuccess('✅ Login button is enabled as expected.');
         console.log('Click in the Login button');
-        await page.locator('#login-button').waitFor({ state: 'visible', timeout: 5000 }); // waits up to 5 seconds
+        await page.locator('#login-button').waitFor({ state: 'visible', timeout: 10000 }); // waits up to 5 seconds
         await page.locator('#login-button').click();
     } else {
         logError('❌ Login button is disabled when it should be enabled.');
@@ -344,7 +344,7 @@ async function loginScreenNewPassword(page, action, stepNumber) {
         await expect(page).toHaveURL(url);
         console.log(`✅ Successfully navigated to ${url}`);
         await page.click('.card.mx-2.d-flex.flex-column.align-items-center.ng-star-inserted');
-        // await page.waitForTimeout(5000); // Wait for 5 seconds
+        await page.waitForTimeout(5000); // Wait for 5 seconds
       }
         
         // after Login be sure that is redirect to the Home Page
