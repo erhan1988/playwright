@@ -11,7 +11,7 @@ async function navigatetoURL(page, action, stepNumber) {
             if (action) {
                 url = `https://${action}-v3-dev.streann.tech/`;
             } else {
-                throw new Error('Invalid action provided. Use "emmanuel" or "amorir".');
+                throw new Error('Invalid action provided. Use "okGol,Televicentro,EmmanuelTV" or "amorir".');
             }
 
             console.log(`Navigating to URL: ${url}`); // Debug the URL
@@ -110,7 +110,7 @@ async function checkHeaderElements(page, action, stepNumber) {
             ];
              // Only add the Register Button if not okgol
              // This is becuase okgol does not have Register Button in the header
-            if (action !== 'okgol') {
+            if (action !== 'okgol' && action !== 'televicentro') {
                 headerElements.splice(2, 0, { locator: "//*[contains(text(),'Subscribe Now') or contains(text(),'Suscríbase Ahora') or contains(text(),'¡Hazte Miembro!')]", name: 'Register Button' });
             }
             // Collect results for each element
@@ -137,7 +137,7 @@ async function checkHeaderElements(page, action, stepNumber) {
             throw error; // Fail the test if an error occurs
         }
     });
-}
+};
 
 
 

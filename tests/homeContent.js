@@ -31,44 +31,57 @@ async function checkCategoryTitleHomeScreen(page,action , stepNumber) {
     });
 }
 
-async function checkVodsInHome(page,action, stepNumber) {
-    await test.step(`${stepNumber}. Check if images exist and click the 14th image vod`, async () => {
-        logStep(`${stepNumber}. Check if images exist and click the 14th image vod...`);
+async function checkVodsInHome(page, action, stepNumber) {
+    await test.step(`${stepNumber}. Check if images exist and click the appropriate VOD`, async () => {
+        logStep(`${stepNumber}. Check if images exist and click the appropriate VOD...`);
         try {
-            // Wait for the elements to be located
             const imageElements = await page.locator("div.item[style*='background-image']").all();
+            const imageCount = imageElements.length;
 
-            // Check if any images are found
-            expect(imageElements.length, 'Expected at least one image').toBeGreaterThan(0);
-            console.log(`✅ Found ${imageElements.length} images with background styles.`);
+            expect(imageCount, 'Expected at least one image').toBeGreaterThan(0);
+            console.log(`✅ Found ${imageCount} images with background styles.`);
 
             let imageToClickIndex;
-            if (imageElements.length >= 15) {
-                imageToClickIndex = 14; // 15th image (index 14)
-            } else if (imageElements.length >= 9) {
-                imageToClickIndex = 8; // 9th image (index 8)
+
+            // Handle action-specific VOD selection
+            if (action === 'televicentro') {
+                if (imageCount >= 1) {
+                    imageToClickIndex = 1; // click the first available VOD
+                    console.log('ℹ️ Televicentro detected. Clicking the first available VOD.');
+                } else {
+                    throw new Error('❌ Televicentro has no VODs available.');
+                }
             } else {
-                throw new Error('Less than 9 images found. Cannot click the 9th image (vod).');
+                // Default behavior
+                if (imageCount >= 15) {
+                    imageToClickIndex = 14;
+                } else if (imageCount >= 9) {
+                    imageToClickIndex = 8;
+                } else if (imageCount >= 1) {
+                    imageToClickIndex = imageCount - 1;
+                    console.warn(`⚠️ Less than 9 VODs found. Clicking the last available one.`);
+                } else {
+                    throw new Error('❌ No VOD images found.');
+                }
             }
-            // Click on the selected image
+
             const imageToClick = imageElements[imageToClickIndex];
             await imageToClick.scrollIntoViewIfNeeded();
             console.log(`Clicking on the ${imageToClickIndex + 1}th image...`);
+            const initialUrl = page.url();
             await imageToClick.click();
 
-            // Wait for the URL to change
-            const initialUrl = page.url();
             await page.waitForFunction(
-                (initialUrl) => window.location.href !== initialUrl,
+                (initial) => window.location.href !== initial,
                 initialUrl,
                 { timeout: 30000 }
             );
-            // Log the new URL
+
             const newUrl = page.url();
             logSuccess(`✅ Successfully redirected to: ${newUrl}`);
         } catch (err) {
             logError(`❌ An error occurred in checkVodsInHome: ${err.message}`);
-            throw new Error(`❌ An error occurred in checkVodsInHome: ${err.message}`);
+            throw err;
         }
     });
 }
