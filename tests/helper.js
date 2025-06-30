@@ -158,7 +158,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
                 break; // Exit the loop after checking the URL change
             }
              // Check for "Suscribirse" and "Compartir" when action is "amorir" or "prtv"
-            else if (action === 'amorir' || action === 'okgol') {
+            else if (action === 'amorir' || action === 'okgol' || action === 'televicentro') {
                 let buttons1 = page.locator("//button[.//span[contains(text(), 'Compartir')]]"); // 🟢 Declare early!
             
                 if (trimmedText.toLowerCase() === 'suscribirse') {
@@ -184,7 +184,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
                     logSuccess(`✅ Returned to Details screen. Current URL: ${backUrl}`);
             
                     // 🔴 Only continue with "Compartir" if action is 'amorir'
-                    if (action === 'amorir' || action === 'okgol') {
+                    if (action === 'amorir' || action === 'okgol' || action === 'televicentro') {
                         logStep('Looking for the "Compartir" button...');
                         const compartirButton = buttons1.first();
                         try {
@@ -210,7 +210,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
             logError(msg);
             throw new Error(msg);
         }
-        if (action === 'amorir' || action === 'okgol') {
+        if (action === 'amorir' || action === 'okgol' || action === 'televicentro') {
             if (!suscribirseFound) {
                 const msg = '❌ "Suscribirse" button not found for action: amorir';
                 logError(msg);

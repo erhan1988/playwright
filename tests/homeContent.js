@@ -86,8 +86,8 @@ async function checkVodsInHome(page, action, stepNumber) {
     });
 }
 async function UserDetailsScreen(page,action,stepNumber,loggedUser) {
-    await test.step(`${stepNumber}. Not logged user checking Details screen containts Go back Title background Image watch Now`, async () => {
-        logStep(`${stepNumber}. Not logged user checking Details screen containts Go back Title background Image watch Now`);
+    await test.step(`${stepNumber}. Not logged user checking Details screen containts Go back Title background Image Buttons`, async () => {
+        logStep(`${stepNumber}. Not logged user checking Details screen containts Go back Title background Image Buttons`);
         try {
             // Call the GobackLink function
             await GobackLink(page,'undefined');  

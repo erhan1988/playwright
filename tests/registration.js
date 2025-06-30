@@ -7,7 +7,7 @@ async function registrationScreen(page, action, stepNumber) {
   logStep(`${stepNumber}. Registration Screen Different Scenario: 1. Scenario check if exist all fields`);
 
     // CLick to redirect to Registration Screen from the Header
-    if (action !== 'okgol') {
+    if (action !== 'okgol' && action !== 'televicentro') {
       const subscribeButton = page.locator(`xpath=//*[contains(normalize-space(text()), 'Subscribe Now') or contains(normalize-space(text()), 'Suscríbase Ahora') or contains(normalize-space(text()), '¡Hazte Miembro!')]`);
       if (await subscribeButton.count()) {
         await subscribeButton.first().click();
@@ -104,7 +104,7 @@ async function registrationScreen(page, action, stepNumber) {
         //   { locator: '#termsOfUseCheckBox', name: 'Checkbox Terms of Use' },
         //   { locator: '#subscribe-button', name: 'Submit Button' },
         // ];
-      }else if (action === 'okgol'){
+      }else if (action === 'okgol' || action === 'televicentro') {
         requiredFields = [
           { locator: '#firstname', name: 'First Name' },
           { locator: '#email', name: 'Email' },
@@ -167,7 +167,7 @@ async function regScreenSecondScenario(page, action, stepNumber) {
        console.log(`First Name has Value: ${firstName}`);
 
        //Fill Last Name
-       if (action !== 'okgol') {
+       if (action !== 'okgol' && action !== 'televicentro') {
           await page.locator('#lastname').fill('Test');
           const lastName = await page.locator('#lastname').inputValue();
           console.log(`Last Name has Value: ${lastName}`);
@@ -235,7 +235,7 @@ async function regScreenThirdcenario(page, action, stepNumber) {
        console.log(`First Name has Value: ${firstName}`);
 
        //Fill Last Name
-       if (action !== 'okgol') {
+       if (action !== 'okgol' && action !== 'televicentro') {
           await page.locator('#lastname').fill('Test');
           const lastName = await page.locator('#lastname').inputValue();
           console.log(`Last Name has Value: ${lastName}`);
@@ -302,7 +302,7 @@ async function regScreenFourcenario(page, action, stepNumber) {
        console.log(`First Name has Value: ${firstName}`);
 
        //Fill Last Name
-       if ( action !== 'okgol') {
+       if ( action !== 'okgol' && action !== 'televicentro') {
         await page.locator('#lastname').fill('Test');
         const lastName = await page.locator('#lastname').inputValue();
         console.log(`Last Name has Value: ${lastName}`);
@@ -361,7 +361,7 @@ async function regScreenFivecenario(page, action, stepNumber) {
        console.log(`First Name has Value: ${firstName}`);
 
        //Fill Last Name
-       if (action !== 'okgol') {
+       if (action !== 'okgol' && action !== 'televicentro') {
         await page.locator('#lastname').fill('Test');
         const lastName = await page.locator('#lastname').inputValue();
         console.log(`Last Name has Value: ${lastName}`);
@@ -417,7 +417,7 @@ async function regScreenSixcenario(page, action, stepNumber) {
 
       await page.waitForSelector('#navbarToggler', { state: 'visible', timeout: 4000 });
 
-      if (action === 'okgol'){
+      if (action === 'okgol'|| action === 'televicentro') {
          const baseUrl = `https://${action}-v3-dev.streann.tech/subscribe`;
          await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });      // Wait for the login screen to load
       }else{
@@ -441,7 +441,7 @@ async function regScreenSixcenario(page, action, stepNumber) {
       console.log(`First Name has Value: ${firstName}`);
 
        //Fill Last Name
-      if (action !== 'okgol') {
+      if (action !== 'okgol' && action !== 'televicentro') {
         await page.locator('#lastname').fill('Test');
         const lastName = await page.locator('#lastname').inputValue();
         console.log(`Last Name has Value: ${lastName}`);

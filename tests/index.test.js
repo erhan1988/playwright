@@ -8,6 +8,8 @@ const { registrationScreen } = require('./registration');
 const { loginScreen,loginScreenNewPassword } = require('./login');
 const { forgotScreen } = require('./forgotScreen');
 const { loggedUserMyAccount} = require('./myAccountScreen');
+const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
+
 
 // Get the action from the command-line argument or environment variable
 const action = process.env.ACTION || process.argv[2]; // Use `ACTION` env variable or second CLI argument
@@ -180,17 +182,23 @@ if (action === 'emmanuel') {
             //6.Check the VODs in Home screen
              await checkVodsInHome(page, action,6);
 
-            // //7.Not logged user checking Details screen containts Go back Title background Image Subscribe etc'
-            //  await UserDetailsScreen(page, action,7);
+            //7.Not logged user checking Details screen containts Go back Title background Image Subscribe etc'
+             await UserDetailsScreen(page, action,7);
 
+            logSuccess('Notes: Televicentro does not have related content VODs added.');
+
+            // Is not added related content for Televicentro so we skip this step
             // //8.Check Related Content in Details screen
             //  await checkRelatedContentInDetailsScreen(page, action,8);
 
-            // //9. Check footer Section 
-            //  await checkFooterLinks (page,action,9);
+            //8. Check footer Section 
+            await checkFooterLinks (page,action,8);
 
-            // //10. Check different scenario for registration User
-            //  await registrationScreen(page,action,10);
+            //9. Check different scenario for contact Us
+            await contactUsFirstScenario(page,action,9);
+
+            //10. Check different scenario for registration User
+            await registrationScreen(page,action,10);
 
             // //11. Check the Login screen
             //  await loginScreen(page,action,11);
