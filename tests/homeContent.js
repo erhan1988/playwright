@@ -66,6 +66,8 @@ async function checkVodsInHome(page, action, stepNumber) {
             }
 
             const imageToClick = imageElements[imageToClickIndex];
+            await page.screenshot({ path: 'vod_scroll_debug.png' }); // Debug screenshot
+            await imageToClick.waitFor({ state: 'visible', timeout: 10000 }); // Wait for visibility
             await imageToClick.scrollIntoViewIfNeeded();
             console.log(`Clicking on the ${imageToClickIndex + 1}th image...`);
             const initialUrl = page.url();

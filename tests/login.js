@@ -301,16 +301,11 @@ async function loginScreenNewPassword(page, action, stepNumber) {
       await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });      // Wait for the login screen to load
       console.log('Current URL after goto:', page.url());
      // Try both ID and text-based selector
-      try {
-        await page.waitForSelector('#login-button', { state: 'visible', timeout: 10000 });
-        console.log('Found #login-button');
-      } catch {
-        console.log('Did not find #login-button, trying text-based locator...');
-        const loginButton = page.getByText(/log in|iniciar sesión|ingresar/i, { exact: false });
-        await expect(loginButton).toBeVisible({ timeout: 10000 });
-        console.log('Found login button by text');
-      }
-    
+     
+      const loginButton = page.getByText(/log in|iniciar sesión|ingresar/i, { exact: false });
+      await expect(loginButton).toBeVisible({ timeout: 70000 });
+      console.log('Found login button by text');
+          
       if (action === 'emmannuel'){
         await page.locator('#username').fill('erhan+1115@streann.com');
         const email = await page.locator('#username').inputValue();

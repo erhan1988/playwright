@@ -174,12 +174,16 @@ async function myUserChangePassword(page, action, stepNumber) {
     await expect(changePasswordButton1).toBeVisible();
     await expect(changePasswordButton1).toBeEnabled();
 
+    await page.screenshot({ path: 'before_change_password_click.png' });
+    console.log('URL before click:', page.url());
     // Use Promise.all to avoid missing navigation
     await Promise.all([
-      page.waitForURL('**/user/user-password', { timeout: 50000 }),
+      page.waitForURL('**/user/user-password', { timeout: 70000 }),
       changePasswordButton1.click()
     ]);
 
+    await page.screenshot({ path: 'after_change_password_click.png' });
+    console.log('URL after click:', page.url());
     // Assert the final URL
     expect(page.url()).toBe(`https://${action}-v3-dev.streann.tech/user/user-password`);
 

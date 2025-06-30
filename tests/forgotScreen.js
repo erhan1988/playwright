@@ -9,7 +9,7 @@ async function forgotScreen(page, action, stepNumber) {
   try {
       // navigate to the Login screen
       const baseUrl = `https://${action}-v3-dev.streann.tech/login`;
-      await page.goto(baseUrl, { waitUntil: 'networkidle' });
+      await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
       
       // Wait for the login screen to load
       await page.waitForSelector('#login-button', { state: 'visible', timeout: 10000 });
