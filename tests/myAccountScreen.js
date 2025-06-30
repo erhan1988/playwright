@@ -40,7 +40,7 @@ async function loggedUserMyAccount(page, action, stepNumber) {
       console.log('Now checking if the login button is Enabled...');
 
        // Emmanuel when is logged is redirect to the Profile Page
-      if (action === 'emmannuel'){
+      if (action === 'emmannuel' || action === 'televicentro') {
         // after Login be sure that is redirect to the Profile Page
         const url = `https://${action}-v3-dev.streann.tech/profile/select-profile`;
         await expect(page).toHaveURL(url);
@@ -164,9 +164,23 @@ async function myUserChangePassword(page, action, stepNumber) {
 
   try {
      // Click the element by class
-    await page.getByText(/Cambiar Contraseña|Change Password/).click();
-    // Wait for navigation to complete
-    await page.waitForLoadState('networkidle');
+    // await page.getByText(/Cambiar Contraseña|Change Password/).click();
+    // // Wait for navigation to complete
+    // await page.waitForLoadState('networkidle');
+    // expect(page.url()).toBe(`https://${action}-v3-dev.streann.tech/user/user-password`);
+
+    // Ensure the button is visible and enabled before clicking
+    const changePasswordButton1 = page.getByText(/Cambiar Contraseña|Change Password/);
+    await expect(changePasswordButton1).toBeVisible();
+    await expect(changePasswordButton1).toBeEnabled();
+
+    // Use Promise.all to avoid missing navigation
+    await Promise.all([
+      page.waitForURL('**/user/user-password', { timeout: 50000 }),
+      changePasswordButton1.click()
+    ]);
+
+    // Assert the final URL
     expect(page.url()).toBe(`https://${action}-v3-dev.streann.tech/user/user-password`);
 
     // Check in the Change User Password if exist all fields 

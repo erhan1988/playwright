@@ -161,7 +161,7 @@ if (action === 'emmanuel') {
 }else if (action === 'televicentro'){
     test.describe('Website Tests for Televicentro', () => {
         test('Website Tests', async ({ page }) => {
-            test.setTimeout(110000); 
+            test.setTimeout(120000); 
 
             //Step 1: Open the Site
             await navigatetoURL(page, action,1);
@@ -200,17 +200,17 @@ if (action === 'emmanuel') {
             //10. Check different scenario for registration User
             await registrationScreen(page,action,10);
 
-            // //11. Check the Login screen
-            //  await loginScreen(page,action,11);
+            //11. Check the Login screen
+             await loginScreen(page,action,11);
 
-            // //12. Check the Forgot Password screen
-            //  await forgotScreen(page,action,12);
+            //12. Check the Forgot Password screen
+             await forgotScreen(page,action,12);
 
-            // //13.Logged User my Account
-            //  await loggedUserMyAccount (page,action,13);
+            //13.Logged User my Account
+             await loggedUserMyAccount (page,action,13);
 
-            // // 14.Login with New Password
-            //  await loginScreenNewPassword(page,action,14);
+            // 14.Login with New Password
+             await loginScreenNewPassword(page,action,14);
         });
     })
 } else {

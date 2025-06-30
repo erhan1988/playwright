@@ -233,7 +233,7 @@ async function loginScreenSixScenario(page, action, stepNumber) {
       console.log('Now checking if the login button is Enabled...');
 
       // Emmanuel when is logged is redirect to the Profile Page
-      if (action === 'emmannuel'){
+      if (action === 'emmannuel'|| action === 'televicentro'){
         // after Login be sure that is redirect to the Profile Page
         const url = `https://${action}-v3-dev.streann.tech/profile/select-profile`;
         await expect(page).toHaveURL(url);
@@ -300,7 +300,16 @@ async function loginScreenNewPassword(page, action, stepNumber) {
       const baseUrl = `https://${action}-v3-dev.streann.tech/login`;
       await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });      // Wait for the login screen to load
       console.log('Current URL after goto:', page.url());
-      await page.waitForSelector('#login-button', { state: 'visible', timeout: 40000 });  
+     // Try both ID and text-based selector
+      try {
+        await page.waitForSelector('#login-button', { state: 'visible', timeout: 10000 });
+        console.log('Found #login-button');
+      } catch {
+        console.log('Did not find #login-button, trying text-based locator...');
+        const loginButton = page.getByText(/log in|iniciar sesión|ingresar/i, { exact: false });
+        await expect(loginButton).toBeVisible({ timeout: 10000 });
+        console.log('Found login button by text');
+      }
     
       if (action === 'emmannuel'){
         await page.locator('#username').fill('erhan+1115@streann.com');
@@ -329,7 +338,7 @@ async function loginScreenNewPassword(page, action, stepNumber) {
       console.log('Now checking if the login button is Enabled...');
 
       // Emmanuel when is logged is redirect to the Profile Page
-      if (action === 'emmannuel'){
+      if (action === 'emmannuel' || action === 'televicentro'){
         // after Login be sure that is redirect to the Profile Page
         const url = `https://${action}-v3-dev.streann.tech/profile/select-profile`;
         await expect(page).toHaveURL(url);

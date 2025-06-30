@@ -83,14 +83,18 @@ async function privacyPolicy(page) {
     await page.waitForSelector('body', { timeout: 8000 });
     await page.waitForFunction(() => {
     const bodyText = document.body.innerText;
-      return bodyText.includes('Privacy Policy Effective Since') || bodyText.includes('Política de Privacidad') || bodyText.includes('Avisos Legales');
+      return bodyText.includes('Privacy Policy Effective Since') || 
+       bodyText.includes('Política de Privacidad') || 
+       bodyText.includes('Políticas de Privacidad') || 
+       bodyText.includes('Avisos Legales');
     });
 
     // ✅ Check privacy page content
     await checkTextExist(page, [
       "Privacy Policy Effective Since",
       "Política de Privacidad",
-      "Avisos Legales"
+      "Avisos Legales",
+      "Políticas de Privacidad"
     ]);
   } catch (err) {
     logError(`❌ An error occurred in privacyPolicy: ${err.message}`);

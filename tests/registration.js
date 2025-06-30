@@ -509,7 +509,7 @@ async function termsOfUseCheckBox(page, action, checkedCheckbox) {
     }
 
     const isChecked = await termsOfUseCheckBox.evaluate((el) => el.checked);
-    await page.waitForTimeout(1000); // Wait for 1 seconds to ensure the checkbox state is updated
+    await page.waitForTimeout(4000); // Wait for 1 seconds to ensure the checkbox state is updated
     if (isChecked) {
       console.log('✅ Terms of Use checkbox is checked.');
     } else {
@@ -549,7 +549,7 @@ async function checkSubscribeButtonDisabled(page, action, enabled) {
 
 async function redirectionAfterRegistration(page, action) {
   try {
-    if  (action === 'amorir' || action === 'okgol') {
+    if  (action === 'amorir' || action === 'okgol' || action === 'televicentro' ) {
         // Wait for the URL to change to the expected one
         await page.waitForURL(/\/user\/choose-plan/, { timeout: 10000 });
         // Check if the URL contains the expected path
