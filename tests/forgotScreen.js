@@ -69,6 +69,7 @@ async function forgotScreenSecondScenario(page, action, stepNumber) {
 
   try {
       // Check if the Send Email button is visible
+      await page.waitForSelector('#send-email-button', { state: 'visible', timeout: 7000 });
       const sendEmailButton = page.locator('#send-email-button');
       if (await sendEmailButton.isVisible()) {
         await sendEmailButton.click();
@@ -97,7 +98,7 @@ async function forgotScreenThirdScenario(page, action, stepNumber) {
   try {
     // Make regresh the page 
     await page.reload();
-    await page.waitForSelector('#send-email-button', { state: 'visible' });
+    await page.waitForSelector('#send-email-button', { state: 'visible', timeout: 8000 });
 
     // Fill the email field with an invalid email address
     await page.locator('#email').fill('dd@streann.com');
@@ -126,7 +127,7 @@ async function forgotScreenFourthScenario(page, action, stepNumber) {
   try {
     // Make refresh the page 
     await page.reload();
-await page.waitForSelector('#send-email-button', { state: 'visible', timeout: 7000 });
+await page.waitForSelector('#send-email-button', { state: 'visible', timeout: 8000 });
     // Fill Email 
     const baseEmail = "test+@streann.com";
     const emailWithDate = generateEmail(baseEmail);

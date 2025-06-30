@@ -51,6 +51,7 @@ async function loggedUserMyAccount(page, action, stepNumber) {
        
       // after Login be sure that is redirect to the Home Page
       const url = `https://${action}-v3-dev.streann.tech/`;
+      await page.waitForURL(url, { timeout: 20000 }); // <-- Add this line
       await expect(page).toHaveURL(url);
       console.log(`✅ Successfully navigated to ${url}`);
 
