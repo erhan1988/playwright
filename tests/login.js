@@ -336,16 +336,18 @@ async function loginScreenNewPassword(page, action, stepNumber) {
       if (action === 'emmannuel' || action === 'televicentro'){
         // after Login be sure that is redirect to the Profile Page
         const url = `https://${action}-v3-dev.streann.tech/profile/select-profile`;
+        await page.waitForURL(url, { timeout: 20000 }); // Wait up to 20 seconds for navigation
         await expect(page).toHaveURL(url);
         console.log(`✅ Successfully navigated to ${url}`);
         await page.click('.card.mx-2.d-flex.flex-column.align-items-center.ng-star-inserted');
         await page.waitForTimeout(5000); // Wait for 5 seconds
       }
         
-        // after Login be sure that is redirect to the Home Page
-        const url = `https://${action}-v3-dev.streann.tech/`;
-        await expect(page).toHaveURL(url);
-        console.log(`✅ Successfully navigated to ${url}`);
+      // after Login be sure that is redirect to the Home Page
+      const url = `https://${action}-v3-dev.streann.tech/`;
+      await page.waitForURL(url, { timeout: 20000 }); // Wait for navigation to complete
+      await expect(page).toHaveURL(url);
+      console.log(`✅ Successfully navigated to ${url}`);
 
     } catch (err) {
       logError(`❌ An error occurred in loginScreenNewPassword: ${err.message}`);

@@ -9,9 +9,9 @@ async function forgotScreen(page, action, stepNumber) {
   try {
       // navigate to the Login screen
       const baseUrl = `https://${action}-v3-dev.streann.tech/login`;
-      await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
-      
-      // Wait for the login screen to load
+      const response = await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
+      console.log('Current URL after goto:', page.url());
+      await page.screenshot({ path: 'login_debug.png' });
       await page.waitForSelector('#login-button', { state: 'visible', timeout: 10000 });
 
       // click in the link Forgot Password 
@@ -125,9 +125,16 @@ async function forgotScreenFourthScenario(page, action, stepNumber) {
   logStep(`${stepNumber}. Forgot Screen Fourth Scenario: 4. Fill correct email need to appear success Message `);
 
   try {
-    // Make refresh the page 
-    await page.reload();
-await page.waitForSelector('#send-email-button', { state: 'visible', timeout: 8000 });
+
+    try {
+      await page.reload();
+      await page.waitForSelector('#send-email-button', { state: 'visible', timeout: 15000 });
+      await page.screenshot({ path: 'before_send_email_button.png' });
+      console.log('Current URL:', page.url());
+    } catch (err) {
+      console.error('Error during reload or screenshot:', err);
+      throw err;
+    }
     // Fill Email 
     const baseEmail = "test+@streann.com";
     const emailWithDate = generateEmail(baseEmail);
