@@ -68,8 +68,7 @@ async function loginScreenSecondScenario(page, action, stepNumber) {
         throw new Error("❌ Login button not found!");
       }
       // Wait for the Registration screen to load
-      await page.waitForSelector('#login-button', { state: 'visible' });
-
+      await page.waitForSelector('#login-button', { state: 'visible', timeout: 20000 });
       // Check if exist all fields in the Login screen
        // Check first Title
        const h1 = page.locator('h1');
@@ -148,7 +147,7 @@ async function loginScreenFourScenario(page, action, stepNumber) {
     try {
       //Refresh the page to reset the form
       await page.reload();
-      await page.waitForSelector('#login-button', { state: 'visible' });
+      await page.waitForSelector('#login-button', { state: 'visible', timeout: 20000 });
 
       // Fill the Email 
       await page.locator('#username').fill('test@streann.com');
@@ -176,8 +175,7 @@ async function loginScreenFiveScenario(page, action, stepNumber) {
     try {
         //Refresh the page to reset the form
         await page.reload();
-        await page.waitForSelector('#login-button', { state: 'visible' });
-
+        await page.waitForSelector('#login-button', { state: 'visible', timeout: 20000 });
       // Email Empty
       await page.locator('#username').fill('');
       const email = await page.locator('#username').inputValue();
@@ -204,7 +202,7 @@ async function loginScreenSixScenario(page, action, stepNumber) {
     try {
         //Refresh the page to reset the form
       await page.reload();
-      await page.waitForSelector('#login-button', { state: 'visible' });
+      await page.waitForSelector('#login-button', { state: 'visible', timeout: 20000 });
 
       if (action === 'emmannuel'){
          await page.locator('#username').fill('erhan+1115@streann.com');

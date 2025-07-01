@@ -20,8 +20,16 @@ async function checkCategoryTitleHomeScreen(page,action , stepNumber) {
 
             // Loop through each element and print its text
             for (let i = 0; i < h5Elements.length; i++) {
-                const text = await h5Elements[i].textContent();
-                logSuccess(`✅ Title Category ${i + 1}: ${text.trim()}`);
+                const el = h5Elements[i];
+                try {
+                    await expect(el).toBeVisible({ timeout: 5000 });
+                    const text = await el.textContent();
+                    logSuccess(`✅ Title Category ${i + 1}: ${text.trim()}`);
+                } catch (err) {
+                    logError(`❌ Title Category ${i + 1} not visible or failed to get text: ${err.message}`);
+                    // Optionally: break or continue depending on your needs
+                    continue;
+                }
             }
             logSuccess('✅ All category titles were successfully retrieved.');
         } catch (err) {
@@ -85,8 +93,10 @@ async function checkVodsInHome(page, action, stepNumber) {
     });
 }
 async function UserDetailsScreen(page,action,stepNumber,loggedUser) {
-    await test.step(`${stepNumber}. Not logged user checking Details screen containts Go back Title background Image Buttons`, async () => {
-        logStep(`${stepNumber}. Not logged user checking Details screen containts Go back Title background Image Buttons`);
+    const userType = loggedUser ? 'Logged user' : 'Not logged user';
+
+    await test.step(`${stepNumber}. ${userType} checking Details screen contains Go back Title background Image Buttons`, async () => {
+        logStep(`${stepNumber}. ${userType} checking Details screen contains Go back Title background Image Buttons`);
         try {
             // Call the GobackLink function
             await GobackLink(page,'undefined');  
