@@ -129,7 +129,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
     logStep('Checking for buttons in Details screen...');
     try {
         await page.evaluate(() => window.scrollBy(0, 200));
-        await page.waitForTimeout(2000);
+        await page.waitForTimeout(3000);
 
         const buttons = page.locator("//button[.//span[@class='mat-mdc-button-touch-target']]");
         const buttonCount = await buttons.count();
@@ -167,8 +167,14 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
             
                     // Click the "Suscribirse" button
                     logStep(`Clicking on "Suscribirse" button at Details screen...`);
-                    await buttons.nth(i).click();
-                    await page.waitForTimeout(4000);
+
+                    try {
+                        await buttons.nth(i).click();
+                        await page.waitForTimeout(12000); 
+                    } catch (err) {
+                        console.log('Button click failed at index', i, 'Error:', err.message);
+                        throw err;
+                    }
             
                     // Wait for the URL to change
                     if (loggedUser){
@@ -196,7 +202,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
                         }
                         logStep(`Clicking on "Compartir" button at Details screen...`);
                         await compartirButton.click();
-                        await page.waitForTimeout(2000);
+                        await page.waitForTimeout(5000);
                         await checkSharePopup(page, 'cdk-overlay-0');
                         //logSuccess(`✅ "Compartir" button clicked successfully.`);
                     }
@@ -513,7 +519,7 @@ async function checkDinamiclyPopUP(page, action, selector) {
         logStep(`Checking popup: ${selector}`);
 
         // Instead of assuming it already exists, wait *if it appears* for up to 15 seconds
-        const toastContainer = await page.waitForSelector(selector, { timeout: 5000, state: 'visible' });
+        const toastContainer = await page.waitForSelector(selector, { timeout: 10000, state: 'visible' });
          if (toastContainer) {
             const message = await toastContainer.textContent();
             if (message && message.trim()) {

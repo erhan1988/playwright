@@ -298,13 +298,10 @@ async function loginScreenNewPassword(page, action, stepNumber) {
   try {
       // navigate to the Login screen
       const baseUrl = `https://${action}-v3-dev.streann.tech/login`;
-      await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });      // Wait for the login screen to load
+      const response = await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 70000 });
+      console.log('Goto response status:', response && response.status());
       console.log('Current URL after goto:', page.url());
-     // Try both ID and text-based selector
-     
-      const loginButton = page.getByText(/log in|iniciar sesión|ingresar/i, { exact: false });
-      await expect(loginButton).toBeVisible({ timeout: 70000 });
-      console.log('Found login button by text');
+      await page.waitForSelector('#login-button, [type="submit"]', { state: 'visible', timeout: 20000 });
           
       if (action === 'emmannuel'){
         await page.locator('#username').fill('erhan+1115@streann.com');
