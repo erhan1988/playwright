@@ -129,7 +129,8 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
     logStep('Checking for buttons in Details screen...');
     try {
         await page.evaluate(() => window.scrollBy(0, 200));
-        await page.waitForTimeout(3000);
+        await page.waitForSelector('button[type="button"]', { state: 'visible', timeout: 20000 });
+       // await page.waitForTimeout(3000);
 
         const buttons = page.locator("//button[.//span[@class='mat-mdc-button-touch-target']]");
         const buttonCount = await buttons.count();

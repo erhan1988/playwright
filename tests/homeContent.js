@@ -70,14 +70,11 @@ async function checkVodsInHome(page, action, stepNumber) {
             await imageToClick.waitFor({ state: 'visible', timeout: 10000 }); // Wait for visibility
             await imageToClick.scrollIntoViewIfNeeded();
             console.log(`Clicking on the ${imageToClickIndex + 1}th image...`);
-            const initialUrl = page.url();
-            await imageToClick.click();
-
-            await page.waitForFunction(
-                (initial) => window.location.href !== initial,
-                initialUrl,
-                { timeout: 30000 }
-            );
+           // const initialUrl = page.url();
+            await Promise.all([
+            page.waitForNavigation({ timeout: 30000 }),
+            imageToClick.click()
+            ]);
 
             const newUrl = page.url();
             logSuccess(`✅ Successfully redirected to: ${newUrl}`);
@@ -161,15 +158,12 @@ async function checkRelatedContentInDetailsScreen(page, action, stepNumber) {
             const imageToClick = imageElements[imageToClickIndex];
             await imageToClick.scrollIntoViewIfNeeded();
             console.log(`Clicking on the ${imageToClickIndex + 1}th image...`);
-            await imageToClick.click();
-
+           // await imageToClick.click();
             // Wait for the URL to change
-            const initialUrl = page.url();
-            await page.waitForFunction(
-                (initialUrl) => window.location.href !== initialUrl,
-                initialUrl,
-                { timeout: 30000 }
-            );
+            await Promise.all([
+            page.waitForNavigation({ timeout: 30000 }),
+            imageToClick.click()
+            ]);
             // Log the new URL
             const newUrl = page.url();
             logSuccess(`✅ Successfully redirected to: ${newUrl}`);
