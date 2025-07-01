@@ -221,8 +221,8 @@ async function regScreenSecondScenario(page, action, stepNumber) {
 }
 
 async function regScreenThirdcenario(page, action, stepNumber) {
-  await test.step(`${stepNumber}. Registration Screen Third Scenario: Need to appear warning message in CConfirm Password all others to be filled`, async () => {
-    logStep(`${stepNumber}.Registration Screen Third Scenario: Need to appear warning message in CConfirm Password all others to be filled`);
+  await test.step(`${stepNumber}. Registration Screen Third Scenario: Need to appear warning message in Confirm Password all others to be filled`, async () => {
+    logStep(`${stepNumber}.Registration Screen Third Scenario: Need to appear warning message in Confirm Password all others to be filled`);
     try {
 
       //Refresh the page to reset the form
