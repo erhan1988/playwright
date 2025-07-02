@@ -129,101 +129,93 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
     logStep('Checking for buttons in Details screen...');
     try {
         await page.evaluate(() => window.scrollBy(0, 200));
-       // await page.waitForSelector('button[type="button"]', { state: 'visible', timeout: 20000 });
-        //await page.waitForTimeout(6000);
-        await page.waitForSelector('span.mat-mdc-button-touch-target', { state: 'visible' });
+        await page.waitForSelector('span.mdc-button__label', { state: 'visible', timeout: 15000 });
 
-        const buttons = page.locator("//button[.//span[@class='mat-mdc-button-touch-target']]");
+        const buttons = page.locator("//button[.//span[@class='mdc-button__label']]");
         const buttonCount = await buttons.count();
         logSuccess(`✅ Found ${buttonCount} buttons in the Details screen.`);
 
         let watchNowFound = false;
-        let suscribirseFound = false; // Declare the variable
-        let compartirFound = false;  // Declare the variable
+        let suscribirseFound = false;
+
         for (let i = 0; i < buttonCount; i++) {
-            const buttonText = await buttons.nth(i).textContent();
+            const button = buttons.nth(i);
+            const buttonText = await button.textContent();
             const trimmedText = buttonText.trim();
-            //logStep(`Button ${i + 1} text: '${trimmedText}'`);
+
+            // "Watch Now" for emmanuel
             if (action === 'emmanuel' && trimmedText.toLowerCase() === 'watch now') {
+                const isVisible = await button.isVisible();
+                const isEnabled = await button.isEnabled();
+                if (!isVisible || !isEnabled) {
+                    await page.screenshot({ path: `watchnow_button_not_enabled_${i + 1}.png` });
+                    throw new Error(`"Watch Now" button at index ${i} is not enabled or not visible.`);
+                }
                 logSuccess(`✅ Found "Watch Now" button at Details screen`);
                 watchNowFound = true;
-
-                const initialUrl = page.url(); // Get the current URL before the action
-                console.log(`Initial URL: ${initialUrl}`); // Log the initial URL
-
-                // Click the "Watch Now" button
                 logStep(`Clicking on "Watch Now" button at Details screen...`);
-                await buttons.nth(i).click();
-
-                // Wait for the URL to change
-                await redirectUrl(page,'/player');
-                break; // Exit the loop after checking the URL change
+                await button.click();
+                await redirectUrl(page, '/player');
+                break;
             }
-             // Check for "Suscribirse" and "Compartir" when action is "amorir" or "prtv"
-            else if (action === 'amorir' || action === 'okgol' || action === 'televicentro') {
-                let buttons1 = page.locator("//button[.//span[contains(text(), 'Compartir')]]"); // 🟢 Declare early!
-            
-                if (trimmedText.toLowerCase() === 'suscribirse') {
-                    logSuccess(`✅ Found "Suscribirse" button at Details screen`);
-                    suscribirseFound = true;
-            
-                    // Click the "Suscribirse" button
-                    logStep(`Clicking on "Suscribirse" button at Details screen...`);
 
-                    try {
-                        await buttons.nth(i).click();
-                        await page.waitForTimeout(12000); 
-                    } catch (err) {
-                        console.log('Button click failed at index', i, 'Error:', err.message);
-                        throw err;
+            // "Suscribirse" for other actions
+            if (['amorir', 'okgol', 'televicentro'].includes(action) && trimmedText.toLowerCase() === 'suscribirse') {
+                const isVisible = await button.isVisible();
+                const isEnabled = await button.isEnabled();
+                if (!isVisible || !isEnabled) continue; // Skip hidden/disabled buttons
+
+                logSuccess(`✅ Found "Suscribirse" button at Details screen`);
+                suscribirseFound = true;
+                logStep(`Clicking on "Suscribirse" button at Details screen...`);
+                try {
+                    await button.click();
+                    if (loggedUser) {
+                        await redirectUrl(page,'/user/choose-plan');
+                    } else {
+                        await redirectUrl(page,'/login');
                     }
-            
-                    // Wait for the URL to change
-                    if (loggedUser){
-                        await redirectUrl(page, '/user/choose-plan');
-                    }else{
-                        await redirectUrl(page, '/login');
-                    }
+
                     // Go back to the details screen
                     logStep('Navigating back to the Details screen...');
                     await page.goBack();
                     const backUrl = page.url();
                     await page.waitForSelector('a.my-1.d-flex.align-items-center.fs-5', { state: 'visible' });
                     logSuccess(`✅ Returned to Details screen. Current URL: ${backUrl}`);
-            
-                    // 🔴 Only continue with "Compartir" if action is 'amorir'
-                    if (action === 'amorir' || action === 'okgol' || action === 'televicentro') {
-                        logStep('Looking for the "Compartir" button...');
-                        const compartirButton = buttons1.first();
-                        try {
-                            await compartirButton.waitFor({ state: 'visible', timeout: 5000 });
-                            logSuccess(`✅ Found "Compartir" button at Details screen`);
-                        } catch (error) {
-                            logError(`❌ "Compartir" button not found or not visible after returning to the Details screen.`);
-                            throw new Error(`"Compartir" button not found or not visible.`);
-                        }
+
+                    // Only continue with "Compartir" if action is 'amorir', 'okgol', or 'televicentro'
+                    logStep('Looking for the "Compartir" button...');
+                    const compartirButton = page.locator("//button[.//span[contains(text(), 'Compartir')]]").first();
+                    try {
+                        await compartirButton.waitFor({ state: 'visible', timeout: 5000 });
+                        logSuccess(`✅ Found "Compartir" button at Details screen`);
                         logStep(`Clicking on "Compartir" button at Details screen...`);
                         await compartirButton.click();
-                        await page.waitForTimeout(5000);
+                        await page.waitForTimeout(2000); // If you expect a popup, wait for it or use waitForSelector
                         await checkSharePopup(page, 'cdk-overlay-0');
-                        //logSuccess(`✅ "Compartir" button clicked successfully.`);
+                    } catch (error) {
+                        await page.screenshot({ path: `compartir_button_not_found_${action}.png` });
+                        logError(`❌ "Compartir" button not found or not visible after returning to the Details screen.`);
+                        throw new Error(`"Compartir" button not found or not visible.`);
                     }
-                    break; // Exit the loop after handling "Suscribirse"
+                } catch (err) {
+                    await page.screenshot({ path: `suscribirse_button_click_error_${action}.png` });
+                    console.log('Button click failed at index', i, 'Error:', err.message);
+                    throw err;
                 }
+                break;
             }
-            
         }
         if (!watchNowFound && action === 'emmanuel') {
             const msg = '❌ "Watch Now" button not found for action: emmanuel';
             logError(msg);
             throw new Error(msg);
         }
-        if (action === 'amorir' || action === 'okgol' || action === 'televicentro') {
-            if (!suscribirseFound) {
-                const msg = '❌ "Suscribirse" button not found for action: amorir';
-                logError(msg);
-                throw new Error(msg);
-            }
+        if (['amorir', 'okgol', 'televicentro'].includes(action) && !suscribirseFound) {
+            await page.screenshot({ path: `suscribirse_button_not_found_${action}.png` });
+            const msg = `❌ "Suscribirse" button not found for action: ${action}`;
+            logError(msg);
+            throw new Error(msg);
         }
     } catch (err) {
         logError(`❌ An error occurred in buttonsDetailsScreen: ${err.message}`);
@@ -231,20 +223,32 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
     }
 }
 
-async function redirectUrl(page, expectedPartOfUrl) {
+async function redirectUrl(page, expectedPartOfUrl, timeout = 20000) {
     try {
-        const currentUrl = page.url(); // Get the current URL
-        console.log(`🌐 Current URL: ${currentUrl}`); // Log the current URL
+        const initialUrl = page.url();
+        console.log(`🌐 Initial URL: ${initialUrl}`);
+
+        // Wait for the URL to contain the expected part
+        await page.waitForFunction(
+            (expected) => window.location.href.includes(expected),
+            expectedPartOfUrl,
+            { timeout }
+        );
+
+        const currentUrl = page.url();
+        console.log(`🌐 Current URL after wait: ${currentUrl}`);
 
         if (currentUrl.includes(expectedPartOfUrl)) {
             logSuccess(`✅ URL contains the expected path: ${expectedPartOfUrl}`);
         } else {
             const message = `❌ URL does not contain the expected path "${expectedPartOfUrl}". Current URL: "${currentUrl}"`;
+            await page.screenshot({ path: `redirectUrl_error_${Date.now()}.png` });
             logError(message);
             throw new Error(message);
         }
     } catch (err) {
         logError(`❌ redirectUrl error: ${err.message}`);
+        await page.screenshot({ path: `redirectUrl_exception_${Date.now()}.png` });
         throw err;
     }
 }
