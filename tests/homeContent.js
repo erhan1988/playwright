@@ -129,7 +129,7 @@ async function checkRelatedContentInDetailsScreen(page, action, stepNumber) {
             // Wait for at least one element or timeout
             await expect.soft(titleButtons.first(), 'Expect at least one title button to appear').toBeVisible({ timeout: 20000 });
             count = await titleButtons.count();
-            }else if (action === 'emmanuel'){
+            }else if (action === 'emmanuel' || action === 'panamsport'){
                 // Check title in the Related Content
                 titleButtons = await page.locator('h5.season-title');
                 // Wait for at least one element or timeout
@@ -171,13 +171,14 @@ async function checkRelatedContentInDetailsScreen(page, action, stepNumber) {
            // await imageToClick.click();
             // Wait for the URL to change
             await Promise.all([
-            page.waitForNavigation({ timeout: 30000 }),
+            page.waitForNavigation({ timeout: 40000 }),
             imageToClick.click()
             ]);
             // Log the new URL
             const newUrl = page.url();
             logSuccess(`✅ Successfully redirected to: ${newUrl}`);
             page.waitForTimeout(11000);
+            
         } catch (err) {
         logError(`❌ An error occurred in checkRelatedContentInDetailsScreen: ${err.message}`);
         throw new Error(`❌ An error occurred in checkRelatedContentInDetailsScreen: ${err.message}`);

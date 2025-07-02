@@ -104,14 +104,17 @@ async function checkHeaderElements(page, action, stepNumber) {
             // Define an array of elements to check
             const headerElements = [
                 { locator:'a.navbar-brand img.img-fluid[alt="logo"]' , name: 'Logo' },
-                { locator: "//*[contains(text(),'Log In') or contains(text(),'Iniciar sesión') or contains(text(),'Ingresar')]",  name: 'Login Button' },   
+                { locator: "//*[contains(text(),'Log in') or contains(text(),'Iniciar sesión') or contains(text(),'Ingresar')]",  name: 'Login Button' },   
                 { locator: '#search-button', name: 'Search Button' },
                 { locator: "//a[contains(text(),'Home') or contains(text(),'Inicio') or contains(text(),'WIPR')]", name: 'Home Link' }   
             ];
-             // Only add the Register Button if not okgol
+             // Only add the Register Button if not okgol and televicentro
              // This is becuase okgol does not have Register Button in the header
             if (action !== 'okgol' && action !== 'televicentro') {
-                headerElements.splice(2, 0, { locator: "//*[contains(text(),'Subscribe Now') or contains(text(),'Suscríbase Ahora') or contains(text(),'¡Hazte Miembro!')]", name: 'Register Button' });
+                headerElements.splice(2, 0, { 
+                    locator: "//*[contains(text(),'Subscribe Now') or contains(text(),'Suscríbase Ahora') or contains(text(),'¡Hazte Miembro!') or contains(text(),'Register')]", 
+                    name: 'Register Button' 
+                });           
             }
             // Collect results for each element
             const results = [];

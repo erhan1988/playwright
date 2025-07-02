@@ -129,7 +129,8 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
     logStep('Checking for buttons in Details screen...');
     try {
         await page.evaluate(() => window.scrollBy(0, 200));
-        await page.waitForSelector("//button[.//span[contains(text(), 'Suscribirse')]]", { state: 'visible', timeout: 10000 });
+        await page.waitForSelector("//button[.//span[contains(text(), 'Suscribirse') or contains(text(), 'Subscribe')]]", { state: 'visible', timeout: 10000 });
+        //await page.waitForSelector("//button[.//span[contains(text(), 'Suscribirse')]]", { state: 'visible', timeout: 10000 });
         await page.waitForSelector('span.mdc-button__label', { state: 'visible', timeout: 15000 });
 
         const buttons = page.locator("//button[.//span[@class='mdc-button__label']]");
@@ -161,7 +162,8 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
             }
 
             // "Suscribirse" for other actions
-            if (['amorir', 'okgol', 'televicentro'].includes(action) && trimmedText.toLowerCase() === 'suscribirse') {
+            if (['amorir', 'okgol', 'televicentro', 'panamsport'].includes(action) &&
+                (trimmedText.toLowerCase() === 'suscribirse' || trimmedText.toLowerCase() === 'subscribe')) {
                 const isVisible = await button.isVisible();
                 const isEnabled = await button.isEnabled();
                 if (!isVisible || !isEnabled) continue; // Skip hidden/disabled buttons
@@ -184,20 +186,20 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
                     await page.waitForSelector('a.my-1.d-flex.align-items-center.fs-5', { state: 'visible' });
                     logSuccess(`✅ Returned to Details screen. Current URL: ${backUrl}`);
 
-                    // Only continue with "Compartir" if action is 'amorir', 'okgol', or 'televicentro'
-                    logStep('Looking for the "Compartir" button...');
-                    const compartirButton = page.locator("//button[.//span[contains(text(), 'Compartir')]]").first();
+                    // Only continue with "Share" if action is 'amorir', 'okgol', or 'televicentro'
+                    logStep('Looking for the "Share" button...');
+                    const compartirButton = page.locator("//button[.//span[contains(text(), 'Compartir') or contains(text(), 'Share')]]").first();
                     try {
                         await compartirButton.waitFor({ state: 'visible', timeout: 5000 });
-                        logSuccess(`✅ Found "Compartir" button at Details screen`);
-                        logStep(`Clicking on "Compartir" button at Details screen...`);
+                        logSuccess(`✅ Found "Share" button at Details screen`);
+                        logStep(`Clicking on "Share" button at Details screen...`);
                         await compartirButton.click();
                         await page.waitForTimeout(2000); // If you expect a popup, wait for it or use waitForSelector
                         await checkSharePopup(page, 'cdk-overlay-0');
                     } catch (error) {
-                        await page.screenshot({ path: `compartir_button_not_found_${action}.png` });
-                        logError(`❌ "Compartir" button not found or not visible after returning to the Details screen.`);
-                        throw new Error(`"Compartir" button not found or not visible.`);
+                        await page.screenshot({ path: `share_button_not_found_${action}.png` });
+                        logError(`❌ "Share" button not found or not visible after returning to the Details screen.`);
+                        throw new Error(`"Share" button not found or not visible.`);
                     }
                 } catch (err) {
                     await page.screenshot({ path: `suscribirse_button_click_error_${action}.png` });
@@ -212,7 +214,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
             logError(msg);
             throw new Error(msg);
         }
-        if (['amorir', 'okgol', 'televicentro'].includes(action) && !suscribirseFound) {
+        if (['amorir', 'okgol', 'televicentro','panamsport'].includes(action) && !suscribirseFound) {
             await page.screenshot({ path: `suscribirse_button_not_found_${action}.png` });
             const msg = `❌ "Suscribirse" button not found for action: ${action}`;
             logError(msg);
