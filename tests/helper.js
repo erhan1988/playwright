@@ -129,6 +129,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
     logStep('Checking for buttons in Details screen...');
     try {
         await page.evaluate(() => window.scrollBy(0, 200));
+        await page.waitForSelector("//button[.//span[contains(text(), 'Suscribirse')]]", { state: 'visible', timeout: 10000 });
         await page.waitForSelector('span.mdc-button__label', { state: 'visible', timeout: 15000 });
 
         const buttons = page.locator("//button[.//span[@class='mdc-button__label']]");
