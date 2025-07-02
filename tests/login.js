@@ -231,20 +231,27 @@ async function loginScreenSixScenario(page, action, stepNumber) {
       console.log('Now checking if the login button is Enabled...');
 
       // Emmanuel when is logged is redirect to the Profile Page
-      if (action === 'emmannuel'|| action === 'televicentro'){
-        // after Login be sure that is redirect to the Profile Page
-        const url = `https://${action}-v3-dev.streann.tech/profile/select-profile`;
-        await expect(page).toHaveURL(url);
-        console.log(`✅ Successfully navigated to ${url}`);
-        await page.click('.card.mx-2.d-flex.flex-column.align-items-center.ng-star-inserted');
-        // await page.waitForTimeout(5000); // Wait for 5 seconds
+      if (action === 'emmannuel' || action === 'televicentro') {
+        // After Login, be sure that it redirects to the Profile Page
+        const profileUrl = `https://${action}-v3-dev.streann.tech/profile/select-profile`;
+        await page.waitForURL(profileUrl, { timeout: 30000 });
+        await expect(page).toHaveURL(profileUrl);
+        console.log(`✅ Successfully navigated to ${profileUrl}`);
+
+       // Click the profile card and wait for home page navigation
+        await Promise.all([
+            page.waitForURL(`https://${action}-v3-dev.streann.tech/`, { timeout: 20000 }),
+            page.click('.card.mx-2.d-flex.flex-column.align-items-center.ng-star-inserted')
+        ]);
+        console.log(`✅ Successfully navigated to home page after profile selection.`);
       }
        
-      // after Login be sure that is redirect to the Home Page
-      const url = `https://${action}-v3-dev.streann.tech/`;
-      await expect(page).toHaveURL(url);
-      console.log(`✅ Successfully navigated to ${url}`);
-      
+      // For all actions (including emmannuel/televicentro), check home page navigation
+      const homeUrl = `https://${action}-v3-dev.streann.tech/`;
+      await page.waitForURL(homeUrl, { timeout: 20000 });
+      await expect(page).toHaveURL(homeUrl);
+      console.log(`✅ Successfully navigated to ${homeUrl}`);
+              
       // Check Logged User in Home page if is appear category Home etc ...
       stepNumber += 1;
       await checkCategoryTitleHomeScreen(page, action, stepNumber);
@@ -328,21 +335,26 @@ async function loginScreenNewPassword(page, action, stepNumber) {
       console.log('Now checking if the login button is Enabled...');
 
       // Emmanuel when is logged is redirect to the Profile Page
-      if (action === 'emmannuel' || action === 'televicentro'){
-        // after Login be sure that is redirect to the Profile Page
-        const url = `https://${action}-v3-dev.streann.tech/profile/select-profile`;
-        await page.waitForURL(url, { timeout: 20000 }); // Wait up to 20 seconds for navigation
-        await expect(page).toHaveURL(url);
-        console.log(`✅ Successfully navigated to ${url}`);
-        await page.click('.card.mx-2.d-flex.flex-column.align-items-center.ng-star-inserted');
-        await page.waitForTimeout(5000); // Wait for 5 seconds
+      if (action === 'emmannuel' || action === 'televicentro') {
+        // After Login, be sure that it redirects to the Profile Page
+        const profileUrl = `https://${action}-v3-dev.streann.tech/profile/select-profile`;
+        await page.waitForURL(profileUrl, { timeout: 30000 });
+        await expect(page).toHaveURL(profileUrl);
+        console.log(`✅ Successfully navigated to ${profileUrl}`);
+
+        // Click the profile card and wait for home page navigation
+        await Promise.all([
+            page.waitForURL(`https://${action}-v3-dev.streann.tech/`, { timeout: 20000 }),
+            page.click('.card.mx-2.d-flex.flex-column.align-items-center.ng-star-inserted')
+        ]);
+        console.log(`✅ Successfully navigated to home page after profile selection.`);
       }
-        
-      // after Login be sure that is redirect to the Home Page
-      const url = `https://${action}-v3-dev.streann.tech/`;
-      await page.waitForURL(url, { timeout: 20000 }); // Wait for navigation to complete
-      await expect(page).toHaveURL(url);
-      console.log(`✅ Successfully navigated to ${url}`);
+
+      // For all actions (including emmannuel/televicentro), check home page navigation
+      const homeUrl = `https://${action}-v3-dev.streann.tech/`;
+      await page.waitForURL(homeUrl, { timeout: 30000 });
+      await expect(page).toHaveURL(homeUrl);
+      console.log(`✅ Successfully navigated to ${homeUrl}`);
 
     } catch (err) {
       logError(`❌ An error occurred in loginScreenNewPassword: ${err.message}`);
