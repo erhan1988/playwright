@@ -245,11 +245,14 @@ if (action === 'emmanuel') {
             //9. Check footer Section 
             await checkFooterLinks (page,action,9);
 
-            // //10. Check different scenario for registration User
-            // await registrationScreen(page,action,10);
+            //10. Check different scenario for contact Us
+            await contactUsFirstScenario(page,action,10);
 
-            // //11. Check the Login screen
-            // await loginScreen(page,action,11);
+            //11. Check different scenario for registration User
+            //await registrationScreen(page,action,11);
+
+            // //12. Check the Login screen
+            // await loginScreen(page,action,12);
 
             // //12. Check the Forgot Password screen
             // await forgotScreen(page,action,12);
