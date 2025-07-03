@@ -213,7 +213,7 @@ if (action === 'emmanuel') {
         });
     })
 }else if(action === 'panamsport'){
-    test.describe('Website Tests for Okgol', () => {
+    test.describe('Website Tests for Panamsport', () => {
         test('Website Tests', async ({ page }) => {
             test.setTimeout(110000); 
     
@@ -242,8 +242,8 @@ if (action === 'emmanuel') {
             //8.Check Related Content in Details screen
             await checkRelatedContentInDetailsScreen(page, action,8);
 
-            // //9. Check footer Section 
-            // await checkFooterLinks (page,action,9);
+            //9. Check footer Section 
+            await checkFooterLinks (page,action,9);
 
             // //10. Check different scenario for registration User
             // await registrationScreen(page,action,10);

@@ -5,9 +5,15 @@ async function checkFooterLinks(page, action, stepNumber) {
   await test.step(`${stepNumber}. Check Footer links elements are exists`, async () => {
     logStep(`${stepNumber}. Check Footer links elements are exists`);
     try {
+      if (action === 'panamsport') {
+         await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+      }
       // ✅ Check footer text
       const footerSelector = 'label:has-text("© 2025")';
+      await page.waitForSelector(footerSelector, { state: 'visible', timeout: 10000 });
       const element = await page.locator(footerSelector).first();
+      await element.scrollIntoViewIfNeeded();
+      await element.waitFor({ state: 'visible', timeout: 10000 });
       const text = await element.textContent();
 
       if (await element.isVisible()) {
@@ -26,7 +32,17 @@ async function checkFooterLinks(page, action, stepNumber) {
         termsLink.click(),
         page.waitForURL(/\/terms/, { timeout: 20000 })
       ]);
-      await logSuccess('✅ Clicked Terms of Use and navigated to terms page');
+
+      const currentUrl = page.url();
+      if (/\/terms/.test(currentUrl)) {
+        await logSuccess('✅ Clicked Terms of Use and navigated to terms page');
+      } else if (/\/login/.test(currentUrl)) {
+        await logError('❌ Clicked Terms of Use but was redirected to login page (user may not be authenticated)');
+        throw new Error('Redirected to login page instead of terms page');
+      } else {
+        await logError(`❌ Clicked Terms of Use but landed on unexpected page: ${currentUrl}`);
+        throw new Error(`Unexpected navigation after clicking Terms of Use: ${currentUrl}`);
+      }
 
       // ✅ Wait for known content (optional)
       await page.waitForSelector('body', { timeout: 7000 });
@@ -36,7 +52,8 @@ async function checkFooterLinks(page, action, stepNumber) {
       await checkTextExist(page, [
         "Welcome to Emmanuel TV!",
         "Términos de Uso",
-        "Términos y Condiciones"
+        "Términos y Condiciones",
+        "Data categories"
       ]);
 
       // 🛑 Now move to privacy policy **only after above check passes**
@@ -86,7 +103,8 @@ async function privacyPolicy(page) {
       return bodyText.includes('Privacy Policy Effective Since') || 
        bodyText.includes('Política de Privacidad') || 
        bodyText.includes('Políticas de Privacidad') || 
-       bodyText.includes('Avisos Legales');
+       bodyText.includes('Avisos Legales') || 
+       bodyText.includes('Data categories');
     });
 
     // ✅ Check privacy page content
@@ -94,7 +112,8 @@ async function privacyPolicy(page) {
       "Privacy Policy Effective Since",
       "Política de Privacidad",
       "Avisos Legales",
-      "Políticas de Privacidad"
+      "Políticas de Privacidad",
+      "Data categories"
     ]);
   } catch (err) {
     logError(`❌ An error occurred in privacyPolicy: ${err.message}`);
@@ -104,14 +123,23 @@ async function privacyPolicy(page) {
 
 async function contactUs(page, action) {
   try {
-    const contactLink = page.getByText(/contact us|contáctenos/i, { exact: false });
+
+    let contactLink;
+    if (action === 'panamsport') {
+       contactLink = page.locator('a', { hasText: /contact us|contáctenos/i }).first();
+      await expect(contactLink).toBeVisible();
+      console.log('Contact Us link href:', await contactLink.getAttribute('href'));
+    }else{
+       contactLink = page.getByText(/contact us|contáctenos/i, { exact: false }).first();
+    }
     await expect(contactLink).toBeVisible();
     const contactUsText = await contactLink.textContent();
     await logSuccess(`Found Contact Us link: "${contactUsText?.trim()}"`);
+  
     if (action !== 'okgol'){
       await Promise.all([
         contactLink.click(),
-        page.waitForURL(/\/contact-us/, { timeout: 10000 })
+       page.waitForURL(/\/contact-us/, { timeout: 20000 })
       ]);
       expect(page.url()).toContain('/contact-us');
     } else if ( action === 'okgol'){
