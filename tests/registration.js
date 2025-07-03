@@ -8,7 +8,7 @@ async function registrationScreen(page, action, stepNumber) {
 
     // CLick to redirect to Registration Screen from the Header
     if (action !== 'okgol' && action !== 'televicentro') {
-      const subscribeButton = page.locator(`xpath=//*[contains(normalize-space(text()), 'Subscribe Now') or contains(normalize-space(text()), 'Suscríbase Ahora') or contains(normalize-space(text()), '¡Hazte Miembro!')]`);
+      const subscribeButton = page.locator(`xpath=//*[contains(normalize-space(text()), 'Subscribe Now') or contains(normalize-space(text()), 'Suscríbase Ahora') or contains(normalize-space(text()), '¡Hazte Miembro!') or contains(normalize-space(text()), 'Register')]`);
       if (await subscribeButton.count()) {
         await subscribeButton.first().click();
         console.log("Subscribe button clicked in the header!");
@@ -105,15 +105,24 @@ async function registrationScreen(page, action, stepNumber) {
         //   { locator: '#subscribe-button', name: 'Submit Button' },
         // ];
       }else if (action === 'okgol' || action === 'televicentro') {
-        requiredFields = [
-          { locator: '#firstname', name: 'First Name' },
-          { locator: '#email', name: 'Email' },
-          { locator: '#password', name: 'Password' },
-          { locator: '#confirmPassword', name: 'Confirm Password' },
-          { locator: '//mat-select[@aria-label="Default select example"]', name: 'Dropdown Select Country' },
-          { locator: '#termsOfUseCheckBox', name: 'Checkbox Terms of Use' },
-          { locator: '#subscribe-button', name: 'Submit Button' }
-        ];
+          requiredFields = [
+            { locator: '#firstname', name: 'First Name' },
+            { locator: '#email', name: 'Email' },
+            { locator: '#password', name: 'Password' },
+            { locator: '#confirmPassword', name: 'Confirm Password' },
+            { locator: '//mat-select[@aria-label="Default select example"]', name: 'Dropdown Select Country' },
+            { locator: '#termsOfUseCheckBox', name: 'Checkbox Terms of Use' },
+            { locator: '#subscribe-button', name: 'Submit Button' }
+          ];
+      }else if ( action === 'panamsport') {
+          requiredFields = [
+            { locator: '#email', name: 'Email' },
+            { locator: '#password', name: 'Password' },
+            { locator: '#confirmPassword', name: 'Confirm Password' },
+            { locator: '//mat-select[@aria-label="Default select example"]', name: 'Dropdown Select Country' },
+            { locator: '#termsOfUseCheckBox', name: 'Checkbox Terms of Use' },
+            { locator: '#subscribe-button', name: 'Submit Button' }
+          ];
       }
 
       for (const element of requiredFields) {
@@ -162,12 +171,14 @@ async function regScreenSecondScenario(page, action, stepNumber) {
     try {
 
        // Fill First Name 
-       await page.locator('#firstname').fill('Test');
-       const firstName = await page.locator('#firstname').inputValue();
-       console.log(`First Name has Value: ${firstName}`);
+       if (action !== 'panamsport'){
+        await page.locator('#firstname').fill('Test');
+        const firstName = await page.locator('#firstname').inputValue();
+        console.log(`First Name has Value: ${firstName}`);
+       }
 
        //Fill Last Name
-       if (action !== 'okgol' && action !== 'televicentro') {
+       if (action !== 'okgol' && action !== 'televicentro' && action !== 'panamsport') {
           await page.locator('#lastname').fill('Test');
           const lastName = await page.locator('#lastname').inputValue();
           console.log(`Last Name has Value: ${lastName}`);
@@ -230,12 +241,13 @@ async function regScreenThirdcenario(page, action, stepNumber) {
       await page.waitForSelector('#subscribe-button', { state: 'visible' });
 
        // Fill First Name 
-       await page.locator('#firstname').fill('Test');
-       const firstName = await page.locator('#firstname').inputValue();
-       console.log(`First Name has Value: ${firstName}`);
-
+       if (action !== 'panamsport'){
+        await page.locator('#firstname').fill('Test');
+        const firstName = await page.locator('#firstname').inputValue();
+        console.log(`First Name has Value: ${firstName}`);
+       }
        //Fill Last Name
-       if (action !== 'okgol' && action !== 'televicentro') {
+       if (action !== 'okgol' && action !== 'televicentro' && action !== 'panamsport') {
           await page.locator('#lastname').fill('Test');
           const lastName = await page.locator('#lastname').inputValue();
           console.log(`Last Name has Value: ${lastName}`);
@@ -297,12 +309,14 @@ async function regScreenFourcenario(page, action, stepNumber) {
       await page.waitForSelector('#subscribe-button', { state: 'visible' });
 
        // Fill First Name ( NOTES ALL FIELDS ARE FILLED only checkbox not checked)
-       await page.locator('#firstname').fill('Test');
-       const firstName = await page.locator('#firstname').inputValue();
-       console.log(`First Name has Value: ${firstName}`);
+       if (action !== 'panamsport'){
+        await page.locator('#firstname').fill('Test');
+        const firstName = await page.locator('#firstname').inputValue();
+        console.log(`First Name has Value: ${firstName}`);
+       }
 
        //Fill Last Name
-       if ( action !== 'okgol' && action !== 'televicentro') {
+       if ( action !== 'okgol' && action !== 'televicentro' && action !== 'panamsport') {
         await page.locator('#lastname').fill('Test');
         const lastName = await page.locator('#lastname').inputValue();
         console.log(`Last Name has Value: ${lastName}`);
@@ -356,12 +370,14 @@ async function regScreenFivecenario(page, action, stepNumber) {
       await page.waitForSelector('#subscribe-button', { state: 'visible' });
 
        // Fill First Name ( NOTES ALL FIELDS ARE FILLED)
-       await page.locator('#firstname').fill('Test');
-       const firstName = await page.locator('#firstname').inputValue();
-       console.log(`First Name has Value: ${firstName}`);
+        if (action !== 'panamsport'){
+          await page.locator('#firstname').fill('Test');
+          const firstName = await page.locator('#firstname').inputValue();
+          console.log(`First Name has Value: ${firstName}`);
+        }
 
        //Fill Last Name
-       if (action !== 'okgol' && action !== 'televicentro') {
+       if (action !== 'okgol' && action !== 'televicentro' && action !== 'panamsport') {
         await page.locator('#lastname').fill('Test');
         const lastName = await page.locator('#lastname').inputValue();
         console.log(`Last Name has Value: ${lastName}`);
@@ -423,7 +439,7 @@ async function regScreenSixcenario(page, action, stepNumber) {
       }else{
         // CLick to redirect to Registration Screen from the Header
         await page.waitForTimeout(5000); // Wait for 5 seconds
-        const subscribeButton = page.getByText(/subscribe now|suscr[ií]base ahora|¡hazte miembro!/i, { exact: false });
+        const subscribeButton = page.getByText(/subscribe now|suscr[ií]base ahora|¡hazte miembro!|register/i, { exact: false });
         if (await subscribeButton.count()) {
           await subscribeButton.first().click();
           console.log("Subscribe button clicked in the header!");
@@ -436,12 +452,14 @@ async function regScreenSixcenario(page, action, stepNumber) {
       await page.waitForSelector('#subscribe-button', { state: 'visible', timeout: 20000 });  
 
       // Fill First Name ( NOTES ALL FIELDS ARE FILLED)
-      await page.locator('#firstname').fill('Test');
-      const firstName = await page.locator('#firstname').inputValue();
-      console.log(`First Name has Value: ${firstName}`);
+      if (action !== 'panamsport') {
+        await page.locator('#firstname').fill('Test');
+        const firstName = await page.locator('#firstname').inputValue();
+        console.log(`First Name has Value: ${firstName}`);
+      }
 
        //Fill Last Name
-      if (action !== 'okgol' && action !== 'televicentro') {
+      if (action !== 'okgol' && action !== 'televicentro' && action !== 'panamsport') {
         await page.locator('#lastname').fill('Test');
         const lastName = await page.locator('#lastname').inputValue();
         console.log(`Last Name has Value: ${lastName}`);
@@ -585,6 +603,12 @@ async function redirectionAfterRegistration(page, action) {
     }else if (action === 'emmanuel') {
        // Check here if will Appear pop up for email verification
       await emailVerificationPopup(page,action);
+    }else if (action === 'panamsport'){
+      const url = `https://${action}-v3-dev.streann.tech/`;
+      await expect(page).toHaveURL(url, { timeout: 20000 }); // waits up to 20 seconds
+      console.log(`✅ Successfully navigated to ${url}`);
+        // Log Out the user then check for six scenario od registration screen create new user with already existing email
+        await logOutUser(page, action);
     }
   } catch (err) {
     logError(`❌ An error occurred in redirectionAfterRegistration: ${err.message}`);

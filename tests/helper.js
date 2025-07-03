@@ -560,7 +560,7 @@ async function logOutUser(page,action) {
   
         // Wait for the "Salir" (Logout) span
         const logoutSpan = await page.waitForSelector(
-          "//span[contains(text(), 'Salir') or contains(text(), 'Log In')]",
+          "//span[contains(text(), 'Salir') or contains(text(), 'Logout')]",
           { timeout: 10000, state: 'visible' }
         );
         
