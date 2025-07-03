@@ -60,7 +60,8 @@ async function loginScreenSecondScenario(page, action, stepNumber) {
     logStep(`${stepNumber}. Login Screen Second Scenario: Click from the header need to redirect to the login screen also check are exist all fields`);
     try {
       // CLick to redirect to login Screen from the Header
-      const loginbutton = page.locator(`xpath=//*[contains(normalize-space(text()), 'Log In') or contains(normalize-space(text()), 'Iniciar sesión') or contains(normalize-space(text()), 'Ingresar')]`);
+      //const loginbutton = page.locator(`xpath=//*[contains(normalize-space(text()), 'Log in') or contains(normalize-space(text()), 'Iniciar sesión') or contains(normalize-space(text()), 'Ingresar')]`);
+      const loginbutton = page.getByText(/log[\s-]?in|iniciar sesión|ingresar/i, { exact: false });
       if (await loginbutton.count()) {
         await loginbutton.first().click();
         console.log("Login button clicked in the header!");

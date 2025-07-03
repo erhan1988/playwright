@@ -177,8 +177,8 @@ async function checkRelatedContentInDetailsScreen(page, action, stepNumber) {
             // Log the new URL
             const newUrl = page.url();
             logSuccess(`✅ Successfully redirected to: ${newUrl}`);
-            if (action !== 'panamsport'){
-                page.waitForTimeout(11000);
+            if (action !== 'panamsport') {
+                await page.waitForTimeout(11000);
             }
             
         } catch (err) {
