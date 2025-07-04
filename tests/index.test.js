@@ -254,21 +254,18 @@ if (action === 'emmanuel') {
             //12. Check the Login screen
             await loginScreen(page,action,12);
 
-            //13.Check the player screen
-           // await checkPlayerScreen(page, action,13,'undefined');
+            //13. Check the Forgot Password screen
+            await forgotScreen(page,action,13);
 
-            // //12. Check the Forgot Password screen
-            // await forgotScreen(page,action,12);
+            //13.Logged User my Account
+            await loggedUserMyAccount (page,action,13);
 
-            // //13.Logged User my Account
-            // await loggedUserMyAccount (page,action,13);
-
-            // // 14.Login with New Password
-            // await loginScreenNewPassword(page,action,14);
+            // 14.Login with New Password
+            await loginScreenNewPassword(page,action,14);
         });
     })
 
 } else {
-    console.log('No valid action provided. Use "Amorir,OkGol,Televicentro" or "Emmanuel".');
+    console.log('No valid action provided. Use "Amorir,OkGol,Televicentro,PanamSport" or "Emmanuel".');
     process.exit(1);
 }

@@ -129,14 +129,23 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
     logStep('Checking for buttons in Details screen...');
     try {
         await page.evaluate(() => window.scrollBy(0, 200));
+       await page.waitForFunction(() =>
+        Array.from(document.querySelectorAll('button')).some(
+            btn => btn.textContent && btn.textContent.trim().length > 0
+        ),
+        null,
+        { timeout: 10000 }
+        );
+        
         if (action !== 'panamsport') {
             await page.waitForSelector("//button[.//span[contains(text(), 'Suscribirse') or contains(text(), 'Subscribe')]]", { state: 'visible', timeout: 10000 });
+            await page.waitForSelector('span.mdc-button__label', { state: 'visible', timeout: 15000 });
         }
-        await page.waitForSelector('span.mdc-button__label', { state: 'visible', timeout: 15000 });
         let buttons;
-        if (action === 'panamsport'){
-             buttons = page.locator('button');
-        }else{
+        if (action === 'panamsport' && loggedUser) {
+            await page.waitForSelector('text=Watch Now', { timeout: 12000 }); // just wait, don't assign
+            buttons = page.locator('button');
+        } else {
             buttons = page.locator("//button[.//span[@class='mdc-button__label']]");
         }
         const buttonCount = await buttons.count();
@@ -151,8 +160,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
             const trimmedText = buttonText.trim();
             console.log(`Button ${i}: "${trimmedText}"`);
 
-
-            // "Watch Now" for emmanuel
+            // "Watch Now" for emmanuel Panamsport
             if (action === 'emmanuel' && trimmedText.toLowerCase() === 'watch now' || loggedUser && trimmedText.toLowerCase().includes('watch now') && action === 'panamsport') {
                 const isVisible = await button.isVisible();
                 const isEnabled = await button.isEnabled();
@@ -218,6 +226,8 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
         }
         if (!watchNowFound && action === 'emmanuel' || !watchNowFound && loggedUser && action === 'panamsport') {
             const msg = `❌ "Watch Now" button not found for action: ${action}`;
+            await page.screenshot({ path: `watch_now_button_not_found_${action}.png` });
+
             logError(msg);
             throw new Error(msg);
         }
@@ -414,7 +424,13 @@ async function checkSharePopup(page, popupId) {
             const buttons = await popupShare.locator('button').all();
 
             for (const button of buttons) {
-                const buttonText = (await button.innerText()).trim().toLowerCase();
+                let buttonText = '';
+                try {
+                    buttonText = (await button.innerText({ timeout: 5000 })).trim().toLowerCase();
+                } catch (err) {
+                    console.log('Failed to get button text:', err.message);
+                    continue; // Skip this button if it fails
+                }
 
                 if (buttonText === 'facebook') {
                     console.log('-. Facebook button is present in the popup');

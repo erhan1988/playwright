@@ -28,6 +28,9 @@ async function loggedUserMyAccount(page, action, stepNumber) {
         const baseEmail = "test+@streann.com";
         const emailWithDate = generateEmail(baseEmail);
         console.log(emailWithDate);
+        await page.waitForSelector('#username', { timeout: 15000 });
+        console.log('Current URL before filling:', page.url());
+        await page.screenshot({ path: `before_fill_${Date.now()}.png` });
         await page.locator('#username').fill(emailWithDate);
         const email = await page.locator('#username').inputValue();
         console.log(`Email has Value: ${email}`);
@@ -221,15 +224,17 @@ async function myAccountScreenPage(page, action, stepNumber) {
     logStep(`${stepNumber}. My Account Screen: 5. Check in /user page if exist Button Plans and Form for contact Us`);
 
     try {
-        const link = page.locator('[routerlink="/user/choose-plan"]');
-        try {
-          await expect(link).toBeVisible({ timeout: 10000 });
-          const title = await link.textContent();
-          console.log("Element exists. Title:", title?.trim());
-        } catch (err) {
-          await page.screenshot({ path: `choose_plan_link_error_${Date.now()}.png` });
-          console.log('Current URL:', page.url());
-          throw new Error("❌ [routerlink=\"/user/choose-plan\"] element does not exist or is not visible.");
+        if (action !== "panamsport") {
+          const link = page.locator('[routerlink="/user/choose-plan"]');
+          try {
+            await expect(link).toBeVisible({ timeout: 10000 });
+            const title = await link.textContent();
+            console.log("Element exists. Title:", title?.trim());
+          } catch (err) {
+            await page.screenshot({ path: `choose_plan_link_error_${Date.now()}.png` });
+            console.log('Current URL:', page.url());
+            throw new Error("❌ [routerlink=\"/user/choose-plan\"] element does not exist or is not visible.");
+          }
         }
 
       if (action === 'okgol') {

@@ -12,8 +12,9 @@ async function forgotScreen(page, action, stepNumber) {
       const response = await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 70000 });
       console.log('Goto response status:', response && response.status());
       console.log('Current URL after goto:', page.url());
-     // await page.waitForSelector('#login-button, [type="submit"]', { state: 'visible', timeout: 20000 });
-
+      if (action === 'panamsport') {
+         await page.waitForSelector('#login-button, [type="submit"]', { state: 'visible', timeout: 40000 });
+      }
       // Click Forgot Password and wait for navigation
       const forgotPasswordLink = page.locator('#forgotPass');
       await expect(forgotPasswordLink).toBeVisible({ timeout: 10000 });
@@ -53,7 +54,7 @@ async function forgotScreen(page, action, stepNumber) {
       await forgotScreenFourthScenario(page, action, stepNumber);
 
     } catch (err) {
-      await page.screenshot({ path: `forgotScreen_error_${Date.now()}.png` });
+      await page.screenshot({ path: `forgotScreen_not_found_${action}.png` });
       logError(`❌ An error occurred in forgotScreen: ${err.message}`);
       throw new Error(`❌ An error occurred in forgotScreen: ${err.message}`);
     }
@@ -120,7 +121,6 @@ async function forgotScreenThirdScenario(page, action, stepNumber) {
     }
   });
 }
-
 async function forgotScreenFourthScenario(page, action, stepNumber) {
   await test.step(`${stepNumber}. Forgot Screen Fourth Scenario: 4. Fill correct email need to appear success Message `, async () => {
     logStep(`${stepNumber}. Forgot Screen Fourth Scenario: 4. Fill correct email need to appear success Message `);
