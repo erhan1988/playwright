@@ -129,11 +129,16 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
     logStep('Checking for buttons in Details screen...');
     try {
         await page.evaluate(() => window.scrollBy(0, 200));
-        await page.waitForSelector("//button[.//span[contains(text(), 'Suscribirse') or contains(text(), 'Subscribe')]]", { state: 'visible', timeout: 10000 });
-        //await page.waitForSelector("//button[.//span[contains(text(), 'Suscribirse')]]", { state: 'visible', timeout: 10000 });
+        if (action !== 'panamsport') {
+            await page.waitForSelector("//button[.//span[contains(text(), 'Suscribirse') or contains(text(), 'Subscribe')]]", { state: 'visible', timeout: 10000 });
+        }
         await page.waitForSelector('span.mdc-button__label', { state: 'visible', timeout: 15000 });
-
-        const buttons = page.locator("//button[.//span[@class='mdc-button__label']]");
+        let buttons;
+        if (action === 'panamsport'){
+             buttons = page.locator('button');
+        }else{
+            buttons = page.locator("//button[.//span[@class='mdc-button__label']]");
+        }
         const buttonCount = await buttons.count();
         logSuccess(`✅ Found ${buttonCount} buttons in the Details screen.`);
 
@@ -144,9 +149,11 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
             const button = buttons.nth(i);
             const buttonText = await button.textContent();
             const trimmedText = buttonText.trim();
+            console.log(`Button ${i}: "${trimmedText}"`);
+
 
             // "Watch Now" for emmanuel
-            if (action === 'emmanuel' && trimmedText.toLowerCase() === 'watch now') {
+            if (action === 'emmanuel' && trimmedText.toLowerCase() === 'watch now' || loggedUser && trimmedText.toLowerCase().includes('watch now') && action === 'panamsport') {
                 const isVisible = await button.isVisible();
                 const isEnabled = await button.isEnabled();
                 if (!isVisible || !isEnabled) {
@@ -158,7 +165,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
                 logStep(`Clicking on "Watch Now" button at Details screen...`);
                 await button.click();
                 await redirectUrl(page, '/player');
-                break;
+                return;
             }
 
             // "Suscribirse" for other actions
@@ -209,8 +216,8 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
                 break;
             }
         }
-        if (!watchNowFound && action === 'emmanuel') {
-            const msg = '❌ "Watch Now" button not found for action: emmanuel';
+        if (!watchNowFound && action === 'emmanuel' || !watchNowFound && loggedUser && action === 'panamsport') {
+            const msg = `❌ "Watch Now" button not found for action: ${action}`;
             logError(msg);
             throw new Error(msg);
         }

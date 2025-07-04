@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
-const { checkElementExists,redirectUrl,checkDinamiclyPopUP,generateEmail,logOutUser} = require('./helper'); 
+const { checkElementExists,redirectUrl,checkDinamiclyPopUP,generateEmail,logOutUser,checkPlayerScreen} = require('./helper'); 
 const { checkCategoryTitleHomeScreen, checkVodsInHome,UserDetailsScreen} = require('./homeContent'); 
 
 async function loginScreen(page, action, stepNumber) {
@@ -262,6 +262,11 @@ async function loginScreenSixScenario(page, action, stepNumber) {
 
       stepNumber += 1;
       await UserDetailsScreen(page, action, stepNumber,'loggedUser');
+
+      if(action === 'panamsport'){
+        stepNumber += 1;
+        await checkPlayerScreen(page, action, stepNumber);
+      }
 
       await logOutUser(page, action);
 
