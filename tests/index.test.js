@@ -87,7 +87,7 @@ if (action === 'emmanuel') {
             await UserDetailsScreen(page, action,7);
 
             //8.Check Related Content in Details screen
-            //await checkRelatedContentInDetailsScreen(page, action,8);
+            await checkRelatedContentInDetailsScreen(page, action,8);
 
             // // //9. Check footer Section 
             //  await checkFooterLinks (page,action,9);

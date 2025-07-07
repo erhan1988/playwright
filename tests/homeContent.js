@@ -129,7 +129,7 @@ async function checkRelatedContentInDetailsScreen(page, action, stepNumber) {
             // Wait for at least one element or timeout
             await expect.soft(titleButtons.first(), 'Expect at least one title button to appear').toBeVisible({ timeout: 20000 });
             count = await titleButtons.count();
-            }else if (action === 'emmanuel' || action === 'panamsport'){
+            }else if (action === 'emmanuel' || action === 'panamsport' || action === 'gols') {
                 // Check title in the Related Content
                 titleButtons = await page.locator('h5.season-title');
                 // Wait for at least one element or timeout
