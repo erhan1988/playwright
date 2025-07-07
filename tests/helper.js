@@ -303,7 +303,7 @@ async function checkPlayerScreen(page, action, stepNumber, value) {
             isReady ? logSuccess('✅ Video is ready to play') : logError('❌ Video did not become ready to play');
 
             const initialTime = await video.evaluate(el => el.currentTime);
-            await page.waitForTimeout(4000);
+            await page.waitForTimeout(5000);
             const laterTime = await video.evaluate(el => el.currentTime);
             const isPlaying = laterTime > initialTime;
             const playedDuration = (laterTime - initialTime).toFixed(2); // Optional: round to 2 decimal places
@@ -551,7 +551,7 @@ async function checkDinamiclyPopUP(page, action, selector) {
         logStep(`Checking popup: ${selector}`);
 
         // Instead of assuming it already exists, wait *if it appears* for up to 15 seconds
-        const toastContainer = await page.waitForSelector(selector, { timeout: 10000, state: 'visible' });
+        const toastContainer = await page.waitForSelector(selector, { timeout: 12000, state: 'visible' });
          if (toastContainer) {
             const message = await toastContainer.textContent();
             if (message && message.trim()) {

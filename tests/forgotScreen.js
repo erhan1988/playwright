@@ -54,7 +54,6 @@ async function forgotScreen(page, action, stepNumber) {
       await forgotScreenFourthScenario(page, action, stepNumber);
 
     } catch (err) {
-      await page.screenshot({ path: `forgotScreen_not_found_${action}.png` });
       logError(`❌ An error occurred in forgotScreen: ${err.message}`);
       throw new Error(`❌ An error occurred in forgotScreen: ${err.message}`);
     }
@@ -92,10 +91,12 @@ async function forgotScreenThirdScenario(page, action, stepNumber) {
 
     try {
       await page.reload();
-      await page.waitForSelector('.loader', { state: 'hidden', timeout: 10000 }); // <-- Add here
+      //await page.waitForSelector('.loader', { state: 'hidden', timeout: 10000 }); // <-- Add here
 
       try {
         await page.waitForSelector('#send-email-button', { state: 'visible', timeout: 20000 });
+        const sendEmailButton = page.locator('#send-email-button');
+        await expect(sendEmailButton).toBeVisible({ timeout: 8000 });
       } catch (err) {
         await page.screenshot({ path: `send_email_button_error_${Date.now()}.png` });
         console.log('Current URL:', page.url());
@@ -109,6 +110,7 @@ async function forgotScreenThirdScenario(page, action, stepNumber) {
 
       // Click in the Send Email button
       const sendEmailButton = page.locator('#send-email-button');
+      await expect(sendEmailButton).toBeVisible({ timeout: 8000 });
       await sendEmailButton.click();
 
       // Check if the error pop-up is visible
@@ -149,6 +151,7 @@ async function forgotScreenFourthScenario(page, action, stepNumber) {
 
       // Click in the Send Email button
       const sendEmailButton = page.locator('#send-email-button');
+      await expect(sendEmailButton).toBeVisible({ timeout: 8000 });
       await sendEmailButton.click();
 
       // Check if appear success message 

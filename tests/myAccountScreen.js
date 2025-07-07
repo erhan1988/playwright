@@ -30,7 +30,7 @@ async function loggedUserMyAccount(page, action, stepNumber) {
         console.log(emailWithDate);
         await page.waitForSelector('#username', { timeout: 15000 });
         console.log('Current URL before filling:', page.url());
-        await page.screenshot({ path: `before_fill_${Date.now()}.png` });
+        //await page.screenshot({ path: `before_fill_${Date.now()}.png` });
         await page.locator('#username').fill(emailWithDate);
         const email = await page.locator('#username').inputValue();
         console.log(`Email has Value: ${email}`);

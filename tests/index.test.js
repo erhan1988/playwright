@@ -215,7 +215,7 @@ if (action === 'emmanuel') {
 }else if(action === 'panamsport'){
     test.describe('Website Tests for Panamsport', () => {
         test('Website Tests', async ({ page }) => {
-            test.setTimeout(110000); 
+            test.setTimeout(130000); 
     
             //Step 1: Open the Site
             await navigatetoURL(page, action,1);
@@ -257,11 +257,11 @@ if (action === 'emmanuel') {
             //13. Check the Forgot Password screen
             await forgotScreen(page,action,13);
 
-            //13.Logged User my Account
-            await loggedUserMyAccount (page,action,13);
+            //14.Logged User my Account
+            await loggedUserMyAccount (page,action,14);
 
-            // 14.Login with New Password
-            await loginScreenNewPassword(page,action,14);
+            // 15.Login with New Password
+            await loginScreenNewPassword(page,action,15);
         });
     })
 

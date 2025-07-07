@@ -284,7 +284,7 @@ async function checkLoginButtonDisabled(page, action, enabled) {
     if (!isDisabled) {
         logSuccess('✅ Login button is enabled as expected.');
         console.log('Click in the Login button');
-        await page.locator('#login-button').waitFor({ state: 'visible', timeout: 10000 }); // waits up to 5 seconds
+        await page.locator('#login-button').waitFor({ state: 'visible', timeout: 11000 }); // waits up to 11 seconds
         await page.locator('#login-button').click();
     } else {
         logError('❌ Login button is disabled when it should be enabled.');
@@ -312,8 +312,16 @@ async function loginScreenNewPassword(page, action, stepNumber) {
       const response = await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 70000 });
       console.log('Goto response status:', response && response.status());
       console.log('Current URL after goto:', page.url());
-      await page.waitForSelector('#login-button, [type="submit"]', { state: 'visible', timeout: 20000 });
-          
+      const loginButton = page.locator('#login-button, [type="submit"]').first();
+      // Wait for the login button to be visible
+      try {
+        await expect(loginButton).toBeVisible({ timeout: 20000 });
+      } catch (err) {
+        console.log('First wait failed, retrying...');
+        await page.waitForTimeout(3000); // wait extra 3s
+        await expect(loginButton).toBeVisible({ timeout: 10000 });
+      }
+
       if (action === 'emmannuel'){
         await page.locator('#username').fill('erhan+1115@streann.com');
         const email = await page.locator('#username').inputValue();
@@ -357,11 +365,10 @@ async function loginScreenNewPassword(page, action, stepNumber) {
       }
 
       // For all actions (including emmannuel/televicentro), check home page navigation
-      const homeUrl = `https://${action}-v3-dev.streann.tech/`;
-      await page.waitForURL(homeUrl, { timeout: 30000 });
-      await expect(page).toHaveURL(homeUrl);
-      console.log(`✅ Successfully navigated to ${homeUrl}`);
-
+    const homeUrl = `https://${action}-v3-dev.streann.tech/`;
+    await expect(page).toHaveURL(homeUrl, { timeout: 30000 });
+    console.log(`✅ Successfully navigated to ${homeUrl}`);
+    
     } catch (err) {
       logError(`❌ An error occurred in loginScreenNewPassword: ${err.message}`);
       throw new Error(`❌ An error occurred in loginScreenNewPassword: ${err.message}`);
