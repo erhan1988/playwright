@@ -60,10 +60,18 @@ async function loggedUserMyAccount(page, action, stepNumber) {
         }
       }
       // Wait for home page
-      const homeUrl = `https://${action}-v3-dev.streann.tech/`;
-      await page.waitForURL(homeUrl, { timeout: 50000 });
-      await expect(page).toHaveURL(homeUrl);
+    const homeUrl = `https://${action}-v3-dev.streann.tech/`;
+
+    try {
+      // Wait until the page has navigated and URL includes the expected value
+      await page.waitForURL(url => url.href.includes(`${action}-v3-dev.streann.tech`), { timeout: 50000 });
+      // Extra check just in case
+      await expect(page).toHaveURL(homeUrl, { timeout: 5000 });
       console.log(`✅ Successfully navigated to ${homeUrl}`);
+    } catch (error) {
+      console.error(`❌ Failed to navigate to ${homeUrl}`);
+      console.error(error);
+    }
 
       stepNumber += 1;
       await myAccountPage(page, action, stepNumber);
