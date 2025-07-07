@@ -70,9 +70,10 @@ async function titleDetailsScreen(page,action) {
     logStep('Checking for the title on the Details screen...');
     try {
         let titleLocator;
-        if (action === 'okgol'){
+        if (action === 'okgol' || action === 'gols'){
              titleLocator = page.locator('h5.title-title');
-        }else {
+        }
+        else {
              titleLocator = page.locator('h1.title-title.fs-3');
         }
         await titleLocator.waitFor({ state: 'visible', timeout: 10000 });
@@ -100,7 +101,7 @@ async function backgroundImageDetailsScreen(page,action) {
     logStep('Checking for background images in the Details screen...');
     try {
         let imageLocator;
-        if (action === 'okgol') {
+        if (action === 'okgol' || action === 'gols') {
             imageLocator = page.locator('img.img-fluid').nth(1);
         } else {
             imageLocator = page.locator('div.details-image.details-image-desktop');
@@ -177,15 +178,21 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
             }
 
             // "Suscribirse" for other actions
-            if (['amorir', 'okgol', 'televicentro', 'panamsport'].includes(action) &&
-                (trimmedText.toLowerCase() === 'suscribirse' || trimmedText.toLowerCase() === 'subscribe')) {
+            if (['amorir', 'okgol', 'televicentro','panamsport','gols'].includes(action) &&
+                (trimmedText.toLowerCase() === 'suscribirse' || trimmedText.toLowerCase() === 'subscribe' || trimmedText.toLowerCase().includes('buy now'))) {
                 const isVisible = await button.isVisible();
                 const isEnabled = await button.isEnabled();
                 if (!isVisible || !isEnabled) continue; // Skip hidden/disabled buttons
 
-                logSuccess(`✅ Found "Suscribirse" button at Details screen`);
-                suscribirseFound = true;
-                logStep(`Clicking on "Suscribirse" button at Details screen...`);
+                if (action === 'gols'){
+                    logSuccess(`✅ Found "Buy Now" button at Details screen`);
+                    suscribirseFound = true;
+                    logStep(`Clicking on "Buy Now" button at Details screen...`);
+                }else{
+                    logSuccess(`✅ Found "Suscribirse" button at Details screen`);
+                    suscribirseFound = true;
+                    logStep(`Clicking on "Suscribirse" button at Details screen...`);
+                }
                 try {
                     await button.click();
                     if (loggedUser) {

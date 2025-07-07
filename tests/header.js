@@ -104,7 +104,7 @@ async function checkHeaderElements(page, action, stepNumber) {
             // Define an array of elements to check
             const headerElements = [
                 { locator:'a.navbar-brand img.img-fluid[alt="logo"]' , name: 'Logo' },
-                { locator: "//*[contains(text(),'Log in') or contains(text(),'Iniciar sesión') or contains(text(),'Ingresar')]",  name: 'Login Button' },   
+                { locator: "//*[contains(text(),'Log in') or contains(text(),'Log In') or contains(text(),'Iniciar sesión') or contains(text(),'Ingresar')]",  name: 'Login Button' },   
                 { locator: '#search-button', name: 'Search Button' },
                 { locator: "//a[contains(text(),'Home') or contains(text(),'Inicio') or contains(text(),'WIPR')]", name: 'Home Link' }   
             ];
