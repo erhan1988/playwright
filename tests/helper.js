@@ -70,7 +70,7 @@ async function titleDetailsScreen(page,action) {
     logStep('Checking for the title on the Details screen...');
     try {
         let titleLocator;
-        if (action === 'okgol' || action === 'gols'){
+        if (action === 'okgol' || action === 'gols' || action === 'gamestreammedia'){
              titleLocator = page.locator('h5.title-title');
         }
         else {
@@ -101,7 +101,7 @@ async function backgroundImageDetailsScreen(page,action) {
     logStep('Checking for background images in the Details screen...');
     try {
         let imageLocator;
-        if (action === 'okgol' || action === 'gols') {
+        if (action === 'okgol' || action === 'gols' || action === 'gamestreammedia') {
             imageLocator = page.locator('img.img-fluid').nth(1);
         } else {
             imageLocator = page.locator('div.details-image.details-image-desktop');
@@ -183,7 +183,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
                 }
             }
             // "Suscribirse" for other actions
-            if (['amorir', 'okgol', 'televicentro','panamsport','gols',].includes(action) &&
+            if (['amorir', 'okgol', 'televicentro','panamsport','gols','gamestreammedia'].includes(action) &&
                 (trimmedText.toLowerCase() === 'suscribirse' || trimmedText.toLowerCase() === 'subscribe' || trimmedText.toLowerCase().includes('buy now'))) {
                 const isVisible = await button.isVisible();
                 const isEnabled = await button.isEnabled();
@@ -242,7 +242,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
             logError(msg);
             throw new Error(msg);
         }
-        if (['amorir', 'okgol', 'televicentro','panamsport','gols'].includes(action) && !suscribirseFound) {
+        if (['amorir', 'okgol', 'televicentro','panamsport','gols','gamestreammedia'].includes(action) && !suscribirseFound) {
             await page.screenshot({ path: `suscribirse_button_not_found_${action}.png` });
             const msg = `❌ "Suscribirse" button not found for action: ${action}`;
             logError(msg);

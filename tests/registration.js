@@ -83,7 +83,7 @@ async function registrationScreen(page, action, stepNumber) {
         //   { locator: '#receiveEmailsCheckBox', name: 'receiveEmailsCheckBox' },
         //   { locator: '#subscribe-button', name: 'Submit Button' },
         // ];
-      }else if (action === 'amorir' || action === 'gols') {
+      }else if (action === 'amorir' || action === 'gols' || action === 'gamestreammedia') {
         requiredFields = [
           { locator: '#firstname', name: 'First Name' },
           { locator: '#lastname', name: 'Last Name' },
@@ -606,7 +606,7 @@ async function redirectionAfterRegistration(page, action) {
     }else if (action === 'emmanuel') {
        // Check here if will Appear pop up for email verification
       await emailVerificationPopup(page,action);
-    }else if (action === 'panamsport' || action === 'gols') {
+    }else if (action === 'panamsport' || action === 'gols' || action === 'gamestreammedia') {
       const url = `https://${action}-v3-dev.streann.tech/`;
       await expect(page).toHaveURL(url, { timeout: 20000 }); // waits up to 20 seconds
       console.log(`✅ Successfully navigated to ${url}`);

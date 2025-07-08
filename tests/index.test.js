@@ -313,7 +313,61 @@ if (action === 'emmanuel') {
             await loginScreenNewPassword(page,action,15);
         });
     })
-} else {
+}else if (action === 'gamestreammedia') {
+    test.describe('Website Tests for GamestreamMedia', () => {
+        test('Website Tests', async ({ page }) => {
+            test.setTimeout(140000);
+            // Is not Done Yet for GamestreamMedia so once again when will be Done from Developer then I can write the tests for it
+            //Step 1: Open the Site
+            await navigatetoURL(page, action,1);
+
+            //Step 2: Check if Favicon exists in the browser
+            await checkFaviconIcon(page, action,2);
+
+            //Step 3: Find link Home in the Header and click
+            await checkHomeLinkHeader(page,3);
+
+            await page.waitForTimeout(2000); // 2000ms = 2 seconds
+            //Step 4: Check if Header elements exist
+            await checkHeaderElements(page, action,4);
+
+            //5.Check the Home screen Need to print title of all category
+            await checkCategoryTitleHomeScreen(page, action,5);
+
+            //6.Check the VODs in Home screen
+            await checkVodsInHome(page, action,6);
+
+            //7.Not logged user checking Details screen containts Go back Title background Image Subscribe etc'
+            await UserDetailsScreen(page, action,7);
+
+            logSuccess('Notes: GameStreamMedia does not have related content VODs added.');
+            // Is not added related content for GameStreamMedia so we skip this step
+            // //8.Check Related Content in Details screen
+            //  await checkRelatedContentInDetailsScreen(page, action,8);
+
+            //8. Check footer Section
+            await checkFooterLinks (page,action,8);
+
+            //9. Check different scenario for contact Us
+            await contactUsFirstScenario(page,action,9);
+
+            // 10. Check different scenario for registration User
+            await registrationScreen(page,action,10);
+
+            //11. Check the Login screen
+            // await loginScreen(page,action,11);
+
+            // //13. Check the Forgot Password screen
+            // await forgotScreen(page,action,13);
+
+            // //14.Logged User my Account
+            // await loggedUserMyAccount (page,action,14);
+
+            // // 15.Login with New Password
+            // await loginScreenNewPassword(page,action,15);
+        });
+    })
+}else {
     console.log('No valid action provided. Use "Amorir,OkGol,Televicentro,PanamSport,Gols" or "Emmanuel".');
     process.exit(1);
 }

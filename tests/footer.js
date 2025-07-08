@@ -54,7 +54,8 @@ async function checkFooterLinks(page, action, stepNumber) {
         "Términos de Uso",
         "Términos y Condiciones",
         "Data categories",
-        "Acceptance of Terms"
+        "Acceptance of Terms",
+        "Effective Date"
       ]);
 
       // 🛑 Now move to privacy policy **only after above check passes**
@@ -88,7 +89,7 @@ async function privacyPolicy(page,action) {
     // ✅ Check and click Privacy Policy
     let privacyLink;
     let privacyText
-    if (action === 'gols'){
+    if (action === 'gols') {
        privacyLink = page.getByRole('link', { name: /privacy policy|política de privacidad/i }).nth(3);
     }else{
        privacyLink = page.getByRole('link', { name: /privacy policy|política de privacidad/i });
@@ -112,7 +113,8 @@ async function privacyPolicy(page,action) {
        bodyText.includes('Políticas de Privacidad') || 
        bodyText.includes('Avisos Legales') || 
        bodyText.includes('Data categories') ||
-       bodyText.includes('Introduction');
+       bodyText.includes('Introduction') ||
+       bodyText.includes('Platform Name: Game Stream Media');
     });
 
     // ✅ Check privacy page content
@@ -122,7 +124,8 @@ async function privacyPolicy(page,action) {
       "Avisos Legales",
       "Políticas de Privacidad",
       "Data categories",
-      "Introduction"
+      "Introduction",
+      "Platform Name: Game Stream Media"
     ]);
   } catch (err) {
     logError(`❌ An error occurred in privacyPolicy: ${err.message}`);
@@ -134,7 +137,7 @@ async function contactUs(page, action) {
   try {
 
     let contactLink;
-    if (action === 'panamsport' || action === 'gols') {
+    if (action === 'panamsport' || action === 'gols' || action === 'gamestreammedia') {
        contactLink = page.locator('a', { hasText: /contact us|contáctenos/i }).first();
       await expect(contactLink).toBeVisible();
       console.log('Contact Us link href:', await contactLink.getAttribute('href'));
