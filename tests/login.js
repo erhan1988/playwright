@@ -74,7 +74,7 @@ async function loginScreenSecondScenario(page, action, stepNumber) {
        // Check first Title
        const h1 = page.locator('h1');
       try {
-        await expect(h1).toHaveText(/Log in|Ingresar/i);
+        await expect(h1).toHaveText(/Log in|Ingresar|Sign In/i);
         const headingText = await h1.textContent();
         logSuccess(`✅ Found Title: "${headingText?.trim()}"`);
       } catch (error) {

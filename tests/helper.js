@@ -143,7 +143,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
             await page.waitForSelector('span.mdc-button__label', { state: 'visible', timeout: 15000 });
         }
         let buttons;
-        if (action === 'panamsport' && loggedUser) {
+        if (action === 'panamsport' && loggedUser || action === 'gols' && loggedUser) {
             await page.waitForSelector('text=Watch Now', { timeout: 12000 }); // just wait, don't assign
             buttons = page.locator('button');
         } else {
@@ -162,7 +162,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
             console.log(`Button ${i}: "${trimmedText}"`);
 
             // "Watch Now" for emmanuel Panamsport
-            if (action === 'emmanuel' && trimmedText.toLowerCase() === 'watch now' || loggedUser && trimmedText.toLowerCase().includes('watch now') && action === 'panamsport') {
+            if (action === 'emmanuel' && trimmedText.toLowerCase() === 'watch now' || loggedUser && trimmedText.toLowerCase().includes('watch now') && action === 'panamsport' || action === 'gols' && loggedUser  && trimmedText.toLowerCase().includes('watch now')) {
                 const isVisible = await button.isVisible();
                 const isEnabled = await button.isEnabled();
                 if (!isVisible || !isEnabled) {
@@ -170,21 +170,26 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
                     throw new Error(`"Watch Now" button at index ${i} is not enabled or not visible.`);
                 }
                 logSuccess(`✅ Found "Watch Now" button at Details screen`);
+                if ( action === 'gols' && loggedUser) {
+                    return;
+                }
                 watchNowFound = true;
-                logStep(`Clicking on "Watch Now" button at Details screen...`);
-                await button.click();
-                await redirectUrl(page, '/player');
-                return;
+                    // Here we don't check player for gols becuase they Deleted and some vods will not work
+                if ( loggedUser && action !== 'gols') {
+                    logStep(`Clicking on "Watch Now" button at Details screen...`);
+                    await button.click();
+                    await redirectUrl(page, '/player');
+                    return;
+                }
             }
-
             // "Suscribirse" for other actions
-            if (['amorir', 'okgol', 'televicentro','panamsport','gols'].includes(action) &&
+            if (['amorir', 'okgol', 'televicentro','panamsport','gols',].includes(action) &&
                 (trimmedText.toLowerCase() === 'suscribirse' || trimmedText.toLowerCase() === 'subscribe' || trimmedText.toLowerCase().includes('buy now'))) {
                 const isVisible = await button.isVisible();
                 const isEnabled = await button.isEnabled();
                 if (!isVisible || !isEnabled) continue; // Skip hidden/disabled buttons
 
-                if (action === 'gols'){
+                if (action === 'gols' && !loggedUser){
                     logSuccess(`✅ Found "Buy Now" button at Details screen`);
                     suscribirseFound = true;
                     logStep(`Clicking on "Buy Now" button at Details screen...`);
@@ -231,14 +236,13 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
                 break;
             }
         }
-        if (!watchNowFound && action === 'emmanuel' || !watchNowFound && loggedUser && action === 'panamsport') {
+        if (!watchNowFound && action === 'emmanuel' || !watchNowFound && loggedUser && action === 'panamsport' || !watchNowFound && loggedUser && action === 'gols') {
             const msg = `❌ "Watch Now" button not found for action: ${action}`;
             await page.screenshot({ path: `watch_now_button_not_found_${action}.png` });
-
             logError(msg);
             throw new Error(msg);
         }
-        if (['amorir', 'okgol', 'televicentro','panamsport'].includes(action) && !suscribirseFound) {
+        if (['amorir', 'okgol', 'televicentro','panamsport','gols'].includes(action) && !suscribirseFound) {
             await page.screenshot({ path: `suscribirse_button_not_found_${action}.png` });
             const msg = `❌ "Suscribirse" button not found for action: ${action}`;
             logError(msg);

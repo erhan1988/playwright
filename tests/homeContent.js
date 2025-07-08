@@ -63,8 +63,8 @@ async function checkVodsInHome(page, action, stepNumber) {
                 // Default behavior
                 if (imageCount >= 15) {
                     imageToClickIndex = 14;
-                } else if (imageCount >= 9) {
-                    imageToClickIndex = 8;
+                } else if (imageCount >= 12) {
+                    imageToClickIndex = 11;
                 } else if (imageCount >= 1) {
                     imageToClickIndex = imageCount - 1;
                     console.warn(`⚠️ Less than 9 VODs found. Clicking the last available one.`);
