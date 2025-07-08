@@ -7,8 +7,11 @@ async function registrationScreen(page, action, stepNumber) {
   logStep(`${stepNumber}. Registration Screen Different Scenario: 1. Scenario check if exist all fields`);
 
     // CLick to redirect to Registration Screen from the Header
+    if ( action === 'gols'){
+      await page.waitForTimeout(4000); // or better: wait for a container element
+    }
     if (action !== 'okgol' && action !== 'televicentro') {
-      const subscribeButton = page.locator(`xpath=//*[contains(normalize-space(text()), 'Subscribe Now') or contains(normalize-space(text()), 'Suscríbase Ahora') or contains(normalize-space(text()), '¡Hazte Miembro!') or contains(normalize-space(text()), 'Register')]`);
+      const subscribeButton = page.locator(`xpath=//*[contains(normalize-space(text()), 'Subscribe Now') or contains(normalize-space(text()), 'Suscríbase Ahora') or contains(normalize-space(text()), '¡Hazte Miembro!') or contains(normalize-space(text()), 'Register')]`);   
       if (await subscribeButton.count()) {
         await subscribeButton.first().click();
         console.log("Subscribe button clicked in the header!");
@@ -57,7 +60,7 @@ async function registrationScreen(page, action, stepNumber) {
       // Check first Title
     const h1 = page.locator('h1');
       try {
-          await expect(h1).toHaveText(/Registration|Registro/i);
+          await expect(h1).toHaveText(/Registration|Registro|Register/i);
           const headingText = await h1.textContent();
           logSuccess(`✅ Found Title: "${headingText?.trim()}"`);
         } catch (error) {
@@ -80,15 +83,16 @@ async function registrationScreen(page, action, stepNumber) {
         //   { locator: '#receiveEmailsCheckBox', name: 'receiveEmailsCheckBox' },
         //   { locator: '#subscribe-button', name: 'Submit Button' },
         // ];
-      }else if (action === 'amorir') {
+      }else if (action === 'amorir' || action === 'gols') {
         requiredFields = [
           { locator: '#firstname', name: 'First Name' },
           { locator: '#lastname', name: 'Last Name' },
           { locator: '#email', name: 'Email' },
           { locator: '#password', name: 'Password' },
           { locator: '#confirmPassword', name: 'Confirm Password' },
+          { locator: '//mat-select[@aria-label="Default select example"]', name: 'Dropdown Select Country' },
           { locator: '#termsOfUseCheckBox', name: 'Checkbox Terms of Use' },
-          { locator: '#subscribe-button', name: 'Submit Button' },
+          { locator: '#subscribe-button', name: 'Submit Button' }
         ];
       }else if (action === 'prtv'){
         // requiredFields = [
@@ -599,11 +603,10 @@ async function redirectionAfterRegistration(page, action) {
 
         // Log Out the user then check for six scenario od registration screen create new user with already existing email
         await logOutUser(page, action);
-
     }else if (action === 'emmanuel') {
        // Check here if will Appear pop up for email verification
       await emailVerificationPopup(page,action);
-    }else if (action === 'panamsport'){
+    }else if (action === 'panamsport' || action === 'gols') {
       const url = `https://${action}-v3-dev.streann.tech/`;
       await expect(page).toHaveURL(url, { timeout: 20000 }); // waits up to 20 seconds
       console.log(`✅ Successfully navigated to ${url}`);

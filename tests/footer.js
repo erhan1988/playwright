@@ -151,6 +151,7 @@ async function contactUs(page, action) {
        page.waitForURL(/\/contact-us/, { timeout: 20000 })
       ]);
       expect(page.url()).toContain('/contact-us');
+      await logSuccess('✅ Clicked Contact Us and navigated to Contact Us Page');
     } else if ( action === 'okgol'){
       const originalPage = page; // Save the main tab (https://okgol-v3-dev.streann.tech/privacy)
 
@@ -186,6 +187,7 @@ async function contactUs(page, action) {
       expect(await originalPage.url()).toBe('https://okgol-v3-dev.streann.tech/privacy');
       console.log('Back to original tab:', await originalPage.url());
     }else if ( action === 'gols'){
+      const originalPage = page;
       await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
       await Promise.all([
         contactLink.click(),
@@ -199,15 +201,23 @@ async function contactUs(page, action) {
         await page.goBack();
 
         // Wait for the previous page to load
-        await page.waitForLoadState('domcontentloaded');
+        await originalPage.bringToFront();
+       await originalPage.waitForLoadState('domcontentloaded');
 
-        // Print the URL after going back
-        console.log('🔙 Went back to:', page.url());
+        // Wait until the URL is correct (retry if needed)
+      let retries2 = 10;
+      while (retries2-- > 0) {
+        const currentUrl = await originalPage.url();
+        if (currentUrl === 'https://gols-v3-dev.streann.tech/privacy') break;
+        await originalPage.waitForTimeout(5000);
+      }
+      expect(await originalPage.url()).toBe('https://gols-v3-dev.streann.tech/privacy');
+      // Print the URL after going back
+      console.log('🔙 Went back to:', page.url());
       } else {
         console.log(`❌ Not redirected correctly. Current URL: ${page.url()}`);
       }
     }
-    await logSuccess('✅ Clicked Contact Us and navigated to Contact Us Page');
   } catch (err) {
     logError(`❌ An error occurred in contactUs: ${err.message}`);
     throw err;
