@@ -5,7 +5,7 @@ async function checkFooterLinks(page, action, stepNumber) {
   await test.step(`${stepNumber}. Check Footer links elements are exists`, async () => {
     logStep(`${stepNumber}. Check Footer links elements are exists`);
     try {
-      if (action === 'panamsport') {
+      if (action === 'panamsport' || action === 'gols') {
          await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
       }
       // ✅ Check footer text
@@ -53,11 +53,12 @@ async function checkFooterLinks(page, action, stepNumber) {
         "Welcome to Emmanuel TV!",
         "Términos de Uso",
         "Términos y Condiciones",
-        "Data categories"
+        "Data categories",
+        "Acceptance of Terms"
       ]);
 
       // 🛑 Now move to privacy policy **only after above check passes**
-      await privacyPolicy(page);
+      await privacyPolicy(page,action);
 
       // CHECK CONTACT US 
       if (action !== 'amorir'){
@@ -82,12 +83,18 @@ async function checkTextExist(page, expectedTerms) {
   throw new Error(`Could not find any of: ${expectedTerms.join(" OR ")}`);
 }
 
-async function privacyPolicy(page) {
+async function privacyPolicy(page,action) {
   try {
     // ✅ Check and click Privacy Policy
-    const privacyLink = page.getByRole('link', { name: /privacy policy|política de privacidad/i });
+    let privacyLink;
+    let privacyText
+    if (action === 'gols'){
+       privacyLink = page.getByRole('link', { name: /privacy policy|política de privacidad/i }).nth(3);
+    }else{
+       privacyLink = page.getByRole('link', { name: /privacy policy|política de privacidad/i });
+    }
     await privacyLink.waitFor({ state: 'visible', timeout: 8000 });
-    const privacyText = await privacyLink.textContent();
+    privacyText = await privacyLink.textContent();
     await logSuccess(`Found Privacy Policy link: "${privacyText?.trim()}"`);
 
     await Promise.all([
@@ -104,7 +111,8 @@ async function privacyPolicy(page) {
        bodyText.includes('Política de Privacidad') || 
        bodyText.includes('Políticas de Privacidad') || 
        bodyText.includes('Avisos Legales') || 
-       bodyText.includes('Data categories');
+       bodyText.includes('Data categories') ||
+       bodyText.includes('Introduction');
     });
 
     // ✅ Check privacy page content
@@ -113,7 +121,8 @@ async function privacyPolicy(page) {
       "Política de Privacidad",
       "Avisos Legales",
       "Políticas de Privacidad",
-      "Data categories"
+      "Data categories",
+      "Introduction"
     ]);
   } catch (err) {
     logError(`❌ An error occurred in privacyPolicy: ${err.message}`);
@@ -125,7 +134,7 @@ async function contactUs(page, action) {
   try {
 
     let contactLink;
-    if (action === 'panamsport') {
+    if (action === 'panamsport' || action === 'gols') {
        contactLink = page.locator('a', { hasText: /contact us|contáctenos/i }).first();
       await expect(contactLink).toBeVisible();
       console.log('Contact Us link href:', await contactLink.getAttribute('href'));
@@ -135,8 +144,8 @@ async function contactUs(page, action) {
     await expect(contactLink).toBeVisible();
     const contactUsText = await contactLink.textContent();
     await logSuccess(`Found Contact Us link: "${contactUsText?.trim()}"`);
-  
-    if (action !== 'okgol'){
+
+    if (action !== 'okgol' && action !== 'gols') {
       await Promise.all([
         contactLink.click(),
        page.waitForURL(/\/contact-us/, { timeout: 20000 })
@@ -176,6 +185,27 @@ async function contactUs(page, action) {
       }
       expect(await originalPage.url()).toBe('https://okgol-v3-dev.streann.tech/privacy');
       console.log('Back to original tab:', await originalPage.url());
+    }else if ( action === 'gols'){
+      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+      await Promise.all([
+        contactLink.click(),
+      ]);
+      // Check and print if redirected correctly
+      const expectedUrl = 'https://gols.co/contact/';
+      if (page.url() === expectedUrl) {
+        console.log('✅ Redirected to contact page');
+        
+        // Go back in browser
+        await page.goBack();
+
+        // Wait for the previous page to load
+        await page.waitForLoadState('domcontentloaded');
+
+        // Print the URL after going back
+        console.log('🔙 Went back to:', page.url());
+      } else {
+        console.log(`❌ Not redirected correctly. Current URL: ${page.url()}`);
+      }
     }
     await logSuccess('✅ Clicked Contact Us and navigated to Contact Us Page');
   } catch (err) {
