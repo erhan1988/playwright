@@ -83,8 +83,8 @@ if (action === 'emmanuel') {
             //6.Check the VODs in Home screen
             await checkVodsInHome(page, action,6);
             
-            // //7.Not logged user checking Details screen containts Go back Title background Image watch Now etc'
-            // await UserDetailsScreen(page, action,7);
+            //7.Not logged user checking Details screen containts Go back Title background Image watch Now etc'
+            await UserDetailsScreen(page, action,7);
 
             // //8.Check the player screen
             // await checkPlayerScreen(page, action,8,'undefined');

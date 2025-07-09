@@ -106,6 +106,7 @@ async function UserDetailsScreen(page,action,stepNumber,loggedUser) {
 
             //Background image check
             await backgroundImageDetailsScreen(page,action);
+            
             // Buttons in the Details screen
             await buttonsDetailsScreen(page,action,loggedUser);
 

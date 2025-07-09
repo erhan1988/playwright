@@ -45,7 +45,6 @@ async function GobackLink(page, value) {
                 initialUrl,
                 { timeout: 10000 }
             );
-
             const currentUrl = page.url();
             console.log('Current URL:', currentUrl);
 
@@ -71,10 +70,10 @@ async function titleDetailsScreen(page,action) {
     try {
         let titleLocator;
         if (action === 'okgol' || action === 'gols' || action === 'gamestreammedia'){
-             titleLocator = page.locator('h5.title-title');
+            titleLocator = page.locator('h5.title-title');
         }
         else {
-             titleLocator = page.locator('h1.title-title.fs-3');
+            titleLocator = page.locator('h1.title-title.fs-3');
         }
         await titleLocator.waitFor({ state: 'visible', timeout: 10000 });
         const titleElements = await titleLocator.all();
@@ -129,6 +128,7 @@ async function backgroundImageDetailsScreen(page,action) {
 async function buttonsDetailsScreen(page, action, loggedUser) {
     logStep('Checking for buttons in Details screen...');
     try {
+
         await page.evaluate(() => window.scrollBy(0, 200));
        await page.waitForFunction(() =>
         Array.from(document.querySelectorAll('button')).some(
@@ -138,16 +138,17 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
         { timeout: 10000 }
         );
         
-        if (action !== 'panamsport') {
+        if (action !== 'panamsport' && action !== 'prtv') {
             await page.waitForSelector("//button[.//span[contains(text(), 'Suscribirse') or contains(text(), 'Subscribe')]]", { state: 'visible', timeout: 10000 });
             await page.waitForSelector('span.mdc-button__label', { state: 'visible', timeout: 15000 });
         }
         let buttons;
-        if (action === 'panamsport' && loggedUser || action === 'gols' && loggedUser) {
+        if (action === 'panamsport' && loggedUser || action === 'gols' && loggedUser || action === 'prtv' && !loggedUser) {
             await page.waitForSelector('text=Watch Now', { timeout: 12000 }); // just wait, don't assign
+             await page.waitForSelector("//button[.//span[contains(@class,'mdc-button__label')]]", { timeout: 20000 });
             buttons = page.locator('button');
         } else {
-            buttons = page.locator("//button[.//span[@class='mdc-button__label']]");
+            buttons = page.locator("//button[.//span[contains(@class,'mdc-button__label')] ]");
         }
         const buttonCount = await buttons.count();
         logSuccess(`✅ Found ${buttonCount} buttons in the Details screen.`);
@@ -161,8 +162,8 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
             const trimmedText = buttonText.trim();
             console.log(`Button ${i}: "${trimmedText}"`);
 
-            // "Watch Now" for emmanuel Panamsport
-            if (action === 'emmanuel' && trimmedText.toLowerCase() === 'watch now' || loggedUser && trimmedText.toLowerCase().includes('watch now') && action === 'panamsport' || action === 'gols' && loggedUser  && trimmedText.toLowerCase().includes('watch now')) {
+            // "Watch Now" for prtv Panamsport
+            if (action === 'prtv' && trimmedText.toLowerCase().includes('watch now') || loggedUser && trimmedText.toLowerCase().includes('watch now') && action === 'panamsport' || action === 'gols' && loggedUser  && trimmedText.toLowerCase().includes('watch now')) {
                 const isVisible = await button.isVisible();
                 const isEnabled = await button.isEnabled();
                 if (!isVisible || !isEnabled) {
@@ -175,7 +176,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
                 }
                 watchNowFound = true;
                     // Here we don't check player for gols becuase they Deleted and some vods will not work
-                if ( loggedUser && action !== 'gols') {
+                if ( loggedUser && action !== 'gols' || !loggedUser && action === 'prtv' ) {
                     logStep(`Clicking on "Watch Now" button at Details screen...`);
                     await button.click();
                     await redirectUrl(page, '/player');
@@ -236,7 +237,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
                 break;
             }
         }
-        if (!watchNowFound && action === 'emmanuel' || !watchNowFound && loggedUser && action === 'panamsport' || !watchNowFound && loggedUser && action === 'gols') {
+        if (!watchNowFound && action === 'prtv' || !watchNowFound && loggedUser && action === 'panamsport' || !watchNowFound && loggedUser && action === 'gols') {
             const msg = `❌ "Watch Now" button not found for action: ${action}`;
             await page.screenshot({ path: `watch_now_button_not_found_${action}.png` });
             logError(msg);
