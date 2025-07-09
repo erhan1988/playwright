@@ -95,8 +95,8 @@ if (action === 'emmanuel') {
             //10. Check footer Section 
             await checkFooterLinks (page,action,10);
 
-            // //11. Check different scenario for contact Us
-            // await contactUsFirstScenario(page,action,11);
+            //11. Check different scenario for contact Us
+            await contactUsFirstScenario(page,action,11);
 
             // //12. Check different scenario for registration User
             // await registrationScreen(page,action,12);
