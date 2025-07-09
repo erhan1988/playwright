@@ -106,7 +106,7 @@ async function UserDetailsScreen(page,action,stepNumber,loggedUser) {
 
             //Background image check
             await backgroundImageDetailsScreen(page,action);
-            
+
             // Buttons in the Details screen
             await buttonsDetailsScreen(page,action,loggedUser);
 
@@ -124,7 +124,7 @@ async function checkRelatedContentInDetailsScreen(page, action, stepNumber) {
             let titleButtons;
             let count = 0;
     
-            if (action === 'amorir' || action === 'okgol') {
+            if (action === 'amorir' || action === 'okgol' || action === 'prtv') {
             // Check title in the Related Content
             titleButtons = await page.locator('button.nav-link.ng-star-inserted');
             // Wait for at least one element or timeout
@@ -178,10 +178,15 @@ async function checkRelatedContentInDetailsScreen(page, action, stepNumber) {
             // Log the new URL
             const newUrl = page.url();
             logSuccess(`✅ Successfully redirected to: ${newUrl}`);
-            if (action !== 'panamsport') {
+            if (action !== 'panamsport' && action !== 'prtv') {
                 await page.waitForTimeout(11000);
+            }else if (action === 'prtv'){
+                 await page.goBack(); // Go back in browser history
+                await page.waitForTimeout(2000); // Wait for 2 seconds
+                // Capture the current URL after clicking back
+                const newURL = page.url();
+                console.log('New URL after back:', newURL);
             }
-            
         } catch (err) {
         logError(`❌ An error occurred in checkRelatedContentInDetailsScreen: ${err.message}`);
         throw new Error(`❌ An error occurred in checkRelatedContentInDetailsScreen: ${err.message}`);

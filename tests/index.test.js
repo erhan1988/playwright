@@ -86,11 +86,11 @@ if (action === 'emmanuel') {
             //7.Not logged user checking Details screen containts Go back Title background Image watch Now etc'
             await UserDetailsScreen(page, action,7);
 
-            // //8.Check the player screen
-            // await checkPlayerScreen(page, action,8,'undefined');
+            //8.Check the player screen
+            await checkPlayerScreen(page, action,8,'undefined');
 
             // //9.Check Related Content in Details screen
-            // await checkRelatedContentInDetailsScreen(page, action,9);
+            await checkRelatedContentInDetailsScreen(page, action,9);
 
             // //10. Check footer Section 
             // await checkFooterLinks (page,action,10);

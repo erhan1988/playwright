@@ -354,19 +354,20 @@ async function checkPlayerScreen(page, action, stepNumber, value) {
                 logError('❌ Progress bar not found.');
             }
 
-            //6 .Check Share Icon in the Player screen
-            const shareIcon = await page.$("//button[@type='button' and contains(@class, 'share-content-icon')]");
-
-            // Soft assertion for reporting (won't fail the test)
-            expect.soft(shareIcon, 'Share icon should be present').not.toBeNull();
-            // Only click if it exists
-            if (shareIcon) {
-            await shareIcon.click();
-            logSuccess('✅ Share icon clicked.');
-            await page.waitForTimeout(2000);
-            await checkSharePopup(page,'cdk-overlay-0');
-            } else {
-              logError('❌ Share icon not found.');
+            //6 .Check Share Icon in the Player screen For PRTV we don't have Share in te player
+            if (action !== 'prtv'){
+                const shareIcon = await page.$("//button[@type='button' and contains(@class, 'share-content-icon')]");
+                // Soft assertion for reporting (won't fail the test)
+                expect.soft(shareIcon, 'Share icon should be present').not.toBeNull();
+                // Only click if it exists
+                if (shareIcon) {
+                await shareIcon.click();
+                logSuccess('✅ Share icon clicked.');
+                await page.waitForTimeout(2000);
+                await checkSharePopup(page,'cdk-overlay-0');
+                } else {
+                logError('❌ Share icon not found.');
+                }
             }
             
             if (action === 'emmanuel') {
