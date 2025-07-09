@@ -89,11 +89,11 @@ if (action === 'emmanuel') {
             //8.Check the player screen
             await checkPlayerScreen(page, action,8,'undefined');
 
-            // //9.Check Related Content in Details screen
+            //9.Check Related Content in Details screen
             await checkRelatedContentInDetailsScreen(page, action,9);
 
-            // //10. Check footer Section 
-            // await checkFooterLinks (page,action,10);
+            //10. Check footer Section 
+            await checkFooterLinks (page,action,10);
 
             // //11. Check different scenario for contact Us
             // await contactUsFirstScenario(page,action,11);

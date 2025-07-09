@@ -22,6 +22,22 @@ async function checkFooterLinks(page, action, stepNumber) {
         throw new Error('Element found but not visible');
       }
 
+      //This is a workaround for the footer text not being visible in some cases when is on English
+      if (action === 'prtv'){
+         const languageButton = page.locator('button#languageSelector');
+        await languageButton.waitFor({ state: 'visible', timeout: 10000 });
+        await languageButton.click();
+
+        // Wait for dropdown to appear
+        // Adjust selector below depending on actual structure of dropdown
+        const spanishOption = page.locator("text=Español"); // or use 'role' if available
+        await spanishOption.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Click the "Spanish" option
+        await spanishOption.click();
+        console.log("✅ Language switched to Spanish");
+      }
+
       // ✅ Check and click Terms of Use
       const termsLink = page.getByRole('link', { name: /terms of use|términos de uso/i });
       await termsLink.waitFor({ state: 'visible', timeout: 8000 });
@@ -137,7 +153,7 @@ async function contactUs(page, action) {
   try {
 
     let contactLink;
-    if (action === 'panamsport' || action === 'gols' || action === 'gamestreammedia') {
+    if (action === 'panamsport' || action === 'gols' || action === 'gamestreammedia' || action === 'prtv') {
        contactLink = page.locator('a', { hasText: /contact us|contáctenos/i }).first();
       await expect(contactLink).toBeVisible();
       console.log('Contact Us link href:', await contactLink.getAttribute('href'));
