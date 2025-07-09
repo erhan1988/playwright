@@ -112,7 +112,7 @@ async function checkHeaderElements(page, action, stepNumber) {
              // This is becuase okgol does not have Register Button in the header
             if (action !== 'okgol' && action !== 'televicentro') {
                 headerElements.splice(2, 0, { 
-                    locator: "//*[contains(text(),'Subscribe Now') or contains(text(),'Suscríbase Ahora') or contains(text(),'¡Hazte Miembro!') or contains(text(),'Register')]", 
+                    locator: "//*[contains(text(),'Subscribe Now') or contains(text(),'Suscríbase Ahora') or contains(text(),'¡Hazte Miembro!') or contains(text(),'Register') or contains(text(),'Become a Member')]", 
                     name: 'Register Button' 
                 });           
             }

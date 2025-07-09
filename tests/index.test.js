@@ -59,6 +59,52 @@ if (action === 'emmanuel') {
             // await loginScreen(page,action,13);
         });
     });
+}else if (action === 'prtv'){ 
+      test.describe('Website Tests for Prtv', () => {
+        test('Website Tests', async ({ page }) => {
+            test.setTimeout(140000); 
+
+            // //Step 1: Open the Site
+            await navigatetoURL(page, action,1);
+
+            // //Step 2: Check if Favicon exists in the browser            
+            await checkFaviconIcon(page, action,2);
+
+            // //Step 3: Find link Home in the Header and click
+            await checkHomeLinkHeader(page,3);
+
+            await page.waitForTimeout(2000); // 2000ms = 2 seconds
+            // //Step 4: Check if Header elements exist
+            await checkHeaderElements(page, action,4);
+
+            // //5.Check the Home screen Need to print title of all category
+            await checkCategoryTitleHomeScreen(page, action,5);
+
+            //6.Check the VODs in Home screen
+            await checkVodsInHome(page, action,6);
+            
+            // //7.Not logged user checking Details screen containts Go back Title background Image watch Now etc'
+            // await UserDetailsScreen(page, action,7);
+
+            // //8.Check the player screen
+            // await checkPlayerScreen(page, action,8,'undefined');
+
+            // //9.Check Related Content in Details screen
+            // await checkRelatedContentInDetailsScreen(page, action,9);
+
+            // //10. Check footer Section 
+            // await checkFooterLinks (page,action,10);
+
+            // //11. Check different scenario for contact Us
+            // await contactUsFirstScenario(page,action,11);
+
+            // //12. Check different scenario for registration User
+            // await registrationScreen(page,action,12);
+
+            // //13. Check the Login screen
+            // await loginScreen(page,action,13);
+        });
+    });
 }else if (action === 'gols'){
      test.describe('Website Tests for Gols', () => {
         test('Website Tests', async ({ page }) => {
