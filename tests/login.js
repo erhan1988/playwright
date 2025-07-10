@@ -263,7 +263,7 @@ async function loginScreenSixScenario(page, action, stepNumber) {
       stepNumber += 1;
       await UserDetailsScreen(page, action, stepNumber,'loggedUser');
 
-      if(action === 'panamsport'){
+      if(action === 'panamsport' || action === 'prtv') {
         stepNumber += 1;
         await checkPlayerScreen(page, action, stepNumber);
       }

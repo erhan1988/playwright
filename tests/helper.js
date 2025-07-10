@@ -176,7 +176,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
                     throw new Error(`"Watch Now" button at index ${i} is not enabled or not visible.`);
                 }
                 logSuccess(`✅ Found "Watch Now" button at Details screen`);
-                if ( action === 'gols' && loggedUser || action === 'prtv' && loggedUser) {
+                if ( action === 'gols' && loggedUser) {
                     return;
                 }
                 watchNowFound = true;
