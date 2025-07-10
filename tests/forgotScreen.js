@@ -8,22 +8,39 @@ async function forgotScreen(page, action, stepNumber) {
 
     try {
       // Go to login and wait for a key element
-      const baseUrl = `https://${action}-v3-dev.streann.tech/login`;
-      const response = await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 70000 });
-      console.log('Goto response status:', response && response.status());
-      console.log('Current URL after goto:', page.url());
-      if (action === 'panamsport' || action === 'gols'|| action === 'prtv') {
-         await page.waitForSelector('#login-button, [type="submit"]', { state: 'visible', timeout: 40000 });
+      if (action !== 'prtv'){
+        const baseUrl = `https://${action}-v3-dev.streann.tech/login`;
+        const response = await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 70000 });
+        console.log('Goto response status:', response && response.status());
+        console.log('Current URL after goto:', page.url());
+        if (action === 'panamsport' || action === 'gols') {
+          await page.waitForSelector('#login-button, [type="submit"]', { state: 'visible', timeout: 40000 });
+        }
+        // Click Forgot Password and wait for navigation
+        const forgotPasswordLink = page.locator('#forgotPass');
+        console.log('⏳ Waiting for forgot password link...');
+        await expect(forgotPasswordLink).toBeVisible({ timeout: 40000 });
+        await Promise.all([
+          page.waitForURL('**/forgot-password', { timeout: 20000 }),
+          forgotPasswordLink.click()
+        ]);
+        expect(page.url()).toContain('/forgot-password');
+      }else {
+        const context = page.context();
+        await context.clearCookies();
+        await page.evaluate(() => {
+          localStorage.clear();
+          sessionStorage.clear();
+        });
+        const baseUrl = `https://${action}-v3-dev.streann.tech/forgot-password`;
+        const response = await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 70000 });
+        console.log('Goto response status:', response && response.status());
+        const currentUrl = page.url();
+        if (!currentUrl.includes('/forgot-password')) {
+          throw new Error('❌ URL does not contain /forgot-password — navigation failed.');
+        }
+        console.log('✅ Confirmed on forgot password page');
       }
-      // Click Forgot Password and wait for navigation
-      const forgotPasswordLink = page.locator('#forgotPass');
-      console.log('⏳ Waiting for forgot password link...');
-      await expect(forgotPasswordLink).toBeVisible({ timeout: 40000 });
-      await Promise.all([
-        page.waitForURL('**/forgot-password', { timeout: 20000 }),
-        forgotPasswordLink.click()
-      ]);
-      expect(page.url()).toContain('/forgot-password');
 
       // Check title
       try {
@@ -65,7 +82,11 @@ async function forgotScreenSecondScenario(page, action, stepNumber) {
   await test.step(`${stepNumber}. Forgot Screen Second Scenario: 2. Click in the button Send email without to fill Email Field need to appear Warning Message `, async () => {
     logStep(`${stepNumber}. Forgot Screen Second Scenario: 2. Click in the button Send email without to fill Email Field need to appear Warning Message `);
 
+    // Reload the page to ensure a fresh state
     try {
+      const currentUrl = page.url();
+      console.log('Current URL before reload:', currentUrl);
+      await page.reload();
       await page.waitForSelector('#send-email-button', { state: 'visible', timeout: 15000 });
       const sendEmailButton = page.locator('#send-email-button');
       await expect(sendEmailButton).toBeVisible({ timeout: 20000 });
