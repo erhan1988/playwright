@@ -62,7 +62,7 @@ if (action === 'emmanuel') {
 }else if (action === 'prtv'){ 
       test.describe('Website Tests for Prtv', () => {
         test('Website Tests', async ({ page }) => {
-            test.setTimeout(140000); 
+            test.setTimeout(200000); 
 
             // //Step 1: Open the Site
             await navigatetoURL(page, action,1);
@@ -98,11 +98,20 @@ if (action === 'emmanuel') {
             //11. Check different scenario for contact Us
             await contactUsFirstScenario(page,action,11);
 
-            // //12. Check different scenario for registration User
-            // await registrationScreen(page,action,12);
+            //12. Check different scenario for registration User
+            await registrationScreen(page,action,12);
 
-            // //13. Check the Login screen
-            // await loginScreen(page,action,13);
+            //13. Check the Login screen
+            await loginScreen(page,action,13);
+
+            //14. Check the Forgot Password screen
+            await forgotScreen(page,action,14);
+
+            //15.Logged User my Account
+            await loggedUserMyAccount (page,action,15);
+
+            // 16.Login with New Password
+            await loginScreenNewPassword(page,action,16);
         });
     });
 }else if (action === 'gols'){
@@ -414,6 +423,6 @@ if (action === 'emmanuel') {
         });
     })
 }else {
-    console.log('No valid action provided. Use "Amorir,OkGol,Televicentro,PanamSport,Gols" or "Emmanuel".');
+    console.log('No valid action provided. Use "Amorir,OkGol,Televicentro,PanamSport,Gols" or "Prtv".');
     process.exit(1);
 }

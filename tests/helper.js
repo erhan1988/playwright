@@ -143,9 +143,9 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
             await page.waitForSelector('span.mdc-button__label', { state: 'visible', timeout: 15000 });
         }
         let buttons;
-        if (action === 'panamsport' && loggedUser || action === 'gols' && loggedUser || action === 'prtv' && !loggedUser) {
-            await page.waitForSelector('text=Watch Now', { timeout: 12000 }); // just wait, don't assign
-             await page.waitForSelector("//button[.//span[contains(@class,'mdc-button__label')]]", { timeout: 20000 });
+        if (action === 'panamsport' && loggedUser || action === 'gols' && loggedUser || action === 'prtv' && !loggedUser || action === 'prtv' && loggedUser) {
+           await page.waitForSelector("xpath=//*[text()='Watch now' or text()='Ver ahora']", { timeout: 12000 });
+            await page.waitForSelector("//button[.//span[contains(@class,'mdc-button__label')]]", { timeout: 20000 });
             buttons = page.locator('button');
         } else {
             buttons = page.locator("//button[.//span[contains(@class,'mdc-button__label')] ]");
@@ -163,7 +163,12 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
             console.log(`Button ${i}: "${trimmedText}"`);
 
             // "Watch Now" for prtv Panamsport
-            if (action === 'prtv' && trimmedText.toLowerCase().includes('watch now') || loggedUser && trimmedText.toLowerCase().includes('watch now') && action === 'panamsport' || action === 'gols' && loggedUser  && trimmedText.toLowerCase().includes('watch now')) {
+            const lowerText = trimmedText.toLowerCase();    
+            if (
+            (action === 'prtv' && (lowerText.includes('watch now') || lowerText.includes('ver ahora'))) ||
+            (loggedUser && lowerText.includes('watch now') && action === 'panamsport') ||
+            (action === 'gols' && loggedUser && lowerText.includes('watch now'))
+            ){
                 const isVisible = await button.isVisible();
                 const isEnabled = await button.isEnabled();
                 if (!isVisible || !isEnabled) {
@@ -171,7 +176,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
                     throw new Error(`"Watch Now" button at index ${i} is not enabled or not visible.`);
                 }
                 logSuccess(`✅ Found "Watch Now" button at Details screen`);
-                if ( action === 'gols' && loggedUser) {
+                if ( action === 'gols' && loggedUser || action === 'prtv' && loggedUser) {
                     return;
                 }
                 watchNowFound = true;

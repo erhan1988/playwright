@@ -95,19 +95,19 @@ async function registrationScreen(page, action, stepNumber) {
           { locator: '#subscribe-button', name: 'Submit Button' }
         ];
       }else if (action === 'prtv'){
-        // requiredFields = [
-        //   { locator: '#firstname', name: 'First Name' },
-        //   { locator: '#lastname', name: 'Last Name' },
-        //   { locator: '#phone', name: 'Phone' },
-        //   { locator: '#email', name: 'Email' },
-        //   { locator: '#password', name: 'Password' },
-        //   { locator: '#confirmPassword', name: 'Confirm Password' },
-        //   { locator: '//mat-select[@aria-label="Default select example"]', name: 'Dropdown Select Country' },
-        //   { locator: '//mat-label[text()="Fecha de nacimiento"]', name: 'Date' },
-        //   { locator: '#voucherCode', name: 'Voucher Code' },
-        //   { locator: '#termsOfUseCheckBox', name: 'Checkbox Terms of Use' },
-        //   { locator: '#subscribe-button', name: 'Submit Button' },
-        // ];
+        requiredFields = [
+          { locator: '#firstname', name: 'First Name' },
+          { locator: '#lastname', name: 'Last Name' },
+          { locator: '#phone', name: 'Phone' },
+          { locator: '#email', name: 'Email' },
+          { locator: '#password', name: 'Password' },
+          { locator: '#confirmPassword', name: 'Confirm Password' },
+          { locator: '//mat-select[@aria-label="Default select example"]', name: 'Dropdown Select Country' },
+          { locator: '//mat-label[text()="Fecha de nacimiento"]', name: 'Date' },
+          { locator: '#voucherCode', name: 'Voucher Code' },
+          { locator: '#termsOfUseCheckBox', name: 'Checkbox Terms of Use' },
+          { locator: '#subscribe-button', name: 'Submit Button' },
+        ];
       }else if (action === 'okgol' || action === 'televicentro') {
           requiredFields = [
             { locator: '#firstname', name: 'First Name' },
@@ -606,7 +606,7 @@ async function redirectionAfterRegistration(page, action) {
     }else if (action === 'emmanuel') {
        // Check here if will Appear pop up for email verification
       await emailVerificationPopup(page,action);
-    }else if (action === 'panamsport' || action === 'gols' || action === 'gamestreammedia') {
+    }else if (action === 'panamsport' || action === 'gols' || action === 'gamestreammedia' || action === 'prtv') {
       const url = `https://${action}-v3-dev.streann.tech/`;
       await expect(page).toHaveURL(url, { timeout: 20000 }); // waits up to 20 seconds
       console.log(`✅ Successfully navigated to ${url}`);

@@ -12,12 +12,13 @@ async function forgotScreen(page, action, stepNumber) {
       const response = await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 70000 });
       console.log('Goto response status:', response && response.status());
       console.log('Current URL after goto:', page.url());
-      if (action === 'panamsport' || action === 'gols') {
+      if (action === 'panamsport' || action === 'gols'|| action === 'prtv') {
          await page.waitForSelector('#login-button, [type="submit"]', { state: 'visible', timeout: 40000 });
       }
       // Click Forgot Password and wait for navigation
       const forgotPasswordLink = page.locator('#forgotPass');
-      await expect(forgotPasswordLink).toBeVisible({ timeout: 10000 });
+      console.log('⏳ Waiting for forgot password link...');
+      await expect(forgotPasswordLink).toBeVisible({ timeout: 40000 });
       await Promise.all([
         page.waitForURL('**/forgot-password', { timeout: 20000 }),
         forgotPasswordLink.click()
@@ -67,7 +68,7 @@ async function forgotScreenSecondScenario(page, action, stepNumber) {
     try {
       await page.waitForSelector('#send-email-button', { state: 'visible', timeout: 15000 });
       const sendEmailButton = page.locator('#send-email-button');
-      await expect(sendEmailButton).toBeVisible({ timeout: 8000 });
+      await expect(sendEmailButton).toBeVisible({ timeout: 20000 });
       await sendEmailButton.click();
       console.log('✅ Clicked on Send Email button without filling the email field.');
 
@@ -96,7 +97,7 @@ async function forgotScreenThirdScenario(page, action, stepNumber) {
       try {
         await page.waitForSelector('#send-email-button', { state: 'visible', timeout: 20000 });
         const sendEmailButton = page.locator('#send-email-button');
-        await expect(sendEmailButton).toBeVisible({ timeout: 8000 });
+        await expect(sendEmailButton).toBeVisible({ timeout: 12000 });
       } catch (err) {
         await page.screenshot({ path: `send_email_button_error_${Date.now()}.png` });
         console.log('Current URL:', page.url());
@@ -132,7 +133,7 @@ async function forgotScreenFourthScenario(page, action, stepNumber) {
       try {
         const sendEmailButton = page.locator('#send-email-button');
         await expect(sendEmailButton).toBeVisible({ timeout: 15000 });
-        await expect(sendEmailButton).toBeEnabled({ timeout: 5000 });
+        await expect(sendEmailButton).toBeEnabled({ timeout: 20000 });
         await sendEmailButton.click();
         console.log('✅ Clicked on Send Email button without filling the email field.');
       } catch (err) {

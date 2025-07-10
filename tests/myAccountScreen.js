@@ -232,7 +232,7 @@ async function myAccountScreenPage(page, action, stepNumber) {
     logStep(`${stepNumber}. My Account Screen: 5. Check in /user page if exist Button Plans and Form for contact Us`);
 
     try {
-        if (action !== "panamsport" && action !== "gols") {
+        if (action !== "panamsport" && action !== "gols" && action !== "prtv") {
           const link = page.locator('[routerlink="/user/choose-plan"]');
           try {
             await expect(link).toBeVisible({ timeout: 10000 });
