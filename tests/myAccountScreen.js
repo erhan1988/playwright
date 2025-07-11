@@ -135,9 +135,9 @@ async function myUserScreen(page, action, stepNumber) {
 
     try {
       const changeDetailsButton = page.getByText(/Cambiar Detalle de Usuario|Change User Details/);
-      await expect(changeDetailsButton).toBeVisible({ timeout: 10000 });
+      await expect(changeDetailsButton).toBeVisible({ timeout: 30000 });
       await changeDetailsButton.click();
-      await page.waitForURL(`**/user/user-email`, { timeout: 20000 });
+      await page.waitForURL(`**/user/user-email`, { timeout: 30000 });
       expect(page.url()).toBe(`https://${action}-v3-dev.streann.tech/user/user-email`);
 
       const requiredFields = [

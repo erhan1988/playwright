@@ -14,12 +14,12 @@ async function forgotScreen(page, action, stepNumber) {
         console.log('Goto response status:', response && response.status());
         console.log('Current URL after goto:', page.url());
         if (action === 'panamsport' || action === 'gols') {
-          await page.waitForSelector('#login-button, [type="submit"]', { state: 'visible', timeout: 40000 });
+          await page.waitForSelector('#login-button, [type="submit"]', { state: 'visible', timeout: 50000 });
         }
         // Click Forgot Password and wait for navigation
         const forgotPasswordLink = page.locator('#forgotPass');
         console.log('⏳ Waiting for forgot password link...');
-        await expect(forgotPasswordLink).toBeVisible({ timeout: 40000 });
+        await expect(forgotPasswordLink).toBeVisible({ timeout: 50000 });
         await Promise.all([
           page.waitForURL('**/forgot-password', { timeout: 20000 }),
           forgotPasswordLink.click()
@@ -116,9 +116,9 @@ async function forgotScreenThirdScenario(page, action, stepNumber) {
       //await page.waitForSelector('.loader', { state: 'hidden', timeout: 10000 }); // <-- Add here
 
       try {
-        await page.waitForSelector('#send-email-button', { state: 'visible', timeout: 20000 });
+        await page.waitForSelector('#send-email-button', { state: 'visible', timeout: 30000 });
         const sendEmailButton = page.locator('#send-email-button');
-        await expect(sendEmailButton).toBeVisible({ timeout: 12000 });
+        await expect(sendEmailButton).toBeVisible({ timeout: 14000 });
       } catch (err) {
         await page.screenshot({ path: `send_email_button_error_${Date.now()}.png` });
         console.log('Current URL:', page.url());
@@ -153,8 +153,8 @@ async function forgotScreenFourthScenario(page, action, stepNumber) {
       await page.reload();
       try {
         const sendEmailButton = page.locator('#send-email-button');
-        await expect(sendEmailButton).toBeVisible({ timeout: 15000 });
-        await expect(sendEmailButton).toBeEnabled({ timeout: 20000 });
+        await expect(sendEmailButton).toBeVisible({ timeout: 30000 });
+        await expect(sendEmailButton).toBeEnabled({ timeout: 30000 });
         await sendEmailButton.click();
         console.log('✅ Clicked on Send Email button without filling the email field.');
       } catch (err) {

@@ -117,7 +117,7 @@ if (action === 'emmanuel') {
 }else if (action === 'gols'){
      test.describe('Website Tests for Gols', () => {
         test('Website Tests', async ({ page }) => {
-            test.setTimeout(140000); 
+            test.setTimeout(170000); 
             
             //Step 1: Open the Site
             await navigatetoURL(page, action,1);

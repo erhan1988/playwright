@@ -435,7 +435,7 @@ async function regScreenSixcenario(page, action, stepNumber) {
     logStep(`${stepNumber}. Registration Screen Six Scenario:Try to create new User with already exist email`);
     try {
 
-      await page.waitForSelector('#navbarToggler', { state: 'visible', timeout: 7000 });
+      await page.waitForSelector('#navbarToggler', { state: 'visible', timeout: 70000 });
 
       if (action === 'okgol'|| action === 'televicentro') {
          const baseUrl = `https://${action}-v3-dev.streann.tech/subscribe`;

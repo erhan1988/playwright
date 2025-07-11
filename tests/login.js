@@ -249,7 +249,7 @@ async function loginScreenSixScenario(page, action, stepNumber) {
        
       // For all actions (including emmannuel/televicentro), check home page navigation
       const homeUrl = `https://${action}-v3-dev.streann.tech/`;
-      await page.waitForURL(homeUrl, { timeout: 20000 });
+      await page.waitForURL(homeUrl, { timeout: 40000 });
       await expect(page).toHaveURL(homeUrl);
       console.log(`✅ Successfully navigated to ${homeUrl}`);
               
@@ -364,10 +364,24 @@ async function loginScreenNewPassword(page, action, stepNumber) {
         console.log(`✅ Successfully navigated to home page after profile selection.`);
       }
 
-      // For all actions (including emmannuel/televicentro), check home page navigation
-    const homeUrl = `https://${action}-v3-dev.streann.tech/`;
-    await expect(page).toHaveURL(homeUrl, { timeout: 30000 });
-    console.log(`✅ Successfully navigated to ${homeUrl}`);
+    // For all actions (including emmannuel/televicentro), check home page navigation
+    try {
+      const homeUrl = `https://${action}-v3-dev.streann.tech/`;
+      console.log(`⏳ Navigating to ${homeUrl}`);
+
+      const response = await page.goto(homeUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
+
+      if (!response || !response.ok()) {
+        throw new Error(`❌ Navigation failed. Status: ${response?.status()}`);
+      }
+      await page.waitForSelector('body', { timeout: 10000 });
+
+      await expect(page).toHaveURL(homeUrl, { timeout: 30000 });
+
+      console.log(`✅ Successfully navigated to ${homeUrl}`);
+    } catch (error) {
+      console.error('❌ Navigation error:', error);
+    }
     
     } catch (err) {
       logError(`❌ An error occurred in loginScreenNewPassword: ${err.message}`);

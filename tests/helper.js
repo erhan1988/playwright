@@ -1,9 +1,12 @@
 const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
 
-async function checkElementExists(page, locator, name) {
+async function checkElementExists(page, locator, name, timeout = 10000) {
     try {
         const elements = page.locator(locator);
+
+        // Wait for at least one element to appear (or timeout)
+        await elements.first().waitFor({ timeout });
         const count = await elements.count();
 
         if (count > 1) {
@@ -18,11 +21,13 @@ async function checkElementExists(page, locator, name) {
         expect(isVisible).toBeTruthy(); // Assert that the element is visible
         logSuccess(`✅ ${name} exists and is visible.`);
         return { name, status: 'visible' }; // Return success result
+
     } catch (error) {
         logError(`Error while checking ${name}: ${error.message}`);
         return { name, status: 'error', error: error.message }; // Return error result
     }
 }
+
 
 async function GobackLink(page, value) {
     console.log('Checking for the "Go Back" link in the Details screen...');
