@@ -11,17 +11,33 @@ async function navigatetoURL(page, action, stepNumber) {
             if (action) {
                 url = `https://${action}-v3-dev.streann.tech/`;
             } else {
-                throw new Error('Invalid action provided. Use "okGol,Televicentro,EmmanuelTV" or "amorir".');
+                throw new Error('Invalid action provided. Use "okGol,Televicentro,Prtv,Gols" or "Amorir".');
             }
-
             console.log(`Navigating to URL: ${url}`); // Debug the URL
-
             // Navigate to the appropriate site
             await page.goto(url, { timeout: 60000, waitUntil: 'load' });
 
             // Wait for the page to fully load
             await page.waitForLoadState('load');
             logSuccess(`Navigated to ${url} and fully loaded the site`);
+
+            const finalUrl = page.url();
+            console.log(`📍 Final URL after navigation: ${finalUrl}`);
+              // Special check for tdmax
+            if (action === 'tdmax') {
+                // Wait up to 10 seconds for the redirect to /page/landing
+                await page.waitForURL('**/page/landing', { timeout: 10000 });
+
+                const finalUrl = page.url();
+                if (!finalUrl.includes('page/landing')) {
+                    throw new Error(`Expected to be redirected to /page/landing for tdmax, but got: ${finalUrl}`);
+                }
+
+                logSuccess(`✅ tdmax correctly redirected to: ${finalUrl}`);
+            } else {
+                const finalUrl = page.url();
+                logSuccess(`✅ Navigated to ${finalUrl} and site fully loaded`);
+            }
         } catch (err) {
             logError(`Error in navigatetoURL: ${err.message}`);
             throw err; // Re-throw the error to fail the test

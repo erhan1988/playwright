@@ -9,6 +9,7 @@ const { loginScreen,loginScreenNewPassword } = require('./login');
 const { forgotScreen } = require('./forgotScreen');
 const { loggedUserMyAccount} = require('./myAccountScreen');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
+const { checkButtonsLandingPage } = require('./landing'); // Import the loggedUserMyAccount function
 
 // Get the action from the command-line argument or environment variable
 const action = process.env.ACTION || process.argv[2]; // Use `ACTION` env variable or second CLI argument
@@ -420,6 +421,67 @@ if (action === 'emmanuel') {
 
             // // 15.Login with New Password
             // await loginScreenNewPassword(page,action,15);
+        });
+    })
+}else if (action === 'tdmax') {
+      test.describe('Website Tests for TDMAX', () => {
+        test('Website Tests', async ({ page }) => {
+            test.setTimeout(140000); 
+    
+            //Step 1: Open the Site
+            await navigatetoURL(page, action,1);
+
+            //Step 2: Check Buttons login/register in the Header on the lading page
+            await checkButtonsLandingPage(page,action,2);
+
+            // Step 3 : Check footer links
+            await checkFooterLinks(page, action, 3);
+
+            //Step 4. Check different scenario for contact Us
+            await contactUsFirstScenario(page,action,10);
+
+            // Step 4: Check if Favicon exists in the browser
+            // checkFaviconIcon(page, action, 4);
+
+            // //Step 3: Find link Home in the Header and click
+            // await checkHomeLinkHeader(page,3);  
+
+        //     await page.waitForTimeout(2000); // 2000ms = 2 seconds
+        //     //Step 4: Check if Header elements exist
+        //     await checkHeaderElements(page, action,4);
+
+        //     //5.Check the Home screen Need to print title of all category
+        //     await checkCategoryTitleHomeScreen(page, action,5);
+
+        //     //6.Check the VODs in Home screen
+        //     await checkVodsInHome(page, action,6);
+
+        //     //7.Not logged user checking Details screen containts Go back Title background Image Subscribe etc'
+        //     await UserDetailsScreen(page, action,7);
+
+        //     //8.Check Related Content in Details screen
+        //     await checkRelatedContentInDetailsScreen(page, action,8);
+
+        //     //9. Check footer Section 
+        //     await checkFooterLinks (page,action,9);
+
+        //     //10. Check different scenario for contact Us
+        //     await contactUsFirstScenario(page,action,10);
+
+        //    // 11. Check different scenario for registration User
+        //     await registrationScreen(page,action,11);
+
+        //     //12. Check the Login screen
+        //     await loginScreen(page,action,12);
+
+        //     //13. Check the Forgot Password screen
+        //     await forgotScreen(page,action,13);
+
+        //     //14.Logged User my Account
+        //     await loggedUserMyAccount (page,action,14);
+
+        //     // 15.Login with New Password
+        //     await loginScreenNewPassword(page,action,15);
         });
     })
 }else {
