@@ -11,7 +11,7 @@ async function registrationScreen(page, action, stepNumber) {
       await page.waitForTimeout(4000); // or better: wait for a container element
     }
     if (action !== 'okgol' && action !== 'televicentro') {
-      const subscribeButton = page.locator(`xpath=//*[contains(normalize-space(text()), 'Subscribe Now') or contains(normalize-space(text()), 'Suscríbase Ahora') or contains(normalize-space(text()), '¡Hazte Miembro!') or contains(normalize-space(text()), 'Register')]`);   
+      const subscribeButton = page.locator(`xpath=//*[contains(normalize-space(text()), 'Subscribe Now') or contains(normalize-space(text()), 'Suscríbase Ahora') or contains(normalize-space(text()), '¡Hazte Miembro!') or contains(normalize-space(text()), 'Register') or contains(normalize-space(text()), 'Regístrate gratis')]`);
       if (await subscribeButton.count()) {
         await subscribeButton.first().click();
         console.log("Subscribe button clicked in the header!");
@@ -127,6 +127,19 @@ async function registrationScreen(page, action, stepNumber) {
             { locator: '#termsOfUseCheckBox', name: 'Checkbox Terms of Use' },
             { locator: '#subscribe-button', name: 'Submit Button' }
           ];
+      }else if ( action === 'tdmax'){
+        requiredFields = [
+          { locator: '#email', name: 'Email' },
+          { locator: '#confirmEmail', name: 'Confirm Email' },
+          { locator: '#password', name: 'Password' },
+          { locator: '#confirmPassword', name: 'Confirm Password' },
+          { locator: 'input[data-mat-calendar="mat-datepicker-0"]', name: 'Pick Date' },
+          { locator: '//mat-select[@aria-label="Default select example"] >> nth=0', name: 'Dropdown Select Country' },
+          { locator: '#termsOfUseCheckBox', name: 'Checkbox Terms of Use' },
+          { locator: 'mat-select[role="combobox"] >> nth=0', name: 'Male/Female  ' },
+          { locator: '#subscribe-button', name: 'Submit Button' },
+          { locator: '#button-cancel', name: 'Cancel Button' }
+        ];
       }
 
       for (const element of requiredFields) {

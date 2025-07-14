@@ -438,7 +438,10 @@ if (action === 'emmanuel') {
             await checkFooterLinks(page, action, 3);
 
             //Step 4. Check different scenario for contact Us
-            await contactUsFirstScenario(page,action,10);
+            await contactUsFirstScenario(page,action,4);
+
+            //11. Check different scenario for registration User
+            await registrationScreen(page,action,5);
 
             // Step 4: Check if Favicon exists in the browser
             // checkFaviconIcon(page, action, 4);
