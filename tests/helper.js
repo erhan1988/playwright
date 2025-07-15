@@ -74,7 +74,7 @@ async function titleDetailsScreen(page,action) {
     logStep('Checking for the title on the Details screen...');
     try {
         let titleLocator;
-        if (action === 'okgol' || action === 'gols' || action === 'gamestreammedia'){
+        if (action === 'okgol' || action === 'gols' || action === 'gamestreammedia' || action === 'tdmax'){
             titleLocator = page.locator('h5.title-title');
         }
         else {
@@ -105,7 +105,7 @@ async function backgroundImageDetailsScreen(page,action) {
     logStep('Checking for background images in the Details screen...');
     try {
         let imageLocator;
-        if (action === 'okgol' || action === 'gols' || action === 'gamestreammedia') {
+        if (action === 'okgol' || action === 'gols' || action === 'gamestreammedia'|| action === 'tdmax') {
             imageLocator = page.locator('img.img-fluid').nth(1);
         } else {
             imageLocator = page.locator('div.details-image.details-image-desktop');
@@ -143,12 +143,14 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
         { timeout: 10000 }
         );
         
-        if (action !== 'panamsport' && action !== 'prtv') {
+        if (action !== 'panamsport' && action !== 'prtv' && action !== 'tdmax') {
             await page.waitForSelector("//button[.//span[contains(text(), 'Suscribirse') or contains(text(), 'Subscribe')]]", { state: 'visible', timeout: 10000 });
             await page.waitForSelector('span.mdc-button__label', { state: 'visible', timeout: 15000 });
         }
         let buttons;
-        if (action === 'panamsport' && loggedUser || action === 'gols' && loggedUser || action === 'prtv' && !loggedUser || action === 'prtv' && loggedUser) {
+        if (action === 'panamsport' && loggedUser || action === 'gols' && loggedUser || action === 'prtv' && !loggedUser || action === 'prtv' && loggedUser || action === 'tdmax'
+            && loggedUser
+        ) {
            await page.waitForSelector("xpath=//*[text()='Watch now' or text()='Ver ahora']", { timeout: 12000 });
             await page.waitForSelector("//button[.//span[contains(@class,'mdc-button__label')]]", { timeout: 20000 });
             buttons = page.locator('button');
@@ -172,7 +174,8 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
             if (
             (action === 'prtv' && (lowerText.includes('watch now') || lowerText.includes('ver ahora'))) ||
             (loggedUser && lowerText.includes('watch now') && action === 'panamsport') ||
-            (action === 'gols' && loggedUser && lowerText.includes('watch now'))
+            (action === 'gols' && loggedUser && lowerText.includes('watch now')) || 
+            (action === 'tdmax' && (lowerText.includes('watch now') || lowerText.includes('ver ahora')))
             ){
                 const isVisible = await button.isVisible();
                 const isEnabled = await button.isEnabled();
@@ -186,7 +189,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
                 }
                 watchNowFound = true;
                     // Here we don't check player for gols becuase they Deleted and some vods will not work
-                if ( loggedUser && action !== 'gols' || !loggedUser && action === 'prtv' ) {
+                if ( loggedUser && action !== 'gols' || !loggedUser && action === 'prtv' || loggedUser && action === 'tdmax') {
                     logStep(`Clicking on "Watch Now" button at Details screen...`);
                     await button.click();
                     await redirectUrl(page, '/player');
@@ -247,7 +250,8 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
                 break;
             }
         }
-        if (!watchNowFound && action === 'prtv' || !watchNowFound && loggedUser && action === 'panamsport' || !watchNowFound && loggedUser && action === 'gols') {
+        if (!watchNowFound && action === 'prtv' || !watchNowFound && loggedUser && action === 'panamsport' || !watchNowFound && loggedUser && action === 'gols' ||
+            !watchNowFound && loggedUser && action === 'tdnax') {
             const msg = `❌ "Watch Now" button not found for action: ${action}`;
             await page.screenshot({ path: `watch_now_button_not_found_${action}.png` });
             logError(msg);

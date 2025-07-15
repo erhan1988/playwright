@@ -59,6 +59,13 @@ async function checkVodsInHome(page, action, stepNumber) {
                 } else {
                     throw new Error('❌ Televicentro has no VODs available.');
                 }
+            }else if (action === 'tdmax'){
+                if (imageCount >= 33) {
+                    imageToClickIndex = 33; // click the first available VOD
+                    console.log('ℹ️ Tdmax detected. Clicking the 33 available VOD.');
+                } else {
+                    throw new Error('❌ TDmax has no VODs available.');
+                }
             } else {
                 // Default behavior
                 if (imageCount >= 15) {

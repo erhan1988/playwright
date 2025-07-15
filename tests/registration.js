@@ -2,6 +2,7 @@ const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
 const { checkElementExists ,selectDropdownByVisibleText,checkAriaInvalid,generateEmail,redirectUrl,checkDinamiclyPopUP, logOutUser} = require('./helper'); 
 const {landingPageRegisterButton} = require ('./landing');
+const {checkHeaderElements} = require ('./header');
 
 async function registrationScreen(page, action, stepNumber) {
   await test.step(`${stepNumber}. Registration Screen check Different Scenario: 1. Scenario check if exist all fields`, async () => {
@@ -180,6 +181,11 @@ async function registrationScreen(page, action, stepNumber) {
 
       stepNumber += 1;
       await regScreenSixcenario(page, action, stepNumber);
+
+      if(action === 'tdmax'){
+        stepNumber += 1;
+        await checkHeaderElements(page,action,stepNumber);
+      }
 
     } catch (err) {
       logError(`❌ An error occurred in registrationScreen: ${err.message}`);

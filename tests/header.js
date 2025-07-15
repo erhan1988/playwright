@@ -117,20 +117,32 @@ async function checkHeaderElements(page, action, stepNumber) {
     await test.step(`${stepNumber}. Check in header in top bar are exist Logo, Buttons: Register, Login, Search Icon, and Home Link`, async () => { 
         logStep(`${stepNumber}. Checking if header elements exist in the top bar`); // Log the step
         try {
-            // Define an array of elements to check
-            const headerElements = [
-                { locator:'a.navbar-brand img.img-fluid[alt="logo"]' , name: 'Logo' },
-                { locator: "//*[contains(text(),'Log in') or contains(text(),'Log In') or contains(text(),'Iniciar sesión') or contains(text(),'Ingresar')]",  name: 'Login Button' },   
-                { locator: '#search-button', name: 'Search Button' },
-                { locator: "//a[contains(text(),'Home') or contains(text(),'Inicio') or contains(text(),'WIPR')]", name: 'Home Link' }   
-            ];
-             // Only add the Register Button if not okgol and televicentro
-             // This is becuase okgol does not have Register Button in the header
-            if (action !== 'okgol' && action !== 'televicentro') {
-                headerElements.splice(2, 0, { 
-                    locator: "//*[contains(text(),'Subscribe Now') or contains(text(),'Suscríbase Ahora') or contains(text(),'¡Hazte Miembro!') or contains(text(),'Register') or contains(text(),'Become a Member')]", 
-                    name: 'Register Button' 
-                });           
+            let headerElements = [];
+            if (action === 'tdmax'){
+                headerElements = [
+                    { locator:'a.navbar-brand img.img-fluid[alt="logo"]' , name: 'Logo' },
+                    {locator: "button:has-text('Log in'), button:has-text('Log In'), button:has-text('Iniciar sesión'), button:has-text('Ingresar')",
+                    name: 'Login Button'},   
+                    { locator: '#search-button', name: 'Search Button' },
+                    {locator: "button:has-text(' Regístrate gratis '), button:has-text('Register'), button:has-text('Subscribe Now')",
+                    name: 'Register Button'},        
+                ];
+            }else{
+                // Define an array of elements to check
+                headerElements = [
+                    { locator:'a.navbar-brand img.img-fluid[alt="logo"]' , name: 'Logo' },
+                    { locator: "//*[contains(text(),'Log in') or contains(text(),'Log In') or contains(text(),'Iniciar sesión') or contains(text(),'Ingresar')]",  name: 'Login Button' },   
+                    { locator: '#search-button', name: 'Search Button' },
+                    { locator: "//a[contains(text(),'Home') or contains(text(),'Inicio') or contains(text(),'WIPR')]", name: 'Home Link' }   
+                ];
+                // Only add the Register Button if not okgol and televicentro
+                // This is becuase okgol does not have Register Button in the header
+                if (action !== 'okgol' && action !== 'televicentro') {
+                    headerElements.splice(2, 0, { 
+                        locator: "//*[contains(text(),'Subscribe Now') or contains(text(),'Suscríbase Ahora') or contains(text(),'¡Hazte Miembro!') or contains(text(),'Register') or contains(text(),'Become a Member')]", 
+                        name: 'Register Button' 
+                    });           
+                }
             }
             // Collect results for each element
             const results = [];

@@ -440,46 +440,15 @@ if (action === 'emmanuel') {
             //Step 4. Check different scenario for contact Us
             await contactUsFirstScenario(page,action,4);
 
-            //11. Check different scenario for registration User
+            //5. Check different scenario for registration User
             await registrationScreen(page,action,5);
 
-            // Step 4: Check if Favicon exists in the browser
-            // checkFaviconIcon(page, action, 4);
+            //6. Check the Login screen
+            await loginScreen(page,action,6);
 
-            // //Step 3: Find link Home in the Header and click
-            // await checkHomeLinkHeader(page,3);  
-
-        //     await page.waitForTimeout(2000); // 2000ms = 2 seconds
-        //     //Step 4: Check if Header elements exist
-        //     await checkHeaderElements(page, action,4);
-
-        //     //5.Check the Home screen Need to print title of all category
-        //     await checkCategoryTitleHomeScreen(page, action,5);
-
-        //     //6.Check the VODs in Home screen
-        //     await checkVodsInHome(page, action,6);
-
-        //     //7.Not logged user checking Details screen containts Go back Title background Image Subscribe etc'
-        //     await UserDetailsScreen(page, action,7);
-
-        //     //8.Check Related Content in Details screen
-        //     await checkRelatedContentInDetailsScreen(page, action,8);
-
-        //     //9. Check footer Section 
-        //     await checkFooterLinks (page,action,9);
-
-        //     //10. Check different scenario for contact Us
-        //     await contactUsFirstScenario(page,action,10);
-
-        //    // 11. Check different scenario for registration User
-        //     await registrationScreen(page,action,11);
-
-        //     //12. Check the Login screen
-        //     await loginScreen(page,action,12);
-
-        //     //13. Check the Forgot Password screen
-        //     await forgotScreen(page,action,13);
-
+            //7.Check the Forgot Password screen ( Sreda da rabotis na forgot Screen)
+             await forgotScreen(page,action,13);
+        
         //     //14.Logged User my Account
         //     await loggedUserMyAccount (page,action,14);
 

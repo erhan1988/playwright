@@ -2,6 +2,7 @@ const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
 const { checkElementExists,redirectUrl,checkDinamiclyPopUP,generateEmail,logOutUser,checkPlayerScreen} = require('./helper'); 
 const { checkCategoryTitleHomeScreen, checkVodsInHome,UserDetailsScreen} = require('./homeContent'); 
+const {checkFaviconIcon,checkHomeLinkHeader} = require ('./header');
 
 async function loginScreen(page, action, stepNumber) {
   await test.step(`${stepNumber}. Login Screen check Different Scenario: 1. Scenario from registration if is redirect to the Login Screen`, async () => {
@@ -252,6 +253,14 @@ async function loginScreenSixScenario(page, action, stepNumber) {
       await page.waitForURL(homeUrl, { timeout: 40000 });
       await expect(page).toHaveURL(homeUrl);
       console.log(`✅ Successfully navigated to ${homeUrl}`);
+
+      if(action === 'tdmax'){
+        stepNumber += 1;
+        await checkFaviconIcon(page, action,stepNumber);
+
+        stepNumber += 1;
+        await checkHomeLinkHeader (page,action,stepNumber);
+      }
               
       // Check Logged User in Home page if is appear category Home etc ...
       stepNumber += 1;
@@ -263,7 +272,7 @@ async function loginScreenSixScenario(page, action, stepNumber) {
       stepNumber += 1;
       await UserDetailsScreen(page, action, stepNumber,'loggedUser');
 
-      if(action === 'panamsport' || action === 'prtv') {
+      if(action === 'panamsport' || action === 'prtv' || action === 'tdmax') {
         stepNumber += 1;
         await checkPlayerScreen(page, action, stepNumber);
       }
