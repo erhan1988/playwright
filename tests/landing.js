@@ -70,10 +70,29 @@ async function landingPageSecondScenario(page, action, stepNumber) {
     }
   });
 }
+async function landingPageRegisterButton(page, action, stepNumber) {
+  await test.step(`${stepNumber}. Checking landing Page to redirect to the  Register Screen`, async () => {
+    logStep(`${stepNumber}.Checking landing Page to redirect to the  Register Screen`);
+    try {
+      // First click in the register button and check if redirect to the Register Screen
+      const registerButton = page.locator("//button[contains(., 'Registrate')]").nth(2);
+      await registerButton.waitFor({ timeout: 10000 });
+      await registerButton.click({ force: true });
+      logSuccess('✅ Register button clicked, waiting for redirect...');
+      await redirectUrl(page,'/subscribe');
+      logSuccess(`✅ Redirected to the Register Screen for action: ${action}`);
+
+    } catch (err) {
+      logError(`❌ An error occurred in landingPageSecondScenario: ${err.message}`);
+      throw new Error(`❌ An error occurred in landingPageSecondScenario: ${err.message}`);
+    }
+  });
+}
 
 
 
 module.exports = {
-  checkButtonsLandingPage
+  checkButtonsLandingPage,
+  landingPageRegisterButton
 };
 

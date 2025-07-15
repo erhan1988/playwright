@@ -1,6 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
 const { checkElementExists ,selectDropdownByVisibleText,checkAriaInvalid,generateEmail,redirectUrl,checkDinamiclyPopUP, logOutUser} = require('./helper'); 
+const {landingPageRegisterButton} = require ('./landing');
 
 async function registrationScreen(page, action, stepNumber) {
   await test.step(`${stepNumber}. Registration Screen check Different Scenario: 1. Scenario check if exist all fields`, async () => {
@@ -136,7 +137,7 @@ async function registrationScreen(page, action, stepNumber) {
           { locator: 'input[data-mat-calendar="mat-datepicker-0"]', name: 'Pick Date' },
           { locator: '//mat-select[@aria-label="Default select example"] >> nth=0', name: 'Dropdown Select Country' },
           { locator: '#termsOfUseCheckBox', name: 'Checkbox Terms of Use' },
-          { locator: 'mat-select[role="combobox"] >> nth=0', name: 'Male/Female  ' },
+          { locator: 'mat-select[role="combobox"] >> nth=1', name: 'Male/Female  ' },
           { locator: '#subscribe-button', name: 'Submit Button' },
           { locator: '#button-cancel', name: 'Cancel Button' }
         ];
@@ -172,6 +173,11 @@ async function registrationScreen(page, action, stepNumber) {
       stepNumber += 1;
       await regScreenFivecenario(page, action, stepNumber);
 
+      if(action === 'tdmax'){
+        stepNumber +=1;
+       await landingPageRegisterButton (page,action,stepNumber)
+      }
+
       stepNumber += 1;
       await regScreenSixcenario(page, action, stepNumber);
 
@@ -188,14 +194,14 @@ async function regScreenSecondScenario(page, action, stepNumber) {
     try {
 
        // Fill First Name 
-       if (action !== 'panamsport'){
+       if (action !== 'panamsport' && action !=='tdmax'){
         await page.locator('#firstname').fill('Test');
         const firstName = await page.locator('#firstname').inputValue();
         console.log(`First Name has Value: ${firstName}`);
        }
 
        //Fill Last Name
-       if (action !== 'okgol' && action !== 'televicentro' && action !== 'panamsport') {
+       if (action !== 'okgol' && action !== 'televicentro' && action !== 'panamsport' && action !== 'tdmax') {
           await page.locator('#lastname').fill('Test');
           const lastName = await page.locator('#lastname').inputValue();
           console.log(`Last Name has Value: ${lastName}`);
@@ -207,12 +213,23 @@ async function regScreenSecondScenario(page, action, stepNumber) {
          console.log(`Phone has Value: ${phone}`);
        }
       // Fill Select Country
-      await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'Albania');
+      if (action === 'tdmax'){
+        await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"] >> nth=0', 'Albania');
+      }else{
+        await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'Albania');
+      }
 
       // Fill Email Not Valid
       await page.locator('#email').fill('test@');
       const email = await page.locator('#email').inputValue();
       console.log(`Email has Value: ${email}`);
+
+      //fill confirm email tdmax
+      if (action === 'tdmax'){
+        await page.locator('#confirmEmail').fill('test@streann.com');
+        const email = await page.locator('#confirmEmail').inputValue();
+        console.log(`Confirm Email has Value: ${email}`);
+      }
       
       // Fill Password Not Valid
       await page.locator('#password').fill('123');
@@ -224,6 +241,10 @@ async function regScreenSecondScenario(page, action, stepNumber) {
       const confirmPassword = await page.locator('#confirmPassword').inputValue();  
       console.log(`Confirm Password has Value: ${confirmPassword}`);
       await page.locator('#confirmPassword').blur();
+
+      if (action === 'tdmax'){
+        await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"] >> nth=1', 'Femenino');
+      }
 
       const invalidFields = [
         { id: '#email', name: 'Email'},
@@ -258,13 +279,13 @@ async function regScreenThirdcenario(page, action, stepNumber) {
       await page.waitForSelector('#subscribe-button', { state: 'visible' });
 
        // Fill First Name 
-       if (action !== 'panamsport'){
+       if (action !== 'panamsport' && action !== 'tdmax'){
         await page.locator('#firstname').fill('Test');
         const firstName = await page.locator('#firstname').inputValue();
         console.log(`First Name has Value: ${firstName}`);
        }
        //Fill Last Name
-       if (action !== 'okgol' && action !== 'televicentro' && action !== 'panamsport') {
+       if (action !== 'okgol' && action !== 'televicentro' && action !== 'panamsport' && action !== 'tdmax') {
           await page.locator('#lastname').fill('Test');
           const lastName = await page.locator('#lastname').inputValue();
           console.log(`Last Name has Value: ${lastName}`);
@@ -276,13 +297,24 @@ async function regScreenThirdcenario(page, action, stepNumber) {
         console.log(`Phone has Value: ${phone}`);
       }
 
-      // Fill Select Country
-      await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'Albania');
+       // Fill Select Country
+      if (action === 'tdmax'){
+        await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"] >> nth=0', 'Albania');
+      }else{
+        await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'Albania');
+      }
 
-      // Fill Email Not Valid
+      // Fill Email Valid
       await page.locator('#email').fill('test@streann.com');
       const email = await page.locator('#email').inputValue();
       console.log(`Email has Value: ${email}`);
+
+       //fill confirm email tdmax
+      if (action === 'tdmax'){
+        await page.locator('#confirmEmail').fill('test@streann.com');
+        const email = await page.locator('#confirmEmail').inputValue();
+        console.log(`Confirm Email has Value: ${email}`);
+      }
       
       // Fill Password  Valid
       await page.locator('#password').fill('123123');
@@ -294,6 +326,10 @@ async function regScreenThirdcenario(page, action, stepNumber) {
       const confirmPassword = await page.locator('#confirmPassword').inputValue();  
       console.log(`Confirm Password has  Value: ${confirmPassword}`);
       await page.locator('#confirmPassword').blur();
+
+       if (action === 'tdmax'){
+        await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"] >> nth=1', 'Femenino');
+      }
 
       const invalidFields = [
         { id: '#confirmPassword', name: 'Confirm Password' },
@@ -326,14 +362,14 @@ async function regScreenFourcenario(page, action, stepNumber) {
       await page.waitForSelector('#subscribe-button', { state: 'visible' });
 
        // Fill First Name ( NOTES ALL FIELDS ARE FILLED only checkbox not checked)
-       if (action !== 'panamsport'){
+       if (action !== 'panamsport' && action !== 'tdmax'){
         await page.locator('#firstname').fill('Test');
         const firstName = await page.locator('#firstname').inputValue();
         console.log(`First Name has Value: ${firstName}`);
        }
 
        //Fill Last Name
-       if ( action !== 'okgol' && action !== 'televicentro' && action !== 'panamsport') {
+       if ( action !== 'okgol' && action !== 'televicentro' && action !== 'panamsport' && action !== 'tdmax') {
         await page.locator('#lastname').fill('Test');
         const lastName = await page.locator('#lastname').inputValue();
         console.log(`Last Name has Value: ${lastName}`);
@@ -346,12 +382,23 @@ async function regScreenFourcenario(page, action, stepNumber) {
       }
 
       // Fill Select Country
-      await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'Albania');
+      if (action === 'tdmax'){
+        await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"] >> nth=0', 'Albania');
+      }else{
+        await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'Albania');
+      }
 
       // Fill Email  Valid
       await page.locator('#email').fill('test@streann.com');
       const email = await page.locator('#email').inputValue();
       console.log(`Email has Value: ${email}`);
+
+        //fill confirm email tdmax
+      if (action === 'tdmax'){
+        await page.locator('#confirmEmail').fill('test@streann.com');
+        const email = await page.locator('#confirmEmail').inputValue();
+        console.log(`Confirm Email has Value: ${email}`);
+      }
       
       // Fill Password Valid
       await page.locator('#password').fill('123123');
@@ -363,6 +410,10 @@ async function regScreenFourcenario(page, action, stepNumber) {
       const confirmPassword = await page.locator('#confirmPassword').inputValue();  
       console.log(`Confirm Password has  Value: ${confirmPassword}`);
       await page.locator('#confirmPassword').blur();
+
+      if (action === 'tdmax'){
+        await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"] >> nth=1', 'Femenino');
+      }
 
       await termsOfUseCheckBox(page, action, false);
 
@@ -387,14 +438,14 @@ async function regScreenFivecenario(page, action, stepNumber) {
       await page.waitForSelector('#subscribe-button', { state: 'visible' });
 
        // Fill First Name ( NOTES ALL FIELDS ARE FILLED)
-        if (action !== 'panamsport'){
+        if (action !== 'panamsport' && action !== 'tdmax'){
           await page.locator('#firstname').fill('Test');
           const firstName = await page.locator('#firstname').inputValue();
           console.log(`First Name has Value: ${firstName}`);
         }
 
        //Fill Last Name
-       if (action !== 'okgol' && action !== 'televicentro' && action !== 'panamsport') {
+       if (action !== 'okgol' && action !== 'televicentro' && action !== 'panamsport' && action !== 'tdmax') {
         await page.locator('#lastname').fill('Test');
         const lastName = await page.locator('#lastname').inputValue();
         console.log(`Last Name has Value: ${lastName}`);
@@ -406,7 +457,11 @@ async function regScreenFivecenario(page, action, stepNumber) {
         console.log(`Phone has Value: ${phone}`);
       }
       // Fill Select Country
-      await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'Albania');
+      if (action === 'tdmax'){
+        await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"] >> nth=0', 'Albania');
+      }else{
+        await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'Albania');
+      }
 
      // Fill Email 
       const baseEmail = "test+@streann.com";
@@ -415,6 +470,13 @@ async function regScreenFivecenario(page, action, stepNumber) {
       await page.locator('#email').fill(emailWithDate);
       const email = await page.locator('#email').inputValue();
       console.log(`Email has Value: ${email}`);
+
+      //fill confirm email tdmax
+      if (action === 'tdmax'){
+        await page.locator('#confirmEmail').fill(emailWithDate);
+        const email = await page.locator('#confirmEmail').inputValue();
+        console.log(`Confirm Email has Value: ${email}`);
+      }
       
       // Fill Password  Valid
       await page.locator('#password').fill('123123');
@@ -426,6 +488,10 @@ async function regScreenFivecenario(page, action, stepNumber) {
       const confirmPassword = await page.locator('#confirmPassword').inputValue();  
       console.log(`Confirm Password has  Value: ${confirmPassword}`);
       await page.locator('#confirmPassword').blur();
+
+      if (action === 'tdmax'){
+         await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"] >> nth=1', 'Femenino');
+      }
 
       // Check termd of use checkbox
       await termsOfUseCheckBox(page, action,true);
@@ -456,7 +522,7 @@ async function regScreenSixcenario(page, action, stepNumber) {
       }else{
         // CLick to redirect to Registration Screen from the Header
         await page.waitForTimeout(5000); // Wait for 5 seconds
-        const subscribeButton = page.getByText(/subscribe now|suscr[ií]base ahora|¡hazte miembro!|register/i, { exact: false });
+        const subscribeButton = page.getByText(/subscribe now|suscr[ií]base ahora|¡hazte miembro!|register|reg[íi]strate gratis/i,{ exact: false });
         if (await subscribeButton.count()) {
           await subscribeButton.first().click();
           console.log("Subscribe button clicked in the header!");
@@ -469,14 +535,14 @@ async function regScreenSixcenario(page, action, stepNumber) {
       await page.waitForSelector('#subscribe-button', { state: 'visible', timeout: 20000 });  
 
       // Fill First Name ( NOTES ALL FIELDS ARE FILLED)
-      if (action !== 'panamsport') {
+      if (action !== 'panamsport' && action !== 'tdmax') {
         await page.locator('#firstname').fill('Test');
         const firstName = await page.locator('#firstname').inputValue();
         console.log(`First Name has Value: ${firstName}`);
       }
 
        //Fill Last Name
-      if (action !== 'okgol' && action !== 'televicentro' && action !== 'panamsport') {
+      if (action !== 'okgol' && action !== 'televicentro' && action !== 'panamsport' && action !== 'tdmax') {
         await page.locator('#lastname').fill('Test');
         const lastName = await page.locator('#lastname').inputValue();
         console.log(`Last Name has Value: ${lastName}`);
@@ -489,21 +555,32 @@ async function regScreenSixcenario(page, action, stepNumber) {
       }
 
       // Fill Select Country
-      await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'Albania');
+      if (action === 'tdmax'){
+        await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"] >> nth=0', 'Albania');
+      }else{
+        await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'Albania');
+      }
 
       // Fill Email
+      let emailWithDate1 = '';
       if (action === 'emmanuel'){
         await page.locator('#email').fill('erhan+1115@streann.com'); 
         const email = await page.locator('#email').inputValue();
         console.log(`Email has Value: ${email}`);
       }else {
         const baseEmail = "test+@streann.com";
-        const emailWithDate1 = generateEmail(baseEmail);
+        emailWithDate1 = generateEmail(baseEmail);
         console.log(emailWithDate1); 
         await page.locator('#email').fill(emailWithDate1); 
         const email = await page.locator('#email').inputValue();
         console.log(`Email has Value: ${email}`);
+      }
 
+      //fill confirm email tdmax
+      if (action === 'tdmax'){
+        await page.locator('#confirmEmail').fill(emailWithDate1);
+        const email = await page.locator('#confirmEmail').inputValue();
+        console.log(`Confirm Email has Value: ${email}`);
       }
       // Fill Password  Valid
       await page.locator('#password').fill('123123');
@@ -515,6 +592,10 @@ async function regScreenSixcenario(page, action, stepNumber) {
       const confirmPassword = await page.locator('#confirmPassword').inputValue();  
       console.log(`Confirm Password has  Value: ${confirmPassword}`);
       await page.locator('#confirmPassword').blur();
+
+      if (action === 'tdmax'){
+        await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"] >> nth=1', 'Femenino');
+      }
 
       // Check termd of use checkbox
       await termsOfUseCheckBox(page, action,true);
@@ -584,7 +665,7 @@ async function checkSubscribeButtonDisabled(page, action, enabled) {
 
 async function redirectionAfterRegistration(page, action) {
   try {
-    if  (action === 'amorir' || action === 'okgol' || action === 'televicentro' ) {
+    if  (action === 'amorir' || action === 'okgol' || action === 'televicentro' || action === 'tdmax' ) {
         // Wait for the URL to change to the expected one
         await page.waitForURL(/\/user\/choose-plan/, { timeout: 10000 });
         // Check if the URL contains the expected path

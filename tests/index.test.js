@@ -435,7 +435,7 @@ if (action === 'emmanuel') {
             await checkButtonsLandingPage(page,action,2);
 
             // Step 3 : Check footer links
-            await checkFooterLinks(page, action, 3);
+            await checkFooterLinks(page, action,3);
 
             //Step 4. Check different scenario for contact Us
             await contactUsFirstScenario(page,action,4);
