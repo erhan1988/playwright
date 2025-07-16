@@ -457,6 +457,6 @@ if (action === 'emmanuel') {
         });
     })
 }else {
-    console.log('No valid action provided. Use "Amorir,OkGol,Televicentro,PanamSport,Gols" or "Prtv".');
+    console.log('No valid action provided. Use "Amorir,OkGol,Televicentro,PanamSport,Gols,Tdmax" or "Prtv".');
     process.exit(1);
 }
