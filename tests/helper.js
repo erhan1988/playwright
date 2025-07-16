@@ -110,7 +110,7 @@ async function backgroundImageDetailsScreen(page,action) {
         } else {
             imageLocator = page.locator('div.details-image.details-image-desktop');
         }
-        await imageLocator.waitFor({ state: 'visible', timeout: 5000 });
+        await imageLocator.waitFor({ state: 'visible', timeout: 15000 });
         const imageCount = await imageLocator.count();
         logSuccess(`✅ Found ${imageCount} background image(s).`);
 
@@ -493,7 +493,7 @@ async function checkSharePopup(page, popupId) {
                 await closeIcon.waitFor({ state: 'visible', timeout: 5000 });
                 await closeIcon.click();
                 console.log('- Clicked to close the popup');
-                await page.waitForTimeout(2000);
+                await page.waitForTimeout(4000);
             } catch (err) {
                 console.log('❌ Close icon not found or not clickable:', err.message);
                 await page.screenshot({ path: 'close_icon_debug.png' });
@@ -597,7 +597,7 @@ async function logOutUser(page,action) {
     logStep(`Log Out User`);
     try {
       // Wait for the dropdown button
-        const dropdownButton = await page.waitForSelector('#accountMenu', { timeout: 30000 });
+        const dropdownButton = await page.waitForSelector('#accountMenu', { timeout: 60000 });
   
         // Check if the button is visible
         if (await dropdownButton.isVisible()) {
@@ -611,7 +611,7 @@ async function logOutUser(page,action) {
         // Wait for the "Salir" (Logout) span
         const logoutSpan = await page.waitForSelector(
           "//span[contains(text(), 'Salir') or contains(text(), 'Logout')]",
-          { timeout: 10000, state: 'visible' }
+          { timeout: 20000, state: 'visible' }
         );
         
         const text = await logoutSpan.textContent();

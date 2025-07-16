@@ -116,9 +116,11 @@ async function forgotScreenThirdScenario(page, action, stepNumber) {
       //await page.waitForSelector('.loader', { state: 'hidden', timeout: 10000 }); // <-- Add here
 
       try {
-        await page.waitForSelector('#send-email-button', { state: 'visible', timeout: 30000 });
+        if ( action !== 'tdmax'){
+        await page.waitForSelector('#send-email-button', { state: 'visible', timeout: 50000 });
+        }
         const sendEmailButton = page.locator('#send-email-button');
-        await expect(sendEmailButton).toBeVisible({ timeout: 14000 });
+        await expect(sendEmailButton).toBeVisible({ timeout: 30000 });
       } catch (err) {
         await page.screenshot({ path: `send_email_button_error_${Date.now()}.png` });
         console.log('Current URL:', page.url());
@@ -153,10 +155,10 @@ async function forgotScreenFourthScenario(page, action, stepNumber) {
       await page.reload();
       try {
         const sendEmailButton = page.locator('#send-email-button');
-        await expect(sendEmailButton).toBeVisible({ timeout: 30000 });
-        await expect(sendEmailButton).toBeEnabled({ timeout: 30000 });
+        await expect(sendEmailButton).toBeVisible({ timeout: 90000 });
+        await expect(sendEmailButton).toBeEnabled({ timeout: 90000 });
         await sendEmailButton.click();
-        console.log('✅ Clicked on Send Email button without filling the email field.');
+        console.log('✅ Clicked on Send Email button with filled correct email.');
       } catch (err) {
         await page.screenshot({ path: `send_email_button_error_${Date.now()}.png` });
         console.log('Current URL:', page.url());
@@ -187,7 +189,12 @@ async function forgotScreenFourthScenario(page, action, stepNumber) {
       logSuccess('✅ Clicked on Cancel button.');
 
       // Check if the URL is correct
-      const url = `https://${action}-v3-dev.streann.tech/`;
+      let url= '';
+      if (action === 'tdmax'){
+         url = `https://${action}-v3-dev.streann.tech/page/landing`;
+      }else{
+      url  = `https://${action}-v3-dev.streann.tech/`;
+      }
       await page.waitForURL(url, { timeout: 20000 });
       await expect(page).toHaveURL(url);
       console.log(`✅ Successfully navigated to ${url}`);

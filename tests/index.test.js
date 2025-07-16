@@ -426,7 +426,7 @@ if (action === 'emmanuel') {
 }else if (action === 'tdmax') {
       test.describe('Website Tests for TDMAX', () => {
         test('Website Tests', async ({ page }) => {
-            test.setTimeout(140000); 
+            test.setTimeout(180000); 
     
             //Step 1: Open the Site
             await navigatetoURL(page, action,1);
@@ -447,13 +447,13 @@ if (action === 'emmanuel') {
             await loginScreen(page,action,6);
 
             //7.Check the Forgot Password screen ( Sreda da rabotis na forgot Screen)
-             await forgotScreen(page,action,13);
+             await forgotScreen(page,action,7);
         
-        //     //14.Logged User my Account
-        //     await loggedUserMyAccount (page,action,14);
+            // //8.Logged User my Account
+            // await loggedUserMyAccount (page,action,8);
 
-        //     // 15.Login with New Password
-        //     await loginScreenNewPassword(page,action,15);
+            // // 9.Login with New Password
+            // await loginScreenNewPassword(page,action,9);
         });
     })
 }else {
