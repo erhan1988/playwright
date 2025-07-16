@@ -449,11 +449,11 @@ if (action === 'emmanuel') {
             //7.Check the Forgot Password screen ( Sreda da rabotis na forgot Screen)
              await forgotScreen(page,action,7);
         
-            // //8.Logged User my Account
-            // await loggedUserMyAccount (page,action,8);
+            //8.Logged User my Account
+            await loggedUserMyAccount (page,action,8);
 
-            // // 9.Login with New Password
-            // await loginScreenNewPassword(page,action,9);
+            // 9.Login with New Password
+            await loginScreenNewPassword(page,action,9);
         });
     })
 }else {
