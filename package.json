@@ -16,7 +16,7 @@
     "axios": "^1.7.9",
     "chromedriver": "^132.0.1",
     "express": "^4.21.2",
-    "form-data": "^4.0.1",
+    "form-data": "^4.0.1"
 
 
   },
