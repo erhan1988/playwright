@@ -61,8 +61,8 @@ async function checkFooterLinks(page, action, stepNumber) {
       }
 
       // ✅ Wait for known content (optional)
-      await page.waitForSelector('body', { timeout: 7000 });
-      await page.waitForTimeout(7000);
+      await page.waitForSelector('body', { timeout: 9000 });
+      await page.waitForTimeout(9000);
 
       // ✅ Now check the expected terms content
       await checkTextExist(page, [

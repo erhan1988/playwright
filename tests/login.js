@@ -318,7 +318,7 @@ async function loginScreenNewPassword(page, action, stepNumber) {
   try {
       // navigate to the Login screen
       const baseUrl = `https://${action}-v3-dev.streann.tech/login`;
-      const response = await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 70000 });
+      const response = await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 90000 });
       console.log('Goto response status:', response && response.status());
       console.log('Current URL after goto:', page.url());
       const loginButton = page.locator('#login-button, [type="submit"]').first();

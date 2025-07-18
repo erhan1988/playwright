@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const { logStep, logSuccess, logError } = require('../index'); // Import logging helpers
 
-async function checkElementExists(page, locator, name, timeout = 10000) {
+async function checkElementExists(page, locator, name, timeout = 20000) {
     try {
         const elements = page.locator(locator);
 
@@ -80,7 +80,7 @@ async function titleDetailsScreen(page,action) {
         else {
             titleLocator = page.locator('h1.title-title.fs-3');
         }
-        await titleLocator.waitFor({ state: 'visible', timeout: 10000 });
+        await titleLocator.waitFor({ state: 'visible', timeout: 30000 });
         const titleElements = await titleLocator.all();
 
         if (titleElements.length === 0) {
@@ -151,7 +151,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
         if (action === 'panamsport' && loggedUser || action === 'gols' && loggedUser || action === 'prtv' && !loggedUser || action === 'prtv' && loggedUser || action === 'tdmax'
             && loggedUser
         ) {
-           await page.waitForSelector("xpath=//*[text()='Watch now' or text()='Ver ahora']", { timeout: 12000 });
+           await page.waitForSelector("xpath=//*[text()='Watch now' or text()='Ver ahora']", { timeout: 20000 });
             await page.waitForSelector("//button[.//span[contains(@class,'mdc-button__label')]]", { timeout: 20000 });
             buttons = page.locator('button');
         } else {

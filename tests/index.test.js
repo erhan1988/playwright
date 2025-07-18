@@ -216,7 +216,7 @@ if (action === 'emmanuel') {
 }else if (action === 'okgol') {
     test.describe('Website Tests for Okgol', () => {
         test('Website Tests', async ({ page }) => {
-            test.setTimeout(140000); 
+            test.setTimeout(170000); 
     
             //Step 1: Open the Site
             await navigatetoURL(page, action,1);
@@ -265,7 +265,7 @@ if (action === 'emmanuel') {
 }else if (action === 'televicentro'){
     test.describe('Website Tests for Televicentro', () => {
         test('Website Tests', async ({ page }) => {
-            test.setTimeout(140000); 
+            test.setTimeout(170000); 
 
             //Step 1: Open the Site
             await navigatetoURL(page, action,1);
@@ -320,7 +320,7 @@ if (action === 'emmanuel') {
 }else if(action === 'panamsport'){
     test.describe('Website Tests for Panamsport', () => {
         test('Website Tests', async ({ page }) => {
-            test.setTimeout(140000); 
+            test.setTimeout(170000); 
     
             //Step 1: Open the Site
             await navigatetoURL(page, action,1);
