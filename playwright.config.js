@@ -21,7 +21,7 @@ export default defineConfig({
     ['dot'], // Minimal output (dots for each test)
   ],
   use: {
-    headless: false, // Run in headed mode
+    headless: true, // Run in headed mode
     launchOptions: {
       args: ['--start-maximized'], // Maximize the browser window
     },
@@ -48,7 +48,7 @@ export default defineConfig({
       name: 'chrome',
       use: {
         browserName: 'chromium', // Using Chromium as the base
-        headless: false, // Run with UI
+        headless: true, // Run with UI
         launchOptions: {
           executablePath: '/usr/bin/google-chrome', // Path to Google Chrome executable
           args: [
