@@ -21,17 +21,12 @@ export default defineConfig({
     ['dot'], // Minimal output (dots for each test)
   ],
   use: {
-    headless: true, // Run in headed mode
+    headless: false, // Run in headed mode
     launchOptions: {
       args: ['--start-maximized'], // Maximize the browser window
     },
     viewport: null, // Disable viewport to use the full screen size
-     // ✅ These options ensure assets are generated:
-    trace: 'on', // or 'retain-on-failure'
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
   },
-  
   projects: [
     // {
     //   name: 'firefox',  // Name of the project (can be any name, e.g., 'chromium', 'firefox')
@@ -53,7 +48,7 @@ export default defineConfig({
       name: 'chrome',
       use: {
         browserName: 'chromium', // Using Chromium as the base
-        headless: true, // Run with UI
+        headless: false, // Run with UI
         launchOptions: {
           executablePath: '/usr/bin/google-chrome', // Path to Google Chrome executable
           args: [
@@ -68,4 +63,3 @@ export default defineConfig({
   ],
 
 });
-
