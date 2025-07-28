@@ -473,6 +473,12 @@ if (action === 'emmanuel') {
             await page.waitForTimeout(2000); // 2000ms = 2 seconds
             //Step 4: Check if Header elements exist
             await checkHeaderElements(page, action,4);
+
+            //5.Check the Home screen Need to print title of all category
+            await checkCategoryTitleHomeScreen(page, action,5);
+
+            //6.Check the VODs in Home screen
+            await checkVodsInHome(page, action,6);
           
         });
     })
