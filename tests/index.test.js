@@ -456,7 +456,27 @@ if (action === 'emmanuel') {
             await loginScreenNewPassword(page,action,9);
         });
     })
+}else if (action === 'flexflix') {
+    test.describe('Website Tests for FlexFlix', () => {
+        test('Website Tests', async ({ page }) => {
+            test.setTimeout(180000); 
+
+             //Step 1: Open the Site
+            await navigatetoURL(page, action,1);
+
+            //Step 2: Check if Favicon exists in the browser                
+            await checkFaviconIcon(page, action,2);
+
+            //Step 3: Find link Home in the Header and click
+            await checkHomeLinkHeader(page,3);  
+
+            await page.waitForTimeout(2000); // 2000ms = 2 seconds
+            //Step 4: Check if Header elements exist
+            await checkHeaderElements(page, action,4);
+          
+        });
+    })
 }else {
-    console.log('No valid action provided. Use "Amorir,OkGol,Televicentro,PanamSport,Gols,Tdmax" or "Prtv".');
+    console.log('No valid action provided. Use "Amorir,OkGol,Televicentro,PanamSport,Gols,Tdmax,Flexflix" or "Prtv".');
     process.exit(1);
 }

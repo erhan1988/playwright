@@ -75,7 +75,7 @@ async function checkHomeLinkHeader(page, stepNumber) {
     await test.step(`${stepNumber}. Find link Home in the Header and click`, async () => { 
         logStep(`${stepNumber}. Executing step: 3. Find link Home in the Header and click`);
         try {
-            const homeOrInicioLink = page.locator("//a[contains(text(),'Home') or contains(text(),'Inicio') or contains(text(),'WIPR')]");
+            const homeOrInicioLink = page.locator("//a[contains(text(),'Home') or contains(text(),'Inicio') or contains(text(),'WIPR') or contains(text(),'On Demand')]");
             const menuButton = page.locator('.navbar-toggler'); 
 
             // Ensure the link is visible, otherwise check menu
@@ -133,15 +133,15 @@ async function checkHeaderElements(page, action, stepNumber) {
                     { locator:'a.navbar-brand img.img-fluid[alt="logo"]' , name: 'Logo' },
                     { locator: "//*[contains(text(),'Log in') or contains(text(),'Log In') or contains(text(),'Iniciar sesión') or contains(text(),'Ingresar')]",  name: 'Login Button' },   
                     { locator: '#search-button', name: 'Search Button' },
-                    { locator: "//a[contains(text(),'Home') or contains(text(),'Inicio') or contains(text(),'WIPR')]", name: 'Home Link' }   
+                    { locator: "//a[contains(text(),'Home') or contains(text(),'Inicio') or contains(text(),'WIPR') or contains(text(),'On Demand')]", name: 'Home Link' }
                 ];
                 // Only add the Register Button if not okgol and televicentro
-                // This is becuase okgol does not have Register Button in the header
+                // This is becuase okgol and Televicentro does not have Register Button in the header
                 if (action !== 'okgol' && action !== 'televicentro') {
                     headerElements.splice(2, 0, { 
-                        locator: "//*[contains(text(),'Subscribe Now') or contains(text(),'Suscríbase Ahora') or contains(text(),'¡Hazte Miembro!') or contains(text(),'Register') or contains(text(),'Become a Member')]", 
+                        locator: "//*[.//text()[contains(.,'Subscribe') or contains(.,'Subscribe Now') or contains(.,'Suscríbase Ahora') or contains(.,'¡Hazte Miembro!') or contains(.,'Register') or contains(.,'Become a Member')]]",
                         name: 'Register Button' 
-                    });           
+                    });
                 }
             }
             // Collect results for each element

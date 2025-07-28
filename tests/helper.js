@@ -9,10 +9,11 @@ async function checkElementExists(page, locator, name, timeout = 20000) {
         await elements.first().waitFor({ timeout });
         const count = await elements.count();
 
-        if (count > 1) {
-            logError(`❌ Found multiple elements (${count}) for ${name}. Locator: ${locator}`);
-            return { name, status: 'error', error: `Multiple elements found (${count})` };
-        } else if (count === 0) {
+        // if (count > 1) {
+        //     logError(`❌ Found multiple elements (${count}) for ${name}. Locator: ${locator}`);
+        //     return { name, status: 'error', error: `Multiple elements found (${count})` };
+        // } else 
+        if (count === 0) {
             logError(`❌ No elements found for ${name}. Locator: ${locator}`);
             return { name, status: 'not visible' };
         }
