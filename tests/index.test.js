@@ -485,6 +485,12 @@ if (action === 'emmanuel') {
 
             //8.Check Related Content in Details screen
             await checkRelatedContentInDetailsScreen(page, action,8);
+
+            //9. Check footer Section 
+            await checkFooterLinks (page,action,9);
+
+            //10. Check different scenario for contact Us
+            //await contactUsFirstScenario(page,action,10); Need to solve in contactUS scenarios all contactUsSecondScenario etc
           
         });
     })

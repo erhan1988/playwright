@@ -71,7 +71,8 @@ async function checkFooterLinks(page, action, stepNumber) {
         "Términos y Condiciones",
         "Data categories",
         "Acceptance of Terms",
-        "Effective Date"
+        "Effective Date",
+        'FlexFlix Terms of Use'
       ]);
 
       // 🛑 Now move to privacy policy **only after above check passes**
@@ -130,7 +131,8 @@ async function privacyPolicy(page,action) {
        bodyText.includes('Avisos Legales') || 
        bodyText.includes('Data categories') ||
        bodyText.includes('Introduction') ||
-       bodyText.includes('Platform Name: Game Stream Media');
+       bodyText.includes('Platform Name: Game Stream Media') ||
+       bodyText.includes('Privacy statement');
     });
 
     // ✅ Check privacy page content
@@ -141,7 +143,8 @@ async function privacyPolicy(page,action) {
       "Políticas de Privacidad",
       "Data categories",
       "Introduction",
-      "Platform Name: Game Stream Media"
+      "Platform Name: Game Stream Media",
+      "Privacy statement"
     ]);
   } catch (err) {
     logError(`❌ An error occurred in privacyPolicy: ${err.message}`);

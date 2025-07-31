@@ -10,17 +10,23 @@ async function contactUsFirstScenario(page, action, stepNumber) {
     try {
       await page.waitForTimeout(2000);
 
-      // Check first Title
+      // Check first Title.
       const h1 = page.locator('h1');
       try {
-        await expect(h1).toHaveText(/Contact Us|Contáctenos/i);
-        const headingText = await h1.textContent();
-        logSuccess(`✅ Found Title: "${headingText?.trim()}"`);
-      } catch (error) {
-        const actualText = await h1.textContent();
-        logError(`❌ Heading did not match expected text. Found: "${actualText?.trim()}"`);
-        throw error;
-      }
+          if (action === 'flexflix') {
+            await expect(h1).toHaveText("We'd love to hear about your experience with FlexFlix, leave us a comment!");
+            const headingText = await h1.textContent();
+            logSuccess(`✅ Found FlexFlix Title: "${headingText?.trim()}"`);
+          } else {
+            await expect(h1).toHaveText(/Contact Us|Contáctenos/i);
+            const headingText = await h1.textContent();
+            logSuccess(`✅ Found Title: "${headingText?.trim()}"`);
+          }
+        } catch (error) {
+          const actualText = await h1.textContent();
+          logError(`❌ Heading did not match expected text. Found: "${actualText?.trim()}"`);
+          throw error;
+        }
 
       // Check if all input fields exist on the Contact Us page
       const contactUsElements = [
@@ -31,6 +37,11 @@ async function contactUsFirstScenario(page, action, stepNumber) {
         { locator: '#issue', name: 'Text Area' },
         { locator: '#submit-button', name: 'Submit Button' },
       ];
+
+      if (action === 'flexflix') {
+       // Remove Dropdown Select Category for FlexFlix Here is not checked for Flexflix becuase we don't have 
+        contactUsElements = contactUsElements.filter(el => el.name !== 'Dropdown Select Category');
+      }
 
       for (const element of contactUsElements) {
         await checkElementExists(page, element.locator, element.name);
