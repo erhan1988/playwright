@@ -198,7 +198,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
                 }
             }
             // "Suscribirse" for other actions
-            if (['amorir', 'okgol', 'televicentro','panamsport','gols','gamestreammedia'].includes(action) &&
+            if (['amorir', 'okgol', 'televicentro','panamsport','gols','gamestreammedia','flexflix'].includes(action) &&
                 (trimmedText.toLowerCase() === 'suscribirse' || trimmedText.toLowerCase() === 'subscribe' || trimmedText.toLowerCase().includes('buy now'))) {
                 const isVisible = await button.isVisible();
                 const isEnabled = await button.isEnabled();
@@ -214,10 +214,13 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
                     logStep(`Clicking on "Suscribirse" button at Details screen...`);
                 }
                 try {
+                    
                     await button.click();
                     if (loggedUser) {
                         await redirectUrl(page,'/user/choose-plan');
-                    } else {
+                    }else if (action === 'flexflix' && !loggedUser) {
+                        await redirectUrl(page,'/subscribe');
+                    }else{
                         await redirectUrl(page,'/login');
                     }
 
@@ -258,7 +261,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
             logError(msg);
             throw new Error(msg);
         }
-        if (['amorir', 'okgol', 'televicentro','panamsport','gols','gamestreammedia'].includes(action) && !suscribirseFound) {
+        if (['amorir', 'okgol', 'televicentro','panamsport','gols','gamestreammedia','flexflix'].includes(action) && !suscribirseFound) {
             await page.screenshot({ path: `suscribirse_button_not_found_${action}.png` });
             const msg = `❌ "Suscribirse" button not found for action: ${action}`;
             logError(msg);

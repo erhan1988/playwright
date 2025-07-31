@@ -131,7 +131,7 @@ async function checkRelatedContentInDetailsScreen(page, action, stepNumber) {
             let titleButtons;
             let count = 0;
     
-            if (action === 'amorir' || action === 'okgol' || action === 'prtv') {
+            if (action === 'amorir' || action === 'okgol' || action === 'prtv' || action === 'flexflix') {
             // Check title in the Related Content
             titleButtons = await page.locator('button.nav-link.ng-star-inserted');
             // Wait for at least one element or timeout
