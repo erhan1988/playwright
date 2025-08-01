@@ -97,7 +97,7 @@ async function loginScreenSecondScenario(page, action, stepNumber) {
         await checkElementExists(page, element.locator, element.name);
       }
 
-      // After this i will check also if exist the link for Sign Up
+      // After this  check also if exist the link for Sign Up
       const link = await page.locator('a[href="/subscribe"]');
       const text = await link.textContent();
       console.log('Link text:', text?.trim());
@@ -233,7 +233,7 @@ async function loginScreenSixScenario(page, action, stepNumber) {
       console.log('Now checking if the login button is Enabled...');
 
       // Emmanuel when is logged is redirect to the Profile Page
-      if (action === 'emmannuel' || action === 'televicentro') {
+      if (action === 'emmannuel' || action === 'televicentro' || action === 'flexflix') {
         // After Login, be sure that it redirects to the Profile Page
         const profileUrl = `https://${action}-v3-dev.streann.tech/profile/select-profile`;
         await page.waitForURL(profileUrl, { timeout: 30000 });

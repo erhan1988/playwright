@@ -255,7 +255,7 @@ async function buttonsDetailsScreen(page, action, loggedUser) {
             }
         }
         if (!watchNowFound && action === 'prtv' || !watchNowFound && loggedUser && action === 'panamsport' || !watchNowFound && loggedUser && action === 'gols' ||
-            !watchNowFound && loggedUser && action === 'tdnax') {
+            !watchNowFound && loggedUser && action === 'tdmax') {
             const msg = `❌ "Watch Now" button not found for action: ${action}`;
             await page.screenshot({ path: `watch_now_button_not_found_${action}.png` });
             logError(msg);
