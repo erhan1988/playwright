@@ -491,6 +491,21 @@ if (action === 'emmanuel') {
 
             //10. Check different scenario for contact Us
             await contactUsFirstScenario(page,action,10);
+
+            // 11. Check different scenario for registration User
+            await registrationScreen(page,action,11);
+
+            // //12. Check the Login screen
+            // await loginScreen(page,action,12);
+
+            // //13. Check the Forgot Password screen
+            // await forgotScreen(page,action,13);
+
+            // //14.Logged User my Account
+            // await loggedUserMyAccount (page,action,14);
+
+            // // 15.Login with New Password
+            // await loginScreenNewPassword(page,action,15);
           
         });
     })

@@ -13,7 +13,13 @@ async function registrationScreen(page, action, stepNumber) {
       await page.waitForTimeout(4000); // or better: wait for a container element
     }
     if (action !== 'okgol' && action !== 'televicentro') {
-      const subscribeButton = page.locator(`xpath=//*[contains(normalize-space(text()), 'Subscribe Now') or contains(normalize-space(text()), 'Suscríbase Ahora') or contains(normalize-space(text()), '¡Hazte Miembro!') or contains(normalize-space(text()), 'Register') or contains(normalize-space(text()), 'Regístrate gratis')]`);
+      const subscribeButton = page.locator(`xpath=//*[contains(normalize-space(text()), 'Subscribe Now') 
+        or contains(normalize-space(text()), 'Subscribe') 
+        or contains(normalize-space(text()), 'Suscríbase Ahora') 
+        or contains(normalize-space(text()), '¡Hazte Miembro!') 
+        or contains(normalize-space(text()), 'Register') 
+        or contains(normalize-space(text()), 'Regístrate gratis')]`);
+
       if (await subscribeButton.count()) {
         await subscribeButton.first().click();
         console.log("Subscribe button clicked in the header!");
@@ -96,7 +102,7 @@ async function registrationScreen(page, action, stepNumber) {
           { locator: '#termsOfUseCheckBox', name: 'Checkbox Terms of Use' },
           { locator: '#subscribe-button', name: 'Submit Button' }
         ];
-      }else if (action === 'prtv'){
+      }else if (action === 'prtv' || action === 'flexflix'){
         requiredFields = [
           { locator: '#firstname', name: 'First Name' },
           { locator: '#lastname', name: 'Last Name' },
@@ -105,7 +111,7 @@ async function registrationScreen(page, action, stepNumber) {
           { locator: '#password', name: 'Password' },
           { locator: '#confirmPassword', name: 'Confirm Password' },
           { locator: '//mat-select[@aria-label="Default select example"]', name: 'Dropdown Select Country' },
-          { locator: '//mat-label[text()="Fecha de nacimiento"]', name: 'Date' },
+          { locator: '//mat-label[normalize-space(text())="Fecha de nacimiento" or normalize-space(text())="Birth Date"]', name: 'Date' },
           { locator: '#voucherCode', name: 'Voucher Code' },
           { locator: '#termsOfUseCheckBox', name: 'Checkbox Terms of Use' },
           { locator: '#subscribe-button', name: 'Submit Button' },
@@ -213,7 +219,7 @@ async function regScreenSecondScenario(page, action, stepNumber) {
           console.log(`Last Name has Value: ${lastName}`);
        }
        //Fill Phone 
-       if (action === 'prtv') {
+       if (action === 'prtv' || action === 'flexflix') {
          await page.locator('#phone').fill('1234567890');
          const phone = await page.locator('#phone').inputValue();
          console.log(`Phone has Value: ${phone}`);
@@ -297,7 +303,7 @@ async function regScreenThirdcenario(page, action, stepNumber) {
           console.log(`Last Name has Value: ${lastName}`);
        }
       //Fill Phone 
-      if (action === 'prtv') {
+      if (action === 'prtv' || action === 'flexflix') {
         await page.locator('#phone').fill('1234567890');
         const phone = await page.locator('#phone').inputValue();
         console.log(`Phone has Value: ${phone}`);
@@ -381,7 +387,7 @@ async function regScreenFourcenario(page, action, stepNumber) {
         console.log(`Last Name has Value: ${lastName}`);
       }
       //Fill Phone 
-      if (action === 'prtv') {
+      if (action === 'prtv' || action === 'flexflix') {
         await page.locator('#phone').fill('1234567890');
         const phone = await page.locator('#phone').inputValue();
         console.log(`Phone has Value: ${phone}`);
@@ -457,7 +463,7 @@ async function regScreenFivecenario(page, action, stepNumber) {
         console.log(`Last Name has Value: ${lastName}`);
        }
       //Fill Phone 
-      if (action === 'prtv') {
+      if (action === 'prtv' || action === 'flexflix') {
         await page.locator('#phone').fill('1234567890');
         const phone = await page.locator('#phone').inputValue();
         console.log(`Phone has Value: ${phone}`);
@@ -528,8 +534,7 @@ async function regScreenSixcenario(page, action, stepNumber) {
       }else{
         // CLick to redirect to Registration Screen from the Header
         await page.waitForTimeout(5000); // Wait for 5 seconds
-        const subscribeButton = page.getByText(/subscribe now|suscr[ií]base ahora|¡hazte miembro!|register|reg[íi]strate gratis/i,{ exact: false });
-        if (await subscribeButton.count()) {
+const subscribeButton = page.getByText(/subscribe now|subscribe|suscr[ií]base ahora|¡hazte miembro!|register|reg[íi]strate gratis/i, { exact: false });        if (await subscribeButton.count()) {
           await subscribeButton.first().click();
           console.log("Subscribe button clicked in the header!");
         } else {
@@ -554,7 +559,7 @@ async function regScreenSixcenario(page, action, stepNumber) {
         console.log(`Last Name has Value: ${lastName}`);
       }
       //Fill Phone 
-      if (action === 'prtv') {
+      if (action === 'prtv' || action === 'flexflix') {
         await page.locator('#phone').fill('1234567890');
         const phone = await page.locator('#phone').inputValue();
         console.log(`Phone has Value: ${phone}`);
@@ -671,7 +676,7 @@ async function checkSubscribeButtonDisabled(page, action, enabled) {
 
 async function redirectionAfterRegistration(page, action) {
   try {
-    if  (action === 'amorir' || action === 'okgol' || action === 'televicentro' || action === 'tdmax' ) {
+    if  (action === 'amorir' || action === 'okgol' || action === 'televicentro' || action === 'tdmax' || action === 'flexflix') {
         // Wait for the URL to change to the expected one
         await page.waitForURL(/\/user\/choose-plan/, { timeout: 10000 });
         // Check if the URL contains the expected path
@@ -684,13 +689,18 @@ async function redirectionAfterRegistration(page, action) {
         }
 
         // Check if the title is as expected
-        await expect(page.locator('h1.d-flex.justify-content-center.text-center.mt-1.title.mb-1.pt-1')).toHaveText('Elige Tu Plan', { timeout: 10000 });
+        if (action === 'flexflix') {
+          await expect(page.locator('h1.d-flex.justify-content-center.text-center.mt-1.title.mb-1.pt-1')).toHaveText('Select your plan', { timeout: 10000 });
+        }else{
+          await expect(page.locator('h1.d-flex.justify-content-center.text-center.mt-1.title.mb-1.pt-1')).toHaveText('Elige Tu Plan', { timeout: 10000 });
+        }
+
         const headingText = await page.locator('h1.d-flex.justify-content-center.text-center.mt-1.title.mb-1.pt-1').textContent();
         logSuccess(`✅ Found Title: "${headingText?.trim()}"`);
 
         // Check if the "Choose Plan Screen" button Continue is visible
         const buttonContinueWithoutPlan = page.locator(
-          "//button[.//span[text()='Continuar sin suscripción'] or .//span[text()='No quiero un plan ahora']]"
+          "//button[.//span[text()='Continuar sin suscripción'] or .//span[text()='No quiero un plan ahora'] or .//span[text()='Continue without a plan']]"
         );
         await buttonContinueWithoutPlan.waitFor({ timeout: 20000 }); // wait for up to 20 seconds
         await buttonContinueWithoutPlan.click(); // click it
