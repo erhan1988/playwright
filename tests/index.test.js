@@ -490,7 +490,7 @@ if (action === 'emmanuel') {
             await checkFooterLinks (page,action,9);
 
             //10. Check different scenario for contact Us
-            //await contactUsFirstScenario(page,action,10); Need to solve in contactUS scenarios all contactUsSecondScenario etc
+            await contactUsFirstScenario(page,action,10);
           
         });
     })

@@ -29,7 +29,7 @@ async function contactUsFirstScenario(page, action, stepNumber) {
         }
 
       // Check if all input fields exist on the Contact Us page
-      const contactUsElements = [
+      let contactUsElements = [
         { locator: '#customer-service', name: 'Form Contact Us' },
         { locator: '#mat-select-value-1', name: 'Dropdown Select Category' },
         { locator: '#email', name: 'Email' },
@@ -74,11 +74,16 @@ async function contactUsSecondScenario(page, action, stepNumber) {
       await page.waitForSelector('#submit-button', { state: 'visible' });
       await page.click('#submit-button');
 
-      const invalidFields = [
+      let invalidFields = [
         { id: '#subject', name: 'Subject' },
         { id: '#issue', name: 'Issue (Textarea)' },
         { id: '#mat-select-0', name: 'Dropdown Select Category' },
       ];
+
+      if (action === 'flexflix') {
+        invalidFields = invalidFields.filter(field => field.name !== 'Dropdown Select Category');
+      }
+
       for (const field of invalidFields) {
         await checkAriaInvalid(page, field); // <-- Use helper function here
       }
@@ -99,7 +104,9 @@ async function contactUsThirdScenario(page, action, stepNumber) {
       await page.waitForSelector('#submit-button', { state: 'visible' });
 
       // Fill Select Category
-      await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'General');
+      if ( action !== 'flexflix') {
+        await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'General');
+      }
 
       // Delete email because it is automatically filled with the user email
       await page.locator('#email').fill('');
@@ -143,7 +150,9 @@ async function contactUsFourthScenario(page, action, stepNumber) {
       await page.waitForSelector('#submit-button', { state: 'visible' });
 
       // Fill Select Category
-      await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'General');
+      if ( action !== 'flexflix') {
+        await selectDropdownByVisibleText(page, '//mat-select[@aria-label="Default select example"]', 'General');
+      }
 
       // Delete email because it is automatically filled with the user email
       await page.locator('#email').fill('test@streann.com');
