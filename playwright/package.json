@@ -1,0 +1,33 @@
+{
+  "name": "automation-playwright",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.51.1",
+    "@types/node": "^22.14.0"
+  },
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "playwright": "^1.51.1",
+    "axios": "^1.7.9",
+    "chromedriver": "^132.0.1",
+    "express": "^4.21.2",
+    "form-data": "^4.0.1"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erhan1988/playwright.git"
+  },
+  "bugs": {
+    "url": "https://github.com/erhan1988/playwright/issues"
+  },
+  "homepage": "https://github.com/erhan1988/playwright#readme",
+  "description": ""
+}

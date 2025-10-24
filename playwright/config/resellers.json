@@ -1,0 +1,522 @@
+{
+  "resellers": [
+    {
+      "id": "6849d5ca8f0828869550a9d4",
+      "name": "fearpix",
+      "baseUrl": "https://fearpix-v3-dev.streann.tech/",
+      "environment": "staging",
+      "testSuites": ["navigatetoURL", "checkFaviconIcon","checkHomeLinkHeader","checkHeaderElements","checkCategoryTitleHomeScreen","checkVodsInHome",
+       "UserDetailsScreen","checkFooterLinks", "contactUs","registrationScreen","loginScreen","forgotScreen","loggedUserMyAccount", "loginScreenNewPassword"],
+      "termsOfUseText": "FearPix Terms of Use",
+      "privacyText": "FearPix Privacy Policy",
+      "contactUsText": "Contact Us",
+      "contactUsLocatorType": "link",
+      "homeLinkHeader": ["Home"],
+      "registerButtonHeader": false,
+      "titleCategoryHomeScreen": "h1.m-0.mb-1.w-50.fs-4",
+      "titleDetailsScreen": "h1.title-title.fs-3",
+      "backgroundImageDetailsScreen": "div.details-image.details-image-desktop",
+      "skipRelatedContent": false,
+      "buttonRelatedContent": "button.nav-link.ng-star-inserted",
+      "choosePlanRedirectRegistration":true,
+      "choosePlanMyAccount":true,
+      "registrationButtonHeaderExist":false,
+      "selectProfile":false,
+      "checkPlayerScreen":false,
+      "contactUs":{
+         "contactUsSubject":"Test",
+         "contactUsEmail":"test@streann.com",
+         "contactUsTextArea":"This is a test message."
+      },
+      "register":{ 
+        "firstName":"User",
+        "emailNotValid":"test@",
+        "confirmEmail":"test@streann.com",
+        "passwordNotValid":"123",
+        "confirmPassNotValid": "123",
+        "email":"test@streann.com",
+        "password":"123123",
+        "confirmPassword":"123123"
+      },
+       "login":{ 
+        "email":"nonexistent@example.com"
+      },
+      "forgotScreen":{ 
+        "emailWrong":"drdr@streann.com"
+      },
+      "settings": {
+        "timeout": 300000
+      }
+    },
+    {
+      "id": "6849d5ca8f0828869550a9d4",
+      "name": "tvin",
+      "baseUrl": "https://tvin-v3-dev.streann.tech/",
+      "environment": "staging",
+      "testSuites": ["navigatetoURL", "checkFaviconIcon","checkHomeLinkHeader","checkHeaderElements","checkCategoryTitleHomeScreen","checkVodsInHome",
+       "UserDetailsScreen","checkFooterLinks", "contactUs","registrationScreen","loginScreen","forgotScreen","loggedUserMyAccount", "loginScreenNewPassword"],
+      "termsOfUseText": "TV IN TERMS OF USE",
+      "privacyText": "TV IN PRIVACY POLICY",
+      "contactUsText":"Contact Us",
+      "contactUsLocatorType": "link",
+      "homeLinkHeader": ["Home"],
+      "registerButtonHeader": false,
+      "titleCategoryHomeScreen": "h5.m-0.mb-1.w-50",
+      "titleDetailsScreen": "h1.title-title.fs-3",
+      "backgroundImageDetailsScreen": "div.details-image.details-image-desktop",
+      "skipRelatedContent": false,
+      "buttonRelatedContent": "button.nav-link.ng-star-inserted",
+      "choosePlanRedirectRegistration":false,
+      "choosePlanMyAccount":false,
+      "registrationButtonHeaderExist":false,
+      "selectProfile":true,
+      "checkPlayerScreen":true,
+      "contactUs":{
+         "contactUsSubject":"Test",
+         "contactUsEmail":"test@streann.com",
+         "contactUsTextArea":"This is a test message."
+      },
+      "register":{ 
+        "firstName":"User",
+        "emailNotValid":"test@",
+        "confirmEmail":"test@streann.com",
+        "passwordNotValid":"123",
+        "confirmPassNotValid": "123",
+        "email":"test@streann.com",
+        "password":"123123",
+        "confirmPassword":"123123"
+      },
+       "login":{ 
+        "email":"nonexistent@example.com"
+      },
+      "forgotScreen":{ 
+        "emailWrong":"drdr@streann.com"
+      },
+      "settings": {
+        "timeout": 300000
+      }
+    },
+    {
+      "id": "61290efae4b0304f3eb75567",
+      "name": "flexflix",
+      "baseUrl": "https://flexflix-v3-dev.streann.tech/",
+      "environment": "staging",
+      "testSuites": ["navigatetoURL", "checkFaviconIcon","checkHomeLinkHeader","checkHeaderElements","checkCategoryTitleHomeScreen","checkVodsInHome",
+       "UserDetailsScreen","checkFooterLinks", "contactUs","registrationScreen","loginScreen","forgotScreen","loggedUserMyAccount", "loginScreenNewPassword"],
+      "termsOfUseText": "FlexFlix Terms of Use",
+      "privacyText": "Privacy statement",
+      "contactUsText":"Contact Us",
+      "contactUsLocatorType": "link",
+      "homeLinkHeader": ["On Demand"],
+      "registerButtonHeader": true,
+      "titleCategoryHomeScreen": "h1.m-0.mb-1.w-50.fs-4",
+      "titleDetailsScreen": "h1.title-title.fs-3",
+      "backgroundImageDetailsScreen": "div.details-image.details-image-desktop",
+      "skipRelatedContent": false,
+      "buttonRelatedContent": "button.nav-link.ng-star-inserted",
+      "choosePlanRedirectRegistration":true,
+      "choosePlanMyAccount":true,
+      "registrationButtonHeaderExist":true,
+      "selectProfile":true,
+      "checkPlayerScreen":false,
+      "contactUs":{
+         "contactUsSubject":"Test",
+         "contactUsEmail":"test@streann.com",
+         "contactUsTextArea":"This is a test message."
+      },
+      "register":{ 
+        "firstName":"User",
+        "lastName":"Test",
+        "phone":"1234567890",
+        "emailNotValid":"test@",
+        "confirmEmail":"test@streann.com",
+        "passwordNotValid":"123",
+        "confirmPassNotValid": "123",
+        "email":"test@streann.com",
+        "password":"123123",
+        "confirmPassword":"123123"
+      },
+       "login":{ 
+        "email":"nonexistent@example.com"
+      },
+      "forgotScreen":{ 
+        "emailWrong":"drdr@streann.com"
+      },
+      "settings": {
+        "timeout": 350000
+      }
+    },
+    {
+      "id": "5fc01321e4b0612f786b31c1",
+      "name": "panamsport",
+      "baseUrl": "https://panamsport-v3-dev.streann.tech/",
+      "environment": "staging",
+     "testSuites": ["navigatetoURL", "checkFaviconIcon","checkHomeLinkHeader","checkHeaderElements","checkCategoryTitleHomeScreen","checkVodsInHome",
+       "UserDetailsScreen","checkFooterLinks", "contactUs","registrationScreen","loginScreen","forgotScreen","loggedUserMyAccount", "loginScreenNewPassword"],
+      "termsOfUseText": "Data categories and sources of data",
+      "privacyText": "PANAM SPORTS: Data Disclaimer",
+      "contactUsText":"Contact Us",
+      "contactUsLocatorType": "link",
+      "homeLinkHeader": ["Home"],
+      "registerButtonHeader": true,
+      "titleCategoryHomeScreen": "h5.m-0.mb-1.w-50",
+      "titleDetailsScreen": "h1.title-title.fs-3",
+      "backgroundImageDetailsScreen": "div.details-image.details-image-desktop",
+      "skipRelatedContent": false,
+      "buttonRelatedContent": "h5.mx-2.season-title",
+      "choosePlanRedirectRegistration":false,
+      "choosePlanMyAccount":false,
+      "registrationButtonHeaderExist":true,
+      "selectProfile":false,
+      "checkPlayerScreen":true,
+      "contactUs":{
+         "contactUsSubject":"Test",
+         "contactUsEmail":"test@streann.com",
+         "contactUsTextArea":"This is a test message."
+      },
+      "register":{ 
+        "emailNotValid":"test@",
+        "confirmEmail":"test@streann.com",
+        "passwordNotValid":"123",
+        "confirmPassNotValid": "123",
+        "email":"test@streann.com",
+        "password":"123123",
+        "confirmPassword":"123123"
+      },
+       "login":{ 
+        "email":"nonexistent@example.com"
+      },
+      "forgotScreen":{ 
+        "emailWrong":"drdr@streann.com"
+      },
+      "settings": {
+        "timeout": 350000
+      }
+    },
+      {
+      "id": "67ae4dca8f0849e7e4f7bacd",
+      "name": "gamestreammedia",
+      "baseUrl": "https://gamestreammedia-v3-dev.streann.tech/",
+      "environment": "staging",
+      "testSuites": ["navigatetoURL", "checkFaviconIcon","checkHomeLinkHeader","checkHeaderElements","checkCategoryTitleHomeScreen","checkVodsInHome",
+       "UserDetailsScreen","checkFooterLinks", "contactUs","registrationScreen","loginScreen","forgotScreen","loggedUserMyAccount", "loginScreenNewPassword"],
+      "termsOfUseText": "Terms of Use",
+      "privacyText": "Privacy Policy",
+      "contactUsText":"Contact Us",
+      "contactUsLocatorType": "link",
+      "homeLinkHeader": ["Home"],
+      "registerButtonHeader": true,
+      "titleCategoryHomeScreen": "h1.m-0.mb-1.w-50.fs-4",
+      "titleDetailsScreen": "h5.title-title",
+      "backgroundImageDetailsScreen": "img.img-fluid",
+      "skipRelatedContent": false,
+      "buttonRelatedContent": "button.nav-link.ng-star-inserted",
+      "choosePlanRedirectRegistration":false,
+      "choosePlanMyAccount":false,
+      "registrationButtonHeaderExist":true,
+      "selectProfile":true,
+      "checkPlayerScreen":true,
+      "contactUs":{
+         "contactUsSubject":"Test",
+         "contactUsEmail":"test@streann.com",
+         "contactUsTextArea":"This is a test message."
+      },
+      "register":{ 
+        "firstName":"User",
+        "lastName":"Test",
+        "emailNotValid":"test@",
+        "confirmEmail":"test@streann.com",
+        "passwordNotValid":"123",
+        "confirmPassNotValid": "123",
+        "email":"test@streann.com",
+        "password":"123123",
+        "confirmPassword":"123123"
+      },
+       "login":{ 
+        "email":"nonexistent@example.com"
+      },
+      "forgotScreen":{ 
+        "emailWrong":"drdr@streann.com"
+      },
+      "settings": {
+        "timeout": 350000
+      }
+    },
+    {
+      "id": "665489308f0895bfb0a92709",
+      "name": "gols",
+      "baseUrl": "https://gols-v3-dev.streann.tech/",
+      "environment": "staging",
+      "testSuites": ["navigatetoURL", "checkFaviconIcon","checkHomeLinkHeader","checkHeaderElements","checkCategoryTitleHomeScreen","checkVodsInHome",
+       "UserDetailsScreen","checkFooterLinks","registrationScreen","loginScreen","forgotScreen","loggedUserMyAccount", "loginScreenNewPassword"],
+      "termsOfUseText": "Acceptance of Terms",
+      "privacyText": "Game On Live Studio",
+      "contactUsText":"Contact Us",
+      "contactUsLocatorType": "link",
+      "homeLinkHeader": ["Home"],
+      "registerButtonHeader": true,
+      "titleCategoryHomeScreen": "h1.m-0.mb-1.w-50.fs-4",
+      "titleDetailsScreen": "h5.title-title",
+      "backgroundImageDetailsScreen": "img.img-fluid",
+      "buttonRelatedContent": "h5.season-title",
+      "skipRelatedContent": false,
+      "choosePlanRedirectRegistration":false,
+      "choosePlanMyAccount":false,
+      "registrationButtonHeaderExist":true,
+      "selectProfile":false,
+      "checkPlayerScreen":false,
+      "register":{
+        "firstName":"User",
+        "lastName":"Test",
+        "emailNotValid":"test@",
+        "confirmEmail":"test@streann.com",
+        "passwordNotValid":"123",
+        "confirmPassNotValid": "123",
+        "email":"test@streann.com",
+        "password":"123123",
+        "confirmPassword":"123123"
+      },
+       "login":{
+        "email":"nonexistent@example.com"
+      },
+      "forgotScreen":{
+        "emailWrong":"drdr@streann.com"
+      },
+      "settings": {
+        "timeout": 350000
+      }
+    },
+     {
+      "id": "667483cc8f0835510a1432fb",
+      "name": "amorir",
+      "baseUrl": "https://amorir-v3-dev.streann.tech/",
+      "environment": "staging",
+       "testSuites": ["navigatetoURL", "checkFaviconIcon","checkHomeLinkHeader","checkHeaderElements","checkCategoryTitleHomeScreen","checkVodsInHome",
+       "UserDetailsScreen","checkFooterLinks","registrationScreen","loginScreen","forgotScreen","loggedUserMyAccount", "loginScreenNewPassword"],
+      "termsOfUseText": "Términos de Uso – Te Vas a Morir",
+      "privacyText": "Política de Privacidad – Te Vas a Morir",
+      "homeLinkHeader": ["Inicio"],
+      "registerButtonHeader": true,
+      "titleCategoryHomeScreen": "h1.m-0.mb-1.w-50.fs-4",
+      "titleDetailsScreen": "h1.title-title.fs-3",
+      "backgroundImageDetailsScreen": "div.details-image.details-image-desktop",
+      "skipRelatedContent": false,
+      "buttonRelatedContent": "button.nav-link.ng-star-inserted",
+      "choosePlanRedirectRegistration":true,
+      "choosePlanMyAccount":true,
+      "registrationButtonHeaderExist":true,
+      "selectProfile":false,
+      "checkPlayerScreen":false,
+      "register":{ 
+        "firstName":"User",
+        "lastName":"Test",
+        "emailNotValid":"test@",
+        "confirmEmail":"test@streann.com",
+        "passwordNotValid":"123",
+        "confirmPassNotValid": "123",
+        "email":"test@streann.com",
+        "password":"123123",
+        "confirmPassword":"123123"
+      },
+       "login":{ 
+        "email":"nonexistent@example.com"
+      },
+      "forgotScreen":{ 
+        "emailWrong":"drdr@streann.com"
+      },
+      "settings": {
+        "timeout": 350000
+      }
+    },
+     {
+      "id": "67ffb7cd8f088acea336789e",
+      "name": "okgol",
+      "baseUrl": "https://okgol-v3-dev.streann.tech/",
+      "environment": "staging",
+      "testSuites": ["navigatetoURL", "checkFaviconIcon","checkHomeLinkHeader","checkHeaderElements","checkCategoryTitleHomeScreen","checkVodsInHome",
+       "UserDetailsScreen","checkFooterLinks","registrationScreen","loginScreen","forgotScreen","loggedUserMyAccount", "loginScreenNewPassword"],
+      "termsOfUseText": "Términos y Condiciones de Uso de OKGOL",
+      "privacyText": "Avisos Legales",
+       "contactUsText":"Contáctenos",
+      "contactUsLocatorType": "link",
+      "homeLinkHeader": ["Inicio"],
+      "registerButtonHeader": false,
+      "titleCategoryHomeScreen": "h1.m-0.mb-1.w-50.fs-4",
+      "titleDetailsScreen": "h5.title-title",
+      "backgroundImageDetailsScreen": "img.img-fluid",
+      "skipRelatedContent": false,
+      "buttonRelatedContent": "button.nav-link.ng-star-inserted",
+      "choosePlanRedirectRegistration":true,
+      "choosePlanMyAccount":true,
+      "registrationButtonHeaderExist":false,
+      "selectProfile":false,
+      "checkPlayerScreen":false,
+      "register":{ 
+        "firstName":"User",
+        "emailNotValid":"test@",
+        "confirmEmail":"test@streann.com",
+        "passwordNotValid":"123",
+        "confirmPassNotValid": "123",
+        "email":"test@streann.com",
+        "password":"123123",
+        "confirmPassword":"123123"
+      },
+       "login":{ 
+        "email":"nonexistent@example.com"
+      },
+      "forgotScreen":{ 
+        "emailWrong":"drdr@streann.com"
+      },
+      "settings": {
+        "timeout": 350000
+      }
+    },
+     {
+      "id": "67afc6258f0849e7e502973e",
+      "name": "televicentro",
+      "baseUrl": "https://televicentro-v3-dev.streann.tech/",
+      "environment": "staging",
+      "testSuites": ["navigatetoURL", "checkFaviconIcon","checkHomeLinkHeader","checkHeaderElements","checkCategoryTitleHomeScreen","checkVodsInHome",
+       "UserDetailsScreen","checkFooterLinks", "contactUs","registrationScreen","loginScreen","forgotScreen","loggedUserMyAccount", "loginScreenNewPassword"],
+      "termsOfUseText": "TÉRMINOS Y CONDICIONES PARA LA PLATAFORMA DEPORTES TVC PLUS",
+      "privacyText": "Políticas de Privacidad",
+      "contactUsText":"Contáctenos",
+      "contactUsLocatorType": "link",
+      "homeLinkHeader": ["Inicio"],
+      "registerButtonHeader": false,
+      "titleCategoryHomeScreen": "h1.m-0.mb-1.w-50.fs-4",
+      "titleDetailsScreen": "h1.title-title.fs-3",
+      "backgroundImageDetailsScreen": "div.details-image.details-image-desktop",
+      "skipRelatedContent": true,
+      "choosePlanRedirectRegistration":true,
+      "choosePlanMyAccount":true,
+      "registrationButtonHeaderExist":false,
+      "selectProfile":true,
+      "checkPlayerScreen":false,
+      "contactUs":{
+         "contactUsSubject":"Test",
+         "contactUsEmail":"test@streann.com",
+         "contactUsTextArea":"This is a test message."
+      },
+      "register":{ 
+        "firstName":"User",
+        "emailNotValid":"test@",
+        "confirmEmail":"test@streann.com",
+        "passwordNotValid":"123",
+        "confirmPassNotValid": "123",
+        "email":"test@streann.com",
+        "password":"123123",
+        "confirmPassword":"123123",
+        "phone":"1234567890"
+      },
+       "login":{ 
+        "email":"nonexistent@example.com"
+      },
+      "forgotScreen":{ 
+        "emailWrong":"drdr@streann.com"
+      },
+      "settings": {
+        "timeout": 350000
+      }
+    },  
+    {
+      "id": "613fa9a7e4b0ee1171b95105",
+      "name": "prtv",
+      "baseUrl": "https://prtv-v3-dev.streann.tech/",
+      "environment": "staging",
+       "testSuites": ["navigatetoURL", "checkFaviconIcon","checkHomeLinkHeader","checkHeaderElements","checkCategoryTitleHomeScreen","checkVodsInHome",
+       "UserDetailsScreen","checkPlayerScreen","checkFooterLinks", "contactUs","registrationScreen","loginScreen","forgotScreen","loggedUserMyAccount", "loginScreenNewPassword"],
+      "termsOfUseText": "Términos de uso de PRTV+",
+      "privacyText": "Política de Privacidad PRTV+",
+      "contactUsText": "Contáctenos",
+      "contactUsLocatorType": "link",
+      "homeLinkHeader": ["WIPR"],
+      "registerButtonHeader": true,
+      "titleCategoryHomeScreen": "h5.m-0.mb-1.w-50",
+      "titleDetailsScreen": "h1.title-title.fs-3",
+      "backgroundImageDetailsScreen": "div.details-image.details-image-desktop",
+      "skipRelatedContent": false,
+      "buttonRelatedContent": "button.nav-link.ng-star-inserted",
+      "choosePlanRedirectRegistration":false,
+      "choosePlanMyAccount":false,
+      "registrationButtonHeaderExist":true,
+      "selectProfile":false,
+      "checkPlayerScreen":true,
+      "contactUs":{
+         "contactUsSubject":"Test",
+         "contactUsEmail":"test@streann.com",
+         "contactUsTextArea":"This is a test message."
+      },
+      "register":{ 
+        "firstName":"User",
+        "lastName":"Test",
+        "phone":"1234567890",
+        "emailNotValid":"test@",
+        "confirmEmail":"test@streann.com",
+        "passwordNotValid":"123",
+        "confirmPassNotValid": "123",
+        "email":"test@streann.com",
+        "password":"123123",
+        "confirmPassword":"123123"
+      },
+       "login":{ 
+        "email":"nonexistent@example.com"
+      },
+      "forgotScreen":{ 
+        "emailWrong":"drdr@streann.com"
+      },
+      "settings": {
+        "timeout": 300000
+      }
+    },
+      {
+      "id": "61316705e4b0295f87dae396",
+      "name": "tdmax",
+      "baseUrl": "https://tdmax-v3-dev.streann.tech/",
+      "environment": "staging",
+       "testSuites": ["navigatetoURL","checkButtonsLandingPage","checkFooterLinks","contactUs","registrationScreen","loginScreen","forgotScreen","loggedUserMyAccount","loginScreenNewPassword" ],
+      "termsOfUseText": "Términos y condiciones para la plataforma TDMAX",
+      "privacyText": "TELEVISORA DE COSTA RICA S.A.",
+      "contactUsText": "Contáctenos",
+      "contactUsLocatorType": "link",
+      "homeLinkHeader": ["Inicio"],
+      "registerButtonHeader": true,
+      "titleCategoryHomeScreen": "h1.m-0.mb-1.w-50.fs-4",
+      "titleDetailsScreen": "h5.title-title",
+      "backgroundImageDetailsScreen": "img.img-fluid",
+      "skipRelatedContent": true,
+      "buttonRelatedContent": "button.nav-link.ng-star-inserted",
+      "choosePlanRedirectRegistration":true,
+      "choosePlanMyAccount":true,
+      "registrationButtonHeaderExist":true,
+      "selectProfile":false,
+      "checkPlayerScreen":true,
+      "contactUs":{
+         "contactUsSubject":"Test",
+         "contactUsEmail":"test@streann.com",
+         "contactUsTextArea":"This is a test message."
+      },
+      "register":{ 
+        "emailNotValid":"test@",
+        "confirmEmail":"test@streann.com",
+        "passwordNotValid":"123",
+        "confirmPassNotValid": "123",
+        "email":"test@streann.com",
+        "password":"123123",
+        "confirmPassword":"123123"
+      },
+       "login":{ 
+        "email":"nonexistent@example.com"
+      },
+      "forgotScreen":{ 
+        "emailWrong":"drdr@streann.com"
+      },
+      "settings": {
+        "timeout": 350000
+      }
+    }
+
+
+  ]
+
+}
