@@ -432,7 +432,7 @@
       "contactUsLocatorType": "link",
       "homeLinkHeader": ["WIPR"],
       "registerButtonHeader": true,
-      "titleCategoryHomeScreen": "h5.m-0.mb-1.w-50",
+      "titleCategoryHomeScreen": "h1.m-0.mb-1.w-50.fs-4",
       "titleDetailsScreen": "h1.title-title.fs-3",
       "backgroundImageDetailsScreen": "div.details-image.details-image-desktop",
       "skipRelatedContent": false,
