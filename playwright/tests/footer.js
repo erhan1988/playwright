@@ -9,7 +9,7 @@ async function checkFooterLinks(page, reseller, stepNumber) {
          await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
       }
       // ✅ Check footer text
-      const footerSelector = 'label:has-text("© 2025")';
+      const footerSelector = 'label:has-text("© 2026")';
       await page.waitForSelector(footerSelector, { state: 'visible', timeout: 10000 });
       const element = await page.locator(footerSelector).first();
       await element.scrollIntoViewIfNeeded();
